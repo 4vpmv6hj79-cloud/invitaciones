@@ -22,14 +22,18 @@ async function bootstrap() {
     }),
   );
 
-  // CORS para permitir el frontend Angular en desarrollo.
+  // CORS para permitir el frontend Angular.
+  // CORS_ORIGIN puede ser una lista separada por comas (dev local + dominio de Vercel).
   const corsOrigin = config.get<string>('CORS_ORIGIN') ?? 'http://localhost:4200';
-  app.enableCors({ origin: corsOrigin });
+  const allowedOrigins = corsOrigin.split(',').map((o) => o.trim()).filter(Boolean);
+  app.enableCors({ origin: allowedOrigins });
 
+  // Railway (y la mayoría de PaaS) inyecta el puerto por la variable PORT.
+  // Hay que escuchar en 0.0.0.0 para aceptar conexiones externas al contenedor.
   const port = config.get<number>('PORT') ?? 3000;
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
   // eslint-disable-next-line no-console
-  console.log(`Backend escuchando en http://localhost:${port}`);
+  console.log(`Backend escuchando en el puerto ${port}`);
 }
 
 bootstrap();

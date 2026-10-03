@@ -15,21 +15,46 @@ import { DesignModule } from './design/design.module';
     // Carga variables de entorno desde .env y las hace disponibles globalmente.
     ConfigModule.forRoot({ isGlobal: true }),
 
-    // Conexión a PostgreSQL. En esta etapa 0 no hay entidades todavía;
-    // se irán agregando por módulo en etapas posteriores.
+    // Conexión a PostgreSQL.
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        host: config.get<string>('DB_HOST', 'localhost'),
-        port: config.get<number>('DB_PORT', 5432),
-        username: config.get<string>('DB_USER', 'invitaciones'),
-        password: config.get<string>('DB_PASSWORD', 'invitaciones_dev'),
-        database: config.get<string>('DB_NAME', 'invitaciones'),
-        autoLoadEntities: true,
-        // En desarrollo sincroniza el esquema; en producción se usarán migraciones.
-        synchronize: config.get<string>('NODE_ENV') === 'development',
-      }),
+      useFactory: (config: ConfigService) => {
+        // Railway (y otros PaaS) entregan la conexión como una sola URL en DATABASE_URL.
+        // Si existe, la usamos; si no, caemos a las variables separadas (desarrollo local).
+        const databaseUrl = config.get<string>('DATABASE_URL');
+
+        // SSL es necesario en varios proveedores gestionados. Se activa con DB_SSL=true.
+        const useSsl = config.get<string>('DB_SSL') === 'true';
+        const ssl = useSsl ? { rejectUnauthorized: false } : undefined;
+
+        // synchronize crea/actualiza el esquema automáticamente a partir de las entidades.
+        // En desarrollo siempre; en producción solo si DB_SYNCHRONIZE=true (útil para el MVP).
+        const synchronize =
+          config.get<string>('NODE_ENV') === 'development' ||
+          config.get<string>('DB_SYNCHRONIZE') === 'true';
+
+        if (databaseUrl) {
+          return {
+            type: 'postgres' as const,
+            url: databaseUrl,
+            autoLoadEntities: true,
+            synchronize,
+            ssl,
+          };
+        }
+
+        return {
+          type: 'postgres' as const,
+          host: config.get<string>('DB_HOST', 'localhost'),
+          port: config.get<number>('DB_PORT', 5432),
+          username: config.get<string>('DB_USER', 'invitaciones'),
+          password: config.get<string>('DB_PASSWORD', 'invitaciones_dev'),
+          database: config.get<string>('DB_NAME', 'invitaciones'),
+          autoLoadEntities: true,
+          synchronize,
+          ssl,
+        };
+      },
     }),
 
     HealthModule,
