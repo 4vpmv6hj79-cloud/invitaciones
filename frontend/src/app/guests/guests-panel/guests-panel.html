@@ -1,0 +1,102 @@
+<header class="head">
+  <h1>Invitados</h1>
+  <a [routerLink]="['/editor', invitationId]" class="back">← Volver al editor</a>
+</header>
+
+@if (summary(); as s) {
+  <section class="summary">
+    <div class="stat"><span class="num">{{ s.total }}</span><span>Invitados</span></div>
+    <div class="stat ok"><span class="num">{{ s.confirmed }}</span><span>Confirmados</span></div>
+    <div class="stat"><span class="num">{{ s.pending }}</span><span>Pendientes</span></div>
+    <div class="stat no"><span class="num">{{ s.declined }}</span><span>No asisten</span></div>
+    <div class="stat"><span class="num">{{ s.seatsConfirmed }}/{{ s.seatsAllowed }}</span><span>Lugares</span></div>
+  </section>
+}
+
+<section class="add">
+  <h2>Agregar invitado</h2>
+  <form [formGroup]="form" (ngSubmit)="addGuest()">
+    <input type="text" formControlName="name" placeholder="Nombre o familia" />
+    <input type="text" formControlName="contact" placeholder="Contacto (opcional)" />
+    <input type="number" formControlName="allowedSeats" min="1" placeholder="Lugares" />
+    <button type="submit">Agregar</button>
+  </form>
+
+  <div class="io">
+    <label class="io-btn">
+      Importar CSV
+      <input type="file" accept=".csv,text/csv" (change)="onImportFile($event)" hidden />
+    </label>
+    <button type="button" class="io-btn" (click)="download()">Exportar CSV</button>
+    @if (importResult()) {
+      <span class="import-ok">{{ importResult() }}</span>
+    }
+  </div>
+</section>
+
+<section class="tickets">
+  <h2>Boletos de acceso (QR)</h2>
+  <label class="toggle">
+    <input type="checkbox" [checked]="ticketsEnabled()" (change)="toggleTickets()" />
+    <span>{{ ticketsEnabled() ? 'Boletos activados' : 'Activar boletos QR' }}</span>
+  </label>
+  @if (ticketMsg()) {
+    <p class="ticket-msg">{{ ticketMsg() }}</p>
+  }
+
+  @if (ticketsEnabled()) {
+    <div class="staff">
+      <p class="staff-title">Personal de acceso</p>
+      <p class="staff-hint">Asigna a alguien (por correo, debe tener cuenta) para validar accesos.</p>
+      <div class="staff-row">
+        <input type="email" [(ngModel)]="staffEmail" placeholder="correo@ejemplo.com" />
+        <button type="button" (click)="assignStaff()">Asignar</button>
+      </div>
+      @if (staffMsg()) {
+        <p class="ticket-msg">{{ staffMsg() }}</p>
+      }
+    </div>
+  }
+</section>
+
+<section class="list">
+  @if (loading()) {
+    <p class="state">Cargando…</p>
+  } @else if (guests().length === 0) {
+    <p class="state">Aún no hay invitados. Agrega el primero arriba.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Lugares</th>
+          <th>Estado</th>
+          <th>Enlace privado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (g of guests(); track g.id) {
+          <tr>
+            <td>{{ g.name }}</td>
+            <td>{{ g.confirmedSeats }}/{{ g.allowedSeats }}</td>
+            <td>
+              <span class="status" [class.ok]="g.rsvpStatus === 'confirmed'"
+                [class.no]="g.rsvpStatus === 'declined'">
+                {{ statusLabel(g.rsvpStatus) }}
+              </span>
+            </td>
+            <td>
+              <button type="button" class="link-btn" (click)="copyLink(g)">
+                {{ copiedToken() === g.accessToken ? 'Copiado' : 'Copiar enlace' }}
+              </button>
+            </td>
+            <td>
+              <button type="button" class="del" (click)="removeGuest(g)">Eliminar</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

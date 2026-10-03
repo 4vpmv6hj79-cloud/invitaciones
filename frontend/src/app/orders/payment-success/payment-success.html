@@ -1,0 +1,45 @@
+<main class="success">
+  @switch (state()) {
+    @case ('checking') {
+      <p class="state">Confirmando tu pago…</p>
+    }
+    @case ('pending') {
+      <p class="state">Estamos confirmando tu pago. Esto puede tardar unos segundos…</p>
+    }
+    @case ('error') {
+      <p class="state state--error">No pudimos confirmar el pago. Revisa en tus borradores o intenta de nuevo.</p>
+      <a routerLink="/catalogo" class="link">Volver al catálogo</a>
+    }
+    @case ('ready') {
+      <div class="done">
+        <span class="check">✓</span>
+        <h1>¡Tu invitación está publicada!</h1>
+        <p class="sub">Comparte este enlace con tus invitados.</p>
+      </div>
+
+      <div class="link-box">
+        <input type="text" [value]="publicUrl()" readonly />
+        <button type="button" (click)="copyLink()">
+          {{ copied() ? 'Copiado' : 'Copiar' }}
+        </button>
+      </div>
+
+      <div class="share">
+        <a class="share-btn whatsapp" [href]="whatsappUrl()" target="_blank" rel="noopener">
+          Compartir por WhatsApp
+        </a>
+        <a class="share-btn" [href]="publicUrl()" target="_blank" rel="noopener">
+          Ver invitación
+        </a>
+        <a class="share-btn" [routerLink]="['/invitacion', invitationId(), 'invitados']">
+          Gestionar invitados
+        </a>
+      </div>
+
+      <figure class="preview-image">
+        <img [src]="imageUrl()" alt="Vista previa de la invitación" />
+        <figcaption>Esta imagen aparecerá al compartir el enlace.</figcaption>
+      </figure>
+    }
+  }
+</main>

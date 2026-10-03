@@ -1,0 +1,71 @@
+<header class="head">
+  <h1>Pedidos y ventas</h1>
+</header>
+
+@if (error()) {
+  <p class="banner banner--error">{{ error() }}</p>
+}
+
+<!-- Reporte de ventas -->
+@if (report(); as r) {
+  <section class="report">
+    <div class="stat"><span class="num">{{ r.totalOrders }}</span><span>Pedidos</span></div>
+    <div class="stat ok"><span class="num">{{ r.paidOrders }}</span><span>Pagados</span></div>
+    <div class="stat"><span class="num">{{ money(r.grossRevenueCents) }}</span><span>Ingreso bruto</span></div>
+    <div class="stat"><span class="num">{{ money(r.estimatedFeesCents) }}</span><span>Comisión est.</span></div>
+    <div class="stat net"><span class="num">{{ money(r.estimatedNetCents) }}</span><span>Neto est.</span></div>
+  </section>
+  <p class="report-note">{{ r.note }}</p>
+}
+
+<!-- Filtros -->
+<section class="filters">
+  <button type="button" [class.active]="filter() === ''" (click)="setFilter('')">Todos</button>
+  <button type="button" [class.active]="filter() === 'paid'" (click)="setFilter('paid')">Pagados</button>
+  <button type="button" [class.active]="filter() === 'pending'" (click)="setFilter('pending')">Pendientes</button>
+  <button type="button" [class.active]="filter() === 'refunded'" (click)="setFilter('refunded')">Reembolsados</button>
+</section>
+
+<!-- Pedidos -->
+<section class="list">
+  @if (loading()) {
+    <p class="state">Cargando pedidos…</p>
+  } @else if (orders().length === 0) {
+    <p class="state">No hay pedidos con este filtro.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Monto</th>
+          <th>Estado</th>
+          <th>Proveedor</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (o of orders(); track o.id) {
+          <tr>
+            <td>{{ o.createdAt | date: 'short' }}</td>
+            <td>{{ money(o.amount) }}</td>
+            <td>
+              <span class="status" [class.ok]="o.status === 'paid'"
+                [class.ref]="o.status === 'refunded'">
+                {{ statusLabel(o.status) }}
+              </span>
+            </td>
+            <td>{{ o.provider }}</td>
+            <td>
+              @if (o.status === 'paid') {
+                <button type="button" class="refund" [disabled]="refunding() === o.id"
+                  (click)="refund(o)">
+                  {{ refunding() === o.id ? 'Reembolsando…' : 'Reembolsar' }}
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

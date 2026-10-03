@@ -1,0 +1,100 @@
+<header class="admin-header">
+  <h1>Administración de plantillas</h1>
+  <p>Crea plantillas y publícalas o retíralas del catálogo.</p>
+</header>
+
+@if (error()) {
+  <p class="banner banner--error">{{ error() }}</p>
+}
+
+<section class="create">
+  <h2>Nueva plantilla</h2>
+  @if (filters(); as f) {
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="name">Nombre</label>
+        <input id="name" type="text" formControlName="name" placeholder="Ej. Boda — Jardín" />
+      </div>
+
+      <div class="field">
+        <label for="description">Descripción</label>
+        <input id="description" type="text" formControlName="description" />
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="eventType">Evento</label>
+          <select id="eventType" formControlName="eventType">
+            <option value="">Selecciona…</option>
+            @for (opt of f.eventTypes; track opt.value) {
+              <option [value]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="style">Estilo</label>
+          <select id="style" formControlName="style">
+            <option value="">Selecciona…</option>
+            @for (opt of f.styles; track opt.value) {
+              <option [value]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="format">Formato</label>
+          <select id="format" formControlName="format">
+            @for (opt of f.formats; track opt.value) {
+              <option [value]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="saving()">
+        {{ saving() ? 'Guardando…' : 'Crear plantilla' }}
+      </button>
+    </form>
+  }
+</section>
+
+<section class="list">
+  <h2>Plantillas ({{ templates().length }})</h2>
+  @if (loading()) {
+    <p class="state">Cargando…</p>
+  } @else if (templates().length === 0) {
+    <p class="state">Aún no hay plantillas.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Estilo</th>
+          <th>Formato</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (t of templates(); track t.id) {
+          <tr [class.inactive]="!t.isActive">
+            <td>{{ t.name }}</td>
+            <td class="cap">{{ t.style }}</td>
+            <td>{{ t.format === 'web' ? 'Web' : 'Imagen' }}</td>
+            <td>
+              <span class="status" [class.status--on]="t.isActive">
+                {{ t.isActive ? 'Publicada' : 'Retirada' }}
+              </span>
+            </td>
+            <td>
+              <button type="button" class="toggle" (click)="toggleActive(t)">
+                {{ t.isActive ? 'Retirar' : 'Publicar' }}
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

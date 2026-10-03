@@ -1,0 +1,88 @@
+<main class="admin-design">
+  <h1>Solicitudes de diseño</h1>
+
+  @if (error()) {
+    <p class="banner banner--error">{{ error() }}</p>
+  }
+
+  <section class="filters">
+    <button type="button" [class.active]="filter() === ''" (click)="setFilter('')">Todas</button>
+    <button type="button" [class.active]="filter() === 'nueva'" (click)="setFilter('nueva')">Nuevas</button>
+    <button type="button" [class.active]="filter() === 'en_proceso'" (click)="setFilter('en_proceso')">En proceso</button>
+    <button type="button" [class.active]="filter() === 'propuesta'" (click)="setFilter('propuesta')">Propuesta</button>
+    <button type="button" [class.active]="filter() === 'aprobada'" (click)="setFilter('aprobada')">Aprobadas</button>
+  </section>
+
+  @if (loading()) {
+    <p class="state">Cargando…</p>
+  } @else if (requests().length === 0) {
+    <p class="state">No hay solicitudes con este filtro.</p>
+  } @else {
+    <ul class="list">
+      @for (r of requests(); track r.id) {
+        <li class="item" (click)="open(r)">
+          <div>
+            <span class="title">{{ r.title }}</span>
+            <span class="meta">{{ r.eventType }}</span>
+          </div>
+          <span class="badge" [attr.data-s]="r.status">{{ service.statusLabel(r.status) }}</span>
+        </li>
+      }
+    </ul>
+  }
+
+  @if (selected(); as d) {
+    <div class="overlay" (click)="close()">
+      <div class="panel" (click)="$event.stopPropagation()">
+        <button type="button" class="x" (click)="close()">✕</button>
+        <h2>{{ d.request.title }}</h2>
+        <p class="meta">{{ d.request.eventType }} · {{ service.statusLabel(d.request.status) }}
+          · revisiones {{ d.request.revisionsUsed }}/{{ d.request.revisionLimit }}</p>
+        @if (d.request.priceCents) {
+          <p class="price-info">
+            Precio propuesto: {{ money(d.request.priceCents) }}
+            @if (d.request.paid) { <span class="paid">· Pagado</span> }
+          </p>
+        }
+        <p class="details">{{ d.request.details }}</p>
+        @if (d.request.budget) { <p class="budget">Presupuesto: {{ d.request.budget }}</p> }
+
+        @if (refs().length > 0) {
+          <div class="ref-thumbs">
+            @for (r of refs(); track r.id) {
+              <a [href]="fileUrl(r.url)" target="_blank" rel="noopener">
+                <img [src]="fileUrl(r.url)" alt="Referencia" />
+              </a>
+            }
+          </div>
+        }
+
+        <div class="thread">
+          @for (m of d.messages; track m.id) {
+            <div class="msg" [class.admin]="m.authorRole === 'admin'" [class.proposal]="m.isProposal">
+              <span class="who">{{ m.authorRole === 'admin' ? 'Equipo' : 'Cliente' }}</span>
+              @if (m.isProposal) { <span class="tag">Propuesta</span> }
+              <p class="body">{{ m.body }}</p>
+            </div>
+          }
+        </div>
+
+        <div class="compose">
+          <textarea [(ngModel)]="proposal" rows="3" placeholder="Escribe una propuesta…"></textarea>
+          <label class="price-field">
+            Precio (MXN)
+            <input type="number" [(ngModel)]="priceMxn" min="1" placeholder="Ej. 2500" />
+          </label>
+          @if (proposalError()) { <p class="err">{{ proposalError() }}</p> }
+          <div class="buttons">
+            <button type="button" class="send" [disabled]="working()" (click)="sendProposal()">
+              Enviar propuesta con precio
+            </button>
+            <button type="button" (click)="setStatus('en_proceso')">Marcar en proceso</button>
+            <button type="button" class="reject" (click)="setStatus('rechazada')">Rechazar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</main>

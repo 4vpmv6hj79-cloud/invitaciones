@@ -1,0 +1,42 @@
+<main class="form-page">
+  <a routerLink="/solicitudes" class="back">← Mis solicitudes</a>
+  <h1>Solicitar diseño a medida</h1>
+  <p class="sub">Cuéntanos qué necesitas y nuestro equipo te enviará una propuesta.</p>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label class="field">
+      <span>Título</span>
+      <input type="text" formControlName="title" placeholder="Ej. Boda temática jardín" />
+    </label>
+
+    <div class="row">
+      <label class="field">
+        <span>Tipo de evento</span>
+        <input type="text" formControlName="eventType" placeholder="Ej. Boda, XV, corporativo" />
+      </label>
+      <label class="field">
+        <span>Estilo (opcional)</span>
+        <input type="text" formControlName="style" placeholder="Ej. elegante, floral" />
+      </label>
+    </div>
+
+    <label class="field">
+      <span>Detalles</span>
+      <textarea formControlName="details" rows="5"
+        placeholder="Colores, referencias, fecha, cantidad de invitados, lo que imaginas…"></textarea>
+    </label>
+
+    <label class="field">
+      <span>Presupuesto estimado (opcional)</span>
+      <input type="text" formControlName="budget" placeholder="Ej. $2,000 - $3,000 MXN" />
+    </label>
+
+    @if (error()) {
+      <p class="err">{{ error() }}</p>
+    }
+
+    <button type="submit" [disabled]="submitting()">
+      {{ submitting() ? 'Enviando…' : 'Enviar solicitud' }}
+    </button>
+  </form>
+</main>

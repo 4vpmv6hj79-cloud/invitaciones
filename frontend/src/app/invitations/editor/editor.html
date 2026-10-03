@@ -1,0 +1,152 @@
+@if (loading()) {
+  <p class="state">Cargando editor…</p>
+} @else if (notFound()) {
+  <p class="state state--error">No se encontró el borrador. <a routerLink="/catalogo">Volver al catálogo</a></p>
+} @else {
+  <div class="editor">
+    <!-- Panel de edición -->
+    <section class="panel" [formGroup]="form">
+      <div class="panel-head">
+        <a routerLink="/catalogo" class="back">← Catálogo</a>
+        <span class="save" [class]="'save--' + saveState()">
+          @switch (saveState()) {
+            @case ('saving') { Guardando… }
+            @case ('saved') { Guardado }
+            @case ('error') { Error al guardar }
+            @default { Borrador }
+          }
+        </span>
+      </div>
+
+      <h2>Datos del evento</h2>
+
+      <div class="field">
+        <label for="title">Título</label>
+        <input id="title" type="text" formControlName="title" placeholder="Ej. Nuestras Bodas de Oro" />
+      </div>
+
+      <div class="field">
+        <label for="couple">Nombres</label>
+        <input id="couple" type="text" formControlName="coupleOrHonoree" placeholder="Ej. María y José" />
+      </div>
+
+      <div class="field">
+        <label for="message">Mensaje</label>
+        <textarea id="message" formControlName="message" rows="3"
+          placeholder="Un mensaje para tus invitados"></textarea>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="date">Fecha</label>
+          <input id="date" type="date" formControlName="date" />
+        </div>
+        <div class="field">
+          <label for="time">Hora</label>
+          <input id="time" type="time" formControlName="time" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="location">Lugar</label>
+        <input id="location" type="text" formControlName="locationName" placeholder="Ej. Jardín Las Rosas" />
+      </div>
+
+      <h2>Diseño</h2>
+
+      <div class="row">
+        <div class="field">
+          <label for="primary">Color principal</label>
+          <input id="primary" type="color" formControlName="primary" />
+        </div>
+        <div class="field">
+          <label for="secondary">Color secundario</label>
+          <input id="secondary" type="color" formControlName="secondary" />
+        </div>
+        <div class="field">
+          <label for="background">Fondo</label>
+          <input id="background" type="color" formControlName="background" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="headingFont">Tipografía de títulos</label>
+          <select id="headingFont" formControlName="headingFont">
+            <option value="Playfair Display">Playfair Display</option>
+            <option value="Cormorant Garamond">Cormorant Garamond</option>
+            <option value="Poppins">Poppins</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Baloo 2">Baloo 2</option>
+            <option value="serif">Serif (sistema)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="bodyFont">Tipografía de texto</label>
+          <select id="bodyFont" formControlName="bodyFont">
+            <option value="Lato">Lato</option>
+            <option value="Inter">Inter</option>
+            <option value="Nunito">Nunito</option>
+            <option value="Nunito Sans">Nunito Sans</option>
+            <option value="Poppins">Poppins</option>
+            <option value="sans-serif">Sans-serif (sistema)</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" class="save-btn" (click)="save()">Guardar borrador</button>
+      <p class="hint">Los cambios se guardan automáticamente mientras editas.</p>
+
+      <button type="button" class="publish-btn" (click)="publish()" [disabled]="publishing()">
+        {{ publishing() ? 'Redirigiendo al pago…' : 'Publicar y compartir' }}
+      </button>
+      @if (publishError()) {
+        <p class="hint hint--error">No se pudo iniciar el pago. Intenta de nuevo.</p>
+      }
+      <p class="hint">Al publicar, pagas una vez y obtienes el enlace para compartir.</p>
+    </section>
+
+    <!-- Vista previa en vivo -->
+    <section class="preview-area">
+      <div class="preview-toolbar">
+        <button type="button" [class.active]="previewMode() === 'mobile'" (click)="setPreview('mobile')">
+          Móvil
+        </button>
+        <button type="button" [class.active]="previewMode() === 'desktop'" (click)="setPreview('desktop')">
+          Escritorio
+        </button>
+      </div>
+
+      <div class="preview-frame" [class.desktop]="previewMode() === 'desktop'">
+        <article
+          class="invitation"
+          [style.background]="value().background"
+          [style.fontFamily]="value().bodyFont"
+        >
+          <p class="eyebrow" [style.color]="value().secondary">Te invitamos a</p>
+          <h1
+            class="title"
+            [style.color]="value().primary"
+            [style.fontFamily]="value().headingFont"
+          >
+            {{ value().title || 'Título del evento' }}
+          </h1>
+          @if (value().coupleOrHonoree) {
+            <p class="names" [style.color]="value().secondary">{{ value().coupleOrHonoree }}</p>
+          }
+          <div class="divider" [style.background]="value().primary"></div>
+          @if (formattedWhen()) {
+            <p class="when" [style.color]="value().secondary">{{ formattedWhen() }}</p>
+          }
+          @if (value().locationName) {
+            <p class="where" [style.color]="value().secondary">{{ value().locationName }}</p>
+          }
+          @if (value().message) {
+            <p class="message" [style.color]="value().secondary">{{ value().message }}</p>
+          }
+          <span class="cta" [style.background]="value().primary">Confirmar asistencia</span>
+        </article>
+      </div>
+    </section>
+  </div>
+}

@@ -1,0 +1,83 @@
+:host {
+  display: block;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: #2b2a33;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+
+  h1 { margin: 0; font-size: clamp(1.4rem, 4vw, 1.9rem); }
+
+  .new {
+    padding: 0.5rem 1rem;
+    background: #b8860b;
+    color: #fff;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+}
+
+.state { color: #6b6773; padding: 2rem 0; }
+
+.empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6b6773;
+
+  .cta {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.6rem 1.4rem;
+    background: #6b5b95;
+    color: #fff;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+}
+
+.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+
+.item {
+  border: 1px solid #ece8f0;
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .title { font-weight: 600; }
+  .meta { font-size: 0.8rem; color: #8a8591; text-transform: capitalize; }
+}
+
+.badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: #f1eef5;
+  color: #6b5b95;
+  white-space: nowrap;
+
+  &[data-s='aprobada'] { background: #e4f4ea; color: #2f7d4f; }
+  &[data-s='propuesta'] { background: #fff3e0; color: #b26a00; }
+  &[data-s='rechazada'] { background: #fdeaea; color: #b4342c; }
+}

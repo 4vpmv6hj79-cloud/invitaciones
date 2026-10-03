@@ -1,0 +1,25 @@
+<header class="head">
+  <h1>Mis solicitudes de diseño</h1>
+  <a routerLink="/solicitudes/nueva" class="new">+ Nueva solicitud</a>
+</header>
+
+@if (loading()) {
+  <p class="state">Cargando…</p>
+} @else if (requests().length === 0) {
+  <div class="empty">
+    <p>No tienes solicitudes de diseño a medida.</p>
+    <a routerLink="/solicitudes/nueva" class="cta">Solicitar diseño</a>
+  </div>
+} @else {
+  <ul class="list">
+    @for (r of requests(); track r.id) {
+      <li class="item">
+        <a [routerLink]="['/solicitudes', r.id]">
+          <span class="title">{{ r.title }}</span>
+          <span class="meta">{{ r.eventType }}</span>
+        </a>
+        <span class="badge" [attr.data-s]="r.status">{{ service.statusLabel(r.status) }}</span>
+      </li>
+    }
+  </ul>
+}

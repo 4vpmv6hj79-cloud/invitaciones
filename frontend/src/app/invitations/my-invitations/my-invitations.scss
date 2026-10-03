@@ -1,0 +1,146 @@
+:host {
+  display: block;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: #2b2a33;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .head-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .link-alt {
+    color: #6b5b95;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .new {
+    padding: 0.5rem 1rem;
+    background: #b8860b;
+    color: #fff;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+}
+
+.state {
+  color: #6b6773;
+  padding: 2rem 0;
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6b6773;
+
+  .cta {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.6rem 1.4rem;
+    background: #6b5b95;
+    color: #fff;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.item {
+  border: 1px solid #ece8f0;
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .title {
+    font-weight: 600;
+  }
+}
+
+.badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: #f1eef5;
+  color: #8a8591;
+
+  &.pub {
+    background: #e4f4ea;
+    color: #2f7d4f;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+
+  a,
+  .pdf-link {
+    color: #6b5b95;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .pdf-link {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  }
+
+  .pdf-size {
+    border: 1px solid #d9d5dd;
+    border-radius: 6px;
+    padding: 0.15rem 0.3rem;
+    font-size: 0.8rem;
+    background: #fff;
+  }
+}

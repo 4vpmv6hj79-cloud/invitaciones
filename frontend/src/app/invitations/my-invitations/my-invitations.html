@@ -1,0 +1,45 @@
+<header class="head">
+  <h1>Mis invitaciones</h1>
+  <div class="head-actions">
+    <a routerLink="/solicitudes" class="link-alt">Diseño a medida</a>
+    <a routerLink="/catalogo" class="new">+ Nueva invitación</a>
+  </div>
+</header>
+
+@if (loading()) {
+  <p class="state">Cargando…</p>
+} @else if (invitations().length === 0) {
+  <div class="empty">
+    <p>Aún no tienes invitaciones.</p>
+    <a routerLink="/catalogo" class="cta">Explorar catálogo</a>
+  </div>
+} @else {
+  <ul class="list">
+    @for (inv of invitations(); track inv.id) {
+      <li class="item">
+        <div class="info">
+          <span class="title">{{ title(inv) }}</span>
+          <span class="badge" [class.pub]="inv.status === 'published'">
+            {{ inv.status === 'published' ? 'Publicada' : 'Borrador' }}
+          </span>
+        </div>
+        <div class="actions">
+          <a [routerLink]="['/editor', inv.id]">Editar</a>
+          <a [routerLink]="['/invitacion', inv.id, 'invitados']">Invitados</a>
+          @if (inv.status === 'published' && inv.publicToken) {
+            <a [href]="'/i/' + inv.publicToken" target="_blank" rel="noopener">Ver</a>
+          }
+          <select class="pdf-size" (change)="setPdfSize(inv.id, $any($event.target).value)">
+            <option value="A5">A5</option>
+            <option value="A6">A6</option>
+            <option value="LETTER">Carta</option>
+          </select>
+          <button type="button" class="pdf-link" [disabled]="downloading() === inv.id"
+            (click)="downloadPdf(inv)">
+            {{ downloading() === inv.id ? 'Generando…' : 'PDF' }}
+          </button>
+        </div>
+      </li>
+    }
+  </ul>
+}

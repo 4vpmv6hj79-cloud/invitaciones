@@ -1,0 +1,161 @@
+:host {
+  display: block;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: #2b2a33;
+}
+
+.admin-header {
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0 0 0.3rem;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  p {
+    margin: 0;
+    color: #6b6773;
+  }
+}
+
+.banner {
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+
+  &--error {
+    background: #fdeaea;
+    color: #b4342c;
+  }
+}
+
+.create,
+.list {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.1rem;
+    margin: 0 0 0.9rem;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  background: #faf8fc;
+  border: 1px solid #ece8f0;
+  border-radius: 12px;
+  padding: 1.1rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+
+  @media (min-width: 620px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+
+  label {
+    font-size: 0.78rem;
+    color: #6b6773;
+  }
+
+  input,
+  select {
+    padding: 0.5rem 0.6rem;
+    border: 1px solid #d9d5dd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #fff;
+  }
+}
+
+button[type='submit'] {
+  align-self: flex-start;
+  padding: 0.6rem 1.3rem;
+  border: none;
+  border-radius: 8px;
+  background: #6b5b95;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.state {
+  color: #6b6773;
+  padding: 1rem 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th,
+  td {
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid #ece8f0;
+  }
+
+  th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #8a8591;
+  }
+
+  tr.inactive td {
+    color: #a7a2ae;
+  }
+}
+
+.cap {
+  text-transform: capitalize;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: #f1eef5;
+  color: #8a8591;
+
+  &--on {
+    background: #e4f4ea;
+    color: #2f7d4f;
+  }
+}
+
+.toggle {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid #d9d5dd;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.8rem;
+
+  &:hover {
+    background: #f3f0f6;
+  }
+}

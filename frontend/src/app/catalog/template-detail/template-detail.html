@@ -1,0 +1,63 @@
+<a class="back" routerLink="/catalogo">← Volver al catálogo</a>
+
+@if (loading()) {
+  <p class="state">Cargando plantilla…</p>
+} @else if (error() || !template()) {
+  <p class="state state--error">No se encontró la plantilla solicitada.</p>
+} @else if (template(); as t) {
+  <div class="detail">
+    <!-- Vista de ejemplo: previsualización con el tema de la plantilla. -->
+    <section class="preview-wrap">
+      <article
+        class="preview"
+        [style.background]="t.theme.background || '#f8f8f8'"
+        [style.fontFamily]="t.theme.bodyFont || 'sans-serif'"
+      >
+        <p class="preview-eyebrow" [style.color]="t.theme.secondary || '#777'">
+          Te invitamos a celebrar
+        </p>
+        <h2
+          class="preview-title"
+          [style.color]="t.theme.primary || '#333'"
+          [style.fontFamily]="t.theme.headingFont || 'serif'"
+        >
+          Nombres del evento
+        </h2>
+        <div class="preview-divider" [style.background]="t.theme.primary || '#333'"></div>
+        <p class="preview-text" [style.color]="t.theme.secondary || '#555'">
+          Sábado 00 de mes de 0000 · 00:00 h
+        </p>
+        <p class="preview-text" [style.color]="t.theme.secondary || '#555'">
+          Lugar del evento, ciudad
+        </p>
+        <span class="preview-cta" [style.background]="t.theme.primary || '#333'">
+          Confirmar asistencia
+        </span>
+      </article>
+      <p class="preview-note">Ejemplo con contenido de muestra. Lo personalizarás en el siguiente paso.</p>
+    </section>
+
+    <aside class="info">
+      <h1>{{ t.name }}</h1>
+      <p class="desc">{{ t.description }}</p>
+
+      <dl class="meta">
+        <div>
+          <dt>Estilo</dt>
+          <dd>{{ t.style }}</dd>
+        </div>
+        <div>
+          <dt>Formato</dt>
+          <dd>{{ t.format === 'web' ? 'Invitación web' : 'Imagen para compartir' }}</dd>
+        </div>
+      </dl>
+
+      <button type="button" class="customize" (click)="customize()" [disabled]="creating()">
+        {{ creating() ? 'Preparando…' : 'Personalizar esta invitación' }}
+      </button>
+      @if (createError()) {
+        <p class="soon soon--error">No se pudo iniciar la personalización. Intenta de nuevo.</p>
+      }
+    </aside>
+  </div>
+}

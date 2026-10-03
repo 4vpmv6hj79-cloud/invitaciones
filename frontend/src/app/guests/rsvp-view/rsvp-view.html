@@ -1,0 +1,79 @@
+@if (loading()) {
+  <p class="state">Cargando tu invitación…</p>
+} @else if (error()) {
+  <p class="state state--error">No encontramos esta invitación. Revisa tu enlace.</p>
+} @else if (view(); as v) {
+  <main
+    class="rsvp"
+    [style.background]="v.invitation.customization.background || '#faf7ef'"
+    [style.fontFamily]="v.invitation.customization.bodyFont || 'serif'"
+  >
+    <section class="card">
+      <p class="eyebrow" [style.color]="v.invitation.customization.secondary || '#777'">
+        Hola {{ v.guest.name }}, te invitamos a
+      </p>
+      <h1
+        class="title"
+        [style.color]="v.invitation.customization.primary || '#333'"
+        [style.fontFamily]="v.invitation.customization.headingFont || 'serif'"
+      >
+        {{ v.invitation.title || 'Nuestro evento' }}
+      </h1>
+      @if (when()) {
+        <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">{{ when() }}</p>
+      }
+      @if (v.invitation.data.locationName) {
+        <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">
+          {{ v.invitation.data.locationName }}
+        </p>
+      }
+
+      @if (done()) {
+        <div class="result">
+          <span class="check">✓</span>
+          <p>¡Gracias! Tu respuesta quedó registrada.</p>
+        </div>
+        @if (pass()?.hasPass) {
+          <div class="pass">
+            <p class="pass-title">Tu pase de acceso</p>
+            <img [src]="pass()!.qrDataUrl" alt="Código QR de tu pase" class="qr" />
+            <p class="pass-name">{{ pass()!.guestName }} · {{ pass()!.seats }} lugar(es)</p>
+            <p class="pass-hint">Muestra este código en el acceso del evento.</p>
+          </div>
+        }
+      } @else {
+        <div class="form" [formGroup]="form">
+          <p class="prompt">¿Nos acompañas?</p>
+          <p class="seats-hint">Tienes {{ v.guest.allowedSeats }} lugar(es) reservado(s).</p>
+
+          <label class="field">
+            <span>¿Cuántos asistirán?</span>
+            <select formControlName="seats">
+              @for (n of seatOptions(); track n) {
+                <option [value]="n">{{ n }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Preferencias o alergias (opcional)</span>
+            <input type="text" formControlName="dietaryNotes" />
+          </label>
+
+          @if (submitError()) {
+            <p class="err">{{ submitError() }}</p>
+          }
+
+          <div class="actions">
+            <button type="button" class="confirm"
+              [style.background]="v.invitation.customization.primary || '#b8860b'"
+              (click)="confirm()">
+              Confirmar asistencia
+            </button>
+            <button type="button" class="decline" (click)="decline()">No podré asistir</button>
+          </div>
+        </div>
+      }
+    </section>
+  </main>
+}

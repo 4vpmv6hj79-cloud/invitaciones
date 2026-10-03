@@ -1,0 +1,112 @@
+.success {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 3rem;
+  text-align: center;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: #2b2a33;
+}
+
+.state {
+  color: #6b6773;
+  padding: 2rem 0;
+
+  &--error {
+    color: #b4342c;
+  }
+}
+
+.link {
+  color: #6b5b95;
+}
+
+.done {
+  margin-bottom: 1.5rem;
+
+  .check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #e4f4ea;
+    color: #2f7d4f;
+    font-size: 1.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  h1 {
+    margin: 0 0 0.3rem;
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+  }
+
+  .sub {
+    margin: 0;
+    color: #6b6773;
+  }
+}
+
+.link-box {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+
+  input {
+    flex: 1;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #d9d5dd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #f8f8fa;
+  }
+
+  button {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #6b5b95;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+.share {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.share-btn {
+  padding: 0.65rem 1.3rem;
+  border-radius: 999px;
+  background: #6b5b95;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+
+  &.whatsapp {
+    background: #25d366;
+  }
+}
+
+.preview-image {
+  margin: 0;
+
+  img {
+    width: 100%;
+    max-width: 480px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  figcaption {
+    margin-top: 0.6rem;
+    font-size: 0.8rem;
+    color: #8a8591;
+  }
+}

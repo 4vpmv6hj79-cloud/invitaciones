@@ -1,0 +1,130 @@
+:host {
+  display: block;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: #2b2a33;
+}
+
+.head h1 {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.banner--error {
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  background: #fdeaea;
+  color: #b4342c;
+  font-size: 0.9rem;
+}
+
+.report {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+
+  .stat {
+    background: #faf8fc;
+    border: 1px solid #ece8f0;
+    border-radius: 12px;
+    padding: 0.9rem 0.6rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.75rem;
+    color: #6b6773;
+
+    .num {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #2b2a33;
+    }
+
+    &.ok .num { color: #2f7d4f; }
+    &.net .num { color: #b8860b; }
+  }
+}
+
+.report-note {
+  font-size: 0.78rem;
+  color: #8a8591;
+  margin: 0 0 1.75rem;
+  font-style: italic;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+
+  button {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid #d9d5dd;
+    border-radius: 999px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.85rem;
+
+    &.active {
+      background: #6b5b95;
+      color: #fff;
+      border-color: #6b5b95;
+    }
+  }
+}
+
+.state {
+  color: #6b6773;
+  padding: 1.5rem 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th, td {
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid #ece8f0;
+  }
+
+  th {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #8a8591;
+  }
+}
+
+.status {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: #f1eef5;
+  color: #8a8591;
+
+  &.ok { background: #e4f4ea; color: #2f7d4f; }
+  &.ref { background: #fff3e0; color: #b26a00; }
+}
+
+.refund {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid #d9a0a0;
+  border-radius: 8px;
+  background: #fff;
+  color: #b4342c;
+  cursor: pointer;
+  font-size: 0.8rem;
+
+  &:disabled { opacity: 0.6; cursor: default; }
+  &:hover:not(:disabled) { background: #fdeaea; }
+}

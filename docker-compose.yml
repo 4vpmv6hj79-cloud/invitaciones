@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: invitaciones_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: invitaciones
+      POSTGRES_PASSWORD: invitaciones_dev
+      POSTGRES_DB: invitaciones
+    ports:
+      - "5433:5432"
+    volumes:
+      - invitaciones_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U invitaciones -d invitaciones"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  invitaciones_pgdata:

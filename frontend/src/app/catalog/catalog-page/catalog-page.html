@@ -1,0 +1,80 @@
+<header class="catalog-header">
+  <h1>Catálogo de invitaciones</h1>
+  <p>Elige una plantilla, personalízala y compártela. Filtra por evento, estilo o formato.</p>
+</header>
+
+@if (filters(); as f) {
+  <section class="filters" aria-label="Filtros del catálogo">
+    <label>
+      <span>Evento</span>
+      <select (change)="onFilterChange('eventType', $any($event.target).value)">
+        <option value="">Todos</option>
+        @for (opt of f.eventTypes; track opt.value) {
+          <option [value]="opt.value" [selected]="selected().eventType === opt.value">
+            {{ opt.label }}
+          </option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>Estilo</span>
+      <select (change)="onFilterChange('style', $any($event.target).value)">
+        <option value="">Todos</option>
+        @for (opt of f.styles; track opt.value) {
+          <option [value]="opt.value" [selected]="selected().style === opt.value">
+            {{ opt.label }}
+          </option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>Formato</span>
+      <select (change)="onFilterChange('format', $any($event.target).value)">
+        <option value="">Todos</option>
+        @for (opt of f.formats; track opt.value) {
+          <option [value]="opt.value" [selected]="selected().format === opt.value">
+            {{ opt.label }}
+          </option>
+        }
+      </select>
+    </label>
+
+    @if (hasActiveFilters()) {
+      <button type="button" class="clear" (click)="clearFilters()">Limpiar filtros</button>
+    }
+  </section>
+}
+
+@if (loading()) {
+  <p class="state">Cargando plantillas…</p>
+} @else if (error()) {
+  <p class="state state--error">
+    No se pudo cargar el catálogo. Verifica que el servidor esté disponible.
+  </p>
+} @else if (templates().length === 0) {
+  <p class="state">No hay plantillas que coincidan con los filtros.</p>
+} @else {
+  <ul class="grid">
+    @for (t of templates(); track t.id) {
+      <li class="card">
+        <a [routerLink]="['/plantilla', t.id]" class="card-link">
+          <div
+            class="thumb"
+            [style.background]="t.theme.background || '#f1f1f1'"
+          >
+            <span class="thumb-title" [style.color]="t.theme.primary || '#333'">
+              {{ t.name }}
+            </span>
+          </div>
+          <div class="card-body">
+            <h2>{{ t.name }}</h2>
+            <p class="desc">{{ t.description }}</p>
+            <span class="badge">{{ styleLabel(t.style) }}</span>
+          </div>
+        </a>
+      </li>
+    }
+  </ul>
+}

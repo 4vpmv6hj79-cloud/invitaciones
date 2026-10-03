@@ -1,0 +1,54 @@
+<main class="validate">
+  <h1>Validación de acceso</h1>
+  <p class="sub">Ingresa o escanea el código del pase.</p>
+
+  @if (scanning()) {
+    <div class="scanner">
+      <video #video class="scanner-video" muted autoplay playsinline></video>
+      <button type="button" class="stop" (click)="stopScan()">Detener cámara</button>
+    </div>
+  } @else {
+    <button type="button" class="scan-btn" (click)="startScan()">Escanear con cámara</button>
+    <p class="or">o ingresa el código</p>
+  }
+
+  <div class="input-row">
+    <input type="text" [(ngModel)]="tokenInput" placeholder="Código del pase" />
+    <button type="button" (click)="inspect()" [disabled]="working()">Consultar</button>
+  </div>
+
+  @if (error()) {
+    <p class="banner banner--error">{{ error() }}</p>
+  }
+
+  @if (result(); as r) {
+    <div class="card" [class.ok]="r.state === 'valid'"
+      [class.used]="r.state === 'already_used'"
+      [class.bad]="r.state === 'not_confirmed'">
+      @switch (r.state) {
+        @case ('valid') {
+          <span class="icon">✓</span>
+          <h2>Pase válido</h2>
+        }
+        @case ('already_used') {
+          <span class="icon">!</span>
+          <h2>Ya ingresó</h2>
+          <p class="when">Entrada registrada: {{ r.checkedInAt }}</p>
+        }
+        @case ('not_confirmed') {
+          <span class="icon">✕</span>
+          <h2>Sin confirmar</h2>
+          <p>Este invitado no confirmó asistencia.</p>
+        }
+      }
+      <p class="guest">{{ r.guestName }} · {{ r.confirmedSeats }} lugar(es)</p>
+
+      @if (r.state === 'valid') {
+        <button type="button" class="checkin" (click)="checkIn()" [disabled]="working()">
+          Registrar entrada
+        </button>
+      }
+      <button type="button" class="reset" (click)="reset()">Validar otro</button>
+    </div>
+  }
+</main>

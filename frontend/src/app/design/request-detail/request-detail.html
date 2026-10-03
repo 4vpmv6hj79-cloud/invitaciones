@@ -1,0 +1,91 @@
+<main class="detail">
+  <a routerLink="/solicitudes" class="back">← Mis solicitudes</a>
+
+  @if (loading()) {
+    <p class="state">Cargando…</p>
+  } @else if (error() || !data()) {
+    <p class="state state--error">No se encontró la solicitud.</p>
+  } @else if (data(); as d) {
+    <header class="req-head">
+      <h1>{{ d.request.title }}</h1>
+      <span class="badge" [attr.data-s]="d.request.status">
+        {{ service.statusLabel(d.request.status) }}
+      </span>
+    </header>
+    <p class="req-meta">{{ d.request.eventType }}@if (d.request.style) { · {{ d.request.style }} }</p>
+    <p class="req-details">{{ d.request.details }}</p>
+    @if (d.request.budget) {
+      <p class="req-budget">Presupuesto: {{ d.request.budget }}</p>
+    }
+
+    <section class="refs">
+      <h2>Imágenes de referencia</h2>
+      <div class="thumbs">
+        @for (r of references(); track r.id) {
+          <div class="thumb">
+            <img [src]="fileUrl(r.url)" alt="Referencia" />
+            <button type="button" class="del-thumb" (click)="deleteReference(r)">✕</button>
+          </div>
+        }
+        @if (d.request.status !== 'aprobada' && d.request.status !== 'rechazada') {
+          <label class="add-thumb">
+            {{ uploading() ? '…' : '+' }}
+            <input type="file" accept="image/*" (change)="onFile($event)" hidden [disabled]="uploading()" />
+          </label>
+        }
+      </div>
+      @if (uploadError()) { <p class="err">{{ uploadError() }}</p> }
+    </section>
+
+    <section class="thread">
+      <h2>Conversación</h2>
+      @if (d.messages.length === 0) {
+        <p class="empty">Aún no hay mensajes. Nuestro equipo responderá pronto.</p>
+      }
+      @for (m of d.messages; track m.id) {
+        <div class="msg" [class.admin]="m.authorRole === 'admin'" [class.proposal]="m.isProposal">
+          <span class="who">{{ m.authorRole === 'admin' ? 'Equipo de diseño' : 'Tú' }}</span>
+          @if (m.isProposal) { <span class="tag">Propuesta</span> }
+          <p class="body">{{ m.body }}</p>
+        </div>
+      }
+    </section>
+
+    @if (d.request.status === 'aprobada' && d.request.paid) {
+      <div class="closed ok">
+        <p>Tu diseño está <strong>aprobado y pagado</strong>. ¡Gracias!</p>
+        <p class="note">¿Necesitas un ajuste adicional? Tiene un costo extra: el equipo te
+          enviará una nueva propuesta con su precio.</p>
+        <textarea [(ngModel)]="reply" rows="2" placeholder="Describe el ajuste que necesitas…"></textarea>
+        @if (actionError()) { <p class="err">{{ actionError() }}</p> }
+        <button type="button" class="adjust" (click)="requestAdjustment()">
+          Solicitar ajuste (con costo)
+        </button>
+      </div>
+    } @else if (d.request.status === 'rechazada') {
+      <p class="closed">Esta solicitud fue cerrada.</p>
+    } @else {
+      <section class="actions">
+        @if (d.request.status === 'propuesta' && d.request.priceCents) {
+          <div class="pay-box">
+            <p class="pay-price">Precio de la propuesta: <strong>{{ money(d.request.priceCents) }}</strong></p>
+            <p class="pay-note">Al pagar, tu diseño queda aprobado. Los ajustes posteriores
+              tienen costo adicional.</p>
+            <button type="button" class="pay" (click)="payAndApprove()">Pagar y aprobar</button>
+          </div>
+        }
+        <textarea [(ngModel)]="reply" rows="3" placeholder="Escribe un mensaje…"></textarea>
+        @if (actionError()) { <p class="err">{{ actionError() }}</p> }
+        <div class="buttons">
+          <button type="button" class="send" [disabled]="sending()" (click)="send(false)">
+            Enviar comentario
+          </button>
+          <button type="button" class="changes" [disabled]="sending() || revisionsLeft() <= 0"
+            (click)="send(true)">
+            Pedir cambios ({{ revisionsLeft() }} rest.)
+          </button>
+        </div>
+      </section>
+    }
+  }
+</main>

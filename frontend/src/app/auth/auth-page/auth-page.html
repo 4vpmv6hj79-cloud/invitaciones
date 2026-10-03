@@ -1,0 +1,44 @@
+<main class="auth">
+  <div class="card">
+    <h1>{{ isRegister() ? 'Crear cuenta' : 'Iniciar sesión' }}</h1>
+    <p class="sub">
+      {{ isRegister() ? 'Regístrate para crear tus invitaciones.' : 'Accede a tus invitaciones.' }}
+    </p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      @if (isRegister()) {
+        <label class="field">
+          <span>Nombre</span>
+          <input type="text" formControlName="name" autocomplete="name" />
+        </label>
+      }
+
+      <label class="field">
+        <span>Correo</span>
+        <input type="email" formControlName="email" autocomplete="email" />
+      </label>
+
+      <label class="field">
+        <span>Contraseña</span>
+        <input type="password" formControlName="password" autocomplete="current-password" />
+        <small>Mínimo 8 caracteres.</small>
+      </label>
+
+      @if (error()) {
+        <p class="err">{{ error() }}</p>
+      }
+
+      <button type="submit" [disabled]="submitting()">
+        {{ submitting() ? 'Un momento…' : (isRegister() ? 'Crear cuenta' : 'Entrar') }}
+      </button>
+    </form>
+
+    <p class="switch">
+      @if (isRegister()) {
+        ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+      } @else {
+        ¿No tienes cuenta? <a routerLink="/registro">Regístrate</a>
+      }
+    </p>
+  </div>
+</main>

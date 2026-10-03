@@ -1,0 +1,57 @@
+@if (loading()) {
+  <p class="state">Cargando invitación…</p>
+} @else if (error()) {
+  <p class="state state--error">No encontramos esta invitación. El enlace puede ser incorrecto.</p>
+} @else if (invitation(); as inv) {
+  @if (inv.expired) {
+    <p class="state state--error">Esta invitación ya no está disponible.</p>
+  } @else {
+    <main
+      class="invitation"
+      [style.background]="inv.customization.background || '#faf7ef'"
+      [style.fontFamily]="inv.customization.bodyFont || 'serif'"
+    >
+      <p class="eyebrow" [style.color]="inv.customization.secondary || '#777'">Te invitamos a</p>
+      <h1
+        class="title"
+        [style.color]="inv.customization.primary || '#333'"
+        [style.fontFamily]="inv.customization.headingFont || 'serif'"
+      >
+        {{ inv.title || 'Nuestro evento' }}
+      </h1>
+
+      @if (inv.data.coupleOrHonoree) {
+        <p class="names" [style.color]="inv.customization.secondary || '#555'">
+          {{ inv.data.coupleOrHonoree }}
+        </p>
+      }
+
+      <div class="divider" [style.background]="inv.customization.primary || '#333'"></div>
+
+      @if (when()) {
+        <p class="line" [style.color]="inv.customization.secondary || '#555'">{{ when() }}</p>
+      }
+      @if (inv.data.locationName) {
+        <p class="line" [style.color]="inv.customization.secondary || '#555'">
+          {{ inv.data.locationName }}
+        </p>
+      }
+      @if (inv.data.message) {
+        <p class="message" [style.color]="inv.customization.secondary || '#555'">
+          {{ inv.data.message }}
+        </p>
+      }
+
+      <div class="actions">
+        @if (calendarHref(); as href) {
+          <a class="action" [href]="href" [download]="(inv.title || 'evento') + '.ics'"
+            [style.borderColor]="inv.customization.primary || '#333'"
+            [style.color]="inv.customization.primary || '#333'">
+            Agregar al calendario
+          </a>
+        }
+        <!-- El botón de confirmar asistencia (RSVP) se activa en la Etapa 4. -->
+      </div>
+    </main>
+  }
+}

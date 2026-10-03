@@ -1,0 +1,152 @@
+// Catálogo mobile-first.
+:host {
+  display: block;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: #2b2a33;
+}
+
+.catalog-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0 0 0.4rem;
+    font-size: clamp(1.6rem, 5vw, 2.3rem);
+  }
+
+  p {
+    margin: 0 auto;
+    max-width: 36rem;
+    color: #5a5663;
+    font-size: 0.95rem;
+  }
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+  justify-content: center;
+  margin-bottom: 1.75rem;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+    color: #6b6773;
+
+    select {
+      padding: 0.5rem 0.6rem;
+      border: 1px solid #d9d5dd;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 0.9rem;
+      min-width: 10rem;
+    }
+  }
+
+  .clear {
+    padding: 0.55rem 0.9rem;
+    border: 1px solid #d9d5dd;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.85rem;
+
+    &:hover {
+      background: #f3f0f6;
+    }
+  }
+}
+
+.state {
+  text-align: center;
+  color: #6b6773;
+  padding: 2rem 0;
+
+  &--error {
+    color: #b4342c;
+  }
+}
+
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.1rem;
+
+  @media (min-width: 560px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 860px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  border: 1px solid #ece8f0;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.thumb {
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
+}
+
+.thumb-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.card-body {
+  padding: 0.9rem 1rem 1.1rem;
+
+  h2 {
+    margin: 0 0 0.35rem;
+    font-size: 1rem;
+  }
+
+  .desc {
+    margin: 0 0 0.6rem;
+    font-size: 0.85rem;
+    color: #6b6773;
+    line-height: 1.4;
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: #f3f0f6;
+  color: #6b5b95;
+  font-size: 0.75rem;
+  font-weight: 600;
+}

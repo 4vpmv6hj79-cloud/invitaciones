@@ -1,0 +1,33 @@
+<nav class="topbar">
+  @if (auth.isLoggedIn()) {
+    <a routerLink="/mis-invitaciones">Mis invitaciones</a>
+    <button type="button" (click)="logout()">Salir</button>
+  } @else {
+    <a routerLink="/login">Iniciar sesión</a>
+    <a routerLink="/registro" class="hl">Crear cuenta</a>
+  }
+</nav>
+
+<main class="home">
+  <section class="hero">
+    <h1>Invitaciones Digitales</h1>
+    <p class="subtitle">
+      Crea, personaliza y comparte invitaciones elegantes para cualquier evento.
+    </p>
+    <a class="cta" routerLink="/catalogo">Explorar catálogo</a>
+  </section>
+
+  <section class="status">
+    @if (backendStatus() === 'checking') {
+      <span class="badge badge--checking">Conectando con el servidor…</span>
+    } @else if (backendStatus() === 'ok') {
+      <span class="badge badge--ok">Servidor conectado</span>
+      <p class="status-detail">
+        Base de datos: {{ health()?.database }} · {{ health()?.service }}
+      </p>
+    } @else {
+      <span class="badge badge--error">Sin conexión con el servidor</span>
+      <p class="status-detail">Verifica que el backend esté corriendo en el puerto 3000.</p>
+    }
+  </section>
+</main>

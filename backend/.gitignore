@@ -1,0 +1,24 @@
+# Dependencias
+/node_modules
+
+# Compilado
+/dist
+*.tsbuildinfo
+
+# Entorno (secretos) — nunca subir
+.env
+.env.*
+!.env.example
+
+# Imágenes subidas (desarrollo). En producción irían a object storage.
+/uploads
+
+# Logs
+*.log
+npm-debug.log*
+
+# Cobertura de pruebas
+/coverage
+
+# Sistema
+.DS_Store

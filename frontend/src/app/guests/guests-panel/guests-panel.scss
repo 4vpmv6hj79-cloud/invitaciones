@@ -1,0 +1,241 @@
+:host {
+  display: block;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: #2b2a33;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .back {
+    color: #6b5b95;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+
+  .stat {
+    background: #faf8fc;
+    border: 1px solid #ece8f0;
+    border-radius: 12px;
+    padding: 0.9rem 0.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.78rem;
+    color: #6b6773;
+
+    .num {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #2b2a33;
+    }
+
+    &.ok .num { color: #2f7d4f; }
+    &.no .num { color: #b4342c; }
+  }
+}
+
+.add {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.05rem;
+    margin: 0 0 0.75rem;
+  }
+
+  form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+
+    input {
+      padding: 0.5rem 0.7rem;
+      border: 1px solid #d9d5dd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    input[type='text'] { flex: 1; min-width: 160px; }
+    input[type='number'] { width: 90px; }
+
+    button {
+      padding: 0.5rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background: #6b5b95;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  }
+}
+
+.io {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+
+  .io-btn {
+    padding: 0.45rem 0.9rem;
+    border: 1px solid #d9d5dd;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+
+  .import-ok {
+    font-size: 0.82rem;
+    color: #2f7d4f;
+  }
+}
+
+.state {
+  color: #6b6773;
+  padding: 1.5rem 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th, td {
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid #ece8f0;
+  }
+
+  th {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #8a8591;
+  }
+}
+
+.status {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: #f1eef5;
+  color: #8a8591;
+
+  &.ok { background: #e4f4ea; color: #2f7d4f; }
+  &.no { background: #fdeaea; color: #b4342c; }
+}
+
+.link-btn {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid #d9d5dd;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.del {
+  padding: 0.3rem 0.6rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #b4342c;
+  cursor: pointer;
+  font-size: 0.8rem;
+
+  &:hover { text-decoration: underline; }
+}
+
+.tickets {
+  margin: 2rem 0;
+  padding: 1.1rem;
+  border: 1px solid #ece8f0;
+  border-radius: 12px;
+  background: #faf8fc;
+
+  h2 {
+    font-size: 1.05rem;
+    margin: 0 0 0.75rem;
+  }
+
+  .toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+
+    input { width: 18px; height: 18px; }
+  }
+
+  .ticket-msg {
+    margin: 0.6rem 0 0;
+    font-size: 0.82rem;
+    color: #2f7d4f;
+  }
+}
+
+.staff {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ece8f0;
+
+  .staff-title {
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .staff-hint {
+    margin: 0.2rem 0 0.6rem;
+    font-size: 0.8rem;
+    color: #8a8591;
+  }
+
+  .staff-row {
+    display: flex;
+    gap: 0.5rem;
+
+    input {
+      flex: 1;
+      padding: 0.5rem 0.7rem;
+      border: 1px solid #d9d5dd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #6b5b95;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  }
+}
