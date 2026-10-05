@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsObject,
   IsOptional,
   IsString,
@@ -36,6 +37,42 @@ export class EventDataDto {
   @IsString()
   @MaxLength(200)
   locationName?: string;
+
+  // Enlace de Google Maps del lugar del evento (opcional).
+  @IsOptional()
+  @IsString()
+  @MaxLength(600)
+  mapsUrl?: string;
+
+  // --- Evento religioso (misa), opcional ---
+
+  // Indica si la invitación incluye un evento religioso.
+  @IsOptional()
+  @IsBoolean()
+  religiousEnabled?: boolean;
+
+  // Si el evento religioso se celebra en el mismo lugar que el evento principal.
+  @IsOptional()
+  @IsBoolean()
+  religiousSameLocation?: boolean;
+
+  // Hora del evento religioso (HH:mm).
+  @IsOptional()
+  @IsString()
+  @MaxLength(10)
+  religiousTime?: string;
+
+  // Nombre del lugar del evento religioso (ej. parroquia).
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  religiousLocationName?: string;
+
+  // Enlace de Google Maps del evento religioso (cuando es en otro lugar).
+  @IsOptional()
+  @IsString()
+  @MaxLength(600)
+  religiousMapsUrl?: string;
 }
 
 // Actualización del borrador: título, contenido del evento y personalización del diseño.

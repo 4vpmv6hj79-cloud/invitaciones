@@ -8,6 +8,14 @@ export interface EventData {
   time?: string; // HH:mm
   timezone?: string;
   locationName?: string;
+  mapsUrl?: string; // enlace de Google Maps del evento
+
+  // Evento religioso (misa), opcional.
+  religiousEnabled?: boolean;
+  religiousSameLocation?: boolean; // true: misma ubicación que el evento
+  religiousTime?: string; // HH:mm
+  religiousLocationName?: string;
+  religiousMapsUrl?: string;
 }
 
 export interface InvitationEvent {

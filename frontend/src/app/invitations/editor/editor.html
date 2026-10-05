@@ -52,6 +52,45 @@
         <input id="location" type="text" formControlName="locationName" placeholder="Ej. Jardín Las Rosas" />
       </div>
 
+      <div class="field">
+        <label for="mapsUrl">Ubicación (enlace de Google Maps)</label>
+        <input id="mapsUrl" type="url" formControlName="mapsUrl"
+          placeholder="Pega aquí el enlace de Google Maps" />
+        <small class="help">En Google Maps: Compartir → Copiar enlace, y pégalo aquí.</small>
+      </div>
+
+      <h2>Evento religioso</h2>
+
+      <label class="check-field">
+        <input type="checkbox" formControlName="religiousEnabled" />
+        <span>¿Tu evento contará con un evento religioso?</span>
+      </label>
+
+      @if (value().religiousEnabled) {
+        <div class="field">
+          <label for="religiousTime">Hora del evento religioso</label>
+          <input id="religiousTime" type="time" formControlName="religiousTime" />
+        </div>
+
+        <label class="check-field">
+          <input type="checkbox" formControlName="religiousSameLocation" />
+          <span>Se lleva a cabo en el mismo lugar que el evento</span>
+        </label>
+
+        @if (!value().religiousSameLocation) {
+          <div class="field">
+            <label for="religiousLocation">Lugar del evento religioso</label>
+            <input id="religiousLocation" type="text" formControlName="religiousLocationName"
+              placeholder="Ej. Parroquia San José" />
+          </div>
+          <div class="field">
+            <label for="religiousMaps">Ubicación del evento religioso (Google Maps)</label>
+            <input id="religiousMaps" type="url" formControlName="religiousMapsUrl"
+              placeholder="Pega aquí el enlace de Google Maps" />
+          </div>
+        }
+      }
+
       <h2>Diseño</h2>
 
       <div class="row">
@@ -140,6 +179,29 @@
           }
           @if (value().locationName) {
             <p class="where" [style.color]="value().secondary">{{ value().locationName }}</p>
+          }
+          @if (value().mapsUrl) {
+            <a class="maps-link" [href]="value().mapsUrl" target="_blank" rel="noopener"
+              [style.color]="value().primary">📍 Ver ubicación</a>
+          }
+          @if (value().religiousEnabled) {
+            <div class="religious" [style.borderColor]="value().primary">
+              <p class="religious-head" [style.color]="value().primary">Evento religioso</p>
+              @if (value().religiousTime) {
+                <p class="line" [style.color]="value().secondary">{{ value().religiousTime }} h</p>
+              }
+              @if (value().religiousSameLocation) {
+                <p class="line" [style.color]="value().secondary">En el mismo lugar del evento</p>
+              } @else {
+                @if (value().religiousLocationName) {
+                  <p class="line" [style.color]="value().secondary">{{ value().religiousLocationName }}</p>
+                }
+                @if (value().religiousMapsUrl) {
+                  <a class="maps-link" [href]="value().religiousMapsUrl" target="_blank" rel="noopener"
+                    [style.color]="value().primary">📍 Ver ubicación</a>
+                }
+              }
+            </div>
           }
           @if (value().message) {
             <p class="message" [style.color]="value().secondary">{{ value().message }}</p>

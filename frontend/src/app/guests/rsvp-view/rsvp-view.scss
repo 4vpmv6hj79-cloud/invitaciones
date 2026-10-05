@@ -186,3 +186,36 @@
   font-size: 0.78rem;
   color: #8a8591;
 }
+
+/* ---- Ubicación y evento religioso ---- */
+.maps-link {
+  display: inline-block;
+  margin: 0.4rem 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.religious {
+  margin: 1rem auto;
+  padding: 0.8rem 1rem;
+  border: 1px solid;
+  border-radius: 0.7rem;
+  max-width: 90%;
+
+  .religious-head {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    margin: 0 0 0.4rem;
+  }
+
+  .line {
+    margin: 0.15rem 0;
+  }
+}

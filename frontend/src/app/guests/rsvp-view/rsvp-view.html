@@ -27,6 +27,38 @@
           {{ v.invitation.data.locationName }}
         </p>
       }
+      @if (v.invitation.data.mapsUrl) {
+        <a class="maps-link" [href]="v.invitation.data.mapsUrl" target="_blank" rel="noopener"
+          [style.color]="v.invitation.customization.primary || '#b8860b'">📍 Ver ubicación</a>
+      }
+
+      @if (v.invitation.data.religiousEnabled) {
+        <div class="religious" [style.borderColor]="v.invitation.customization.primary || '#b8860b'">
+          <p class="religious-head" [style.color]="v.invitation.customization.primary || '#b8860b'">
+            Evento religioso
+          </p>
+          @if (v.invitation.data.religiousTime) {
+            <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">
+              {{ v.invitation.data.religiousTime }} h
+            </p>
+          }
+          @if (v.invitation.data.religiousSameLocation) {
+            <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">
+              En el mismo lugar del evento
+            </p>
+          } @else {
+            @if (v.invitation.data.religiousLocationName) {
+              <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">
+                {{ v.invitation.data.religiousLocationName }}
+              </p>
+            }
+            @if (v.invitation.data.religiousMapsUrl) {
+              <a class="maps-link" [href]="v.invitation.data.religiousMapsUrl" target="_blank" rel="noopener"
+                [style.color]="v.invitation.customization.primary || '#b8860b'">📍 Ver ubicación</a>
+            }
+          }
+        </div>
+      }
 
       @if (done()) {
         <div class="result">

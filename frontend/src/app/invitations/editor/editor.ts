@@ -39,6 +39,13 @@ export class Editor implements OnInit {
     date: [''],
     time: [''],
     locationName: [''],
+    mapsUrl: [''],
+    // Evento religioso (misa)
+    religiousEnabled: [false],
+    religiousSameLocation: [true],
+    religiousTime: [''],
+    religiousLocationName: [''],
+    religiousMapsUrl: [''],
     primary: ['#333333'],
     secondary: ['#666666'],
     background: ['#ffffff'],
@@ -81,6 +88,12 @@ export class Editor implements OnInit {
       date: d.date ?? '',
       time: d.time ?? '',
       locationName: d.locationName ?? '',
+      mapsUrl: d.mapsUrl ?? '',
+      religiousEnabled: d.religiousEnabled ?? false,
+      religiousSameLocation: d.religiousSameLocation ?? true,
+      religiousTime: d.religiousTime ?? '',
+      religiousLocationName: d.religiousLocationName ?? '',
+      religiousMapsUrl: d.religiousMapsUrl ?? '',
       primary: c.primary ?? '#333333',
       secondary: c.secondary ?? '#666666',
       background: c.background ?? '#ffffff',
@@ -102,6 +115,8 @@ export class Editor implements OnInit {
 
   save(): void {
     const v = this.form.getRawValue();
+    // Si la misa es en el mismo lugar, no persistimos lugar/maps propios del evento religioso.
+    const sameLoc = v.religiousEnabled && v.religiousSameLocation;
     const payload: UpdateInvitationPayload = {
       title: v.title,
       eventData: {
@@ -110,6 +125,12 @@ export class Editor implements OnInit {
         date: v.date,
         time: v.time,
         locationName: v.locationName,
+        mapsUrl: v.mapsUrl,
+        religiousEnabled: v.religiousEnabled,
+        religiousSameLocation: v.religiousSameLocation,
+        religiousTime: v.religiousEnabled ? v.religiousTime : '',
+        religiousLocationName: sameLoc ? '' : v.religiousEnabled ? v.religiousLocationName : '',
+        religiousMapsUrl: sameLoc ? '' : v.religiousEnabled ? v.religiousMapsUrl : '',
       },
       customization: {
         primary: v.primary,
