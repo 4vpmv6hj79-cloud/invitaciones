@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RsvpService, RsvpView } from '../rsvp.service';
 import { TicketService, GuestPass } from '../../tickets/ticket.service';
+import { buildCalendarHref } from '../../invitations/ics.util';
 
 @Component({
   selector: 'app-rsvp-view',
@@ -22,6 +23,8 @@ export class RsvpViewComponent implements OnInit {
   protected readonly error = signal(false);
   protected readonly view = signal<RsvpView | null>(null);
   protected readonly done = signal(false);
+  // true solo cuando la respuesta fue "confirmado" (no cuando declina).
+  protected readonly confirmed = signal(false);
   protected readonly submitError = signal<string | null>(null);
   protected readonly pass = signal<GuestPass | null>(null);
 
@@ -41,8 +44,10 @@ export class RsvpViewComponent implements OnInit {
           dietaryNotes: v.guest.dietaryNotes ?? '',
         });
         this.loading.set(false);
-        // Si ya estaba confirmado, intenta cargar su pase (si hay boletos).
+        // Si ya estaba confirmado, marca el estado, muestra el resultado y carga su pase.
         if (v.guest.rsvpStatus === 'confirmed') {
+          this.done.set(true);
+          this.confirmed.set(true);
           this.loadPass();
         }
       },
@@ -79,6 +84,7 @@ export class RsvpViewComponent implements OnInit {
       .subscribe({
         next: () => {
           this.done.set(true);
+          this.confirmed.set(true);
           this.loadPass(); // tras confirmar, muestra el pase si hay boletos
         },
         error: (e) =>
@@ -98,5 +104,13 @@ export class RsvpViewComponent implements OnInit {
     const d = this.view()?.invitation.data;
     if (!d) return '';
     return [d.date, d.time ? `${d.time} h` : ''].filter(Boolean).join(' · ');
+  }
+
+  // Enlace .ics (evento principal + misa) para agregar al calendario.
+  // Se usa solo tras confirmar asistencia.
+  protected calendarHref(): string | null {
+    const inv = this.view()?.invitation;
+    if (!inv) return null;
+    return buildCalendarHref(inv.title, inv.data);
   }
 }

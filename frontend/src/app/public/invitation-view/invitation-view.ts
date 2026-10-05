@@ -43,26 +43,4 @@ export class InvitationView implements OnInit {
     return [d.date, d.time ? `${d.time} h` : ''].filter(Boolean).join(' · ');
   }
 
-  // Enlace para agregar al calendario (archivo .ics generado al vuelo).
-  protected calendarHref(): string | null {
-    const inv = this.invitation();
-    if (!inv?.data?.date) return null;
-    const title = inv.title || 'Evento';
-    const date = inv.data.date.replace(/-/g, '');
-    const time = (inv.data.time || '00:00').replace(':', '') + '00';
-    const dt = `${date}T${time}`;
-    const ics = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'BEGIN:VEVENT',
-      `SUMMARY:${title}`,
-      `DTSTART:${dt}`,
-      inv.data.locationName ? `LOCATION:${inv.data.locationName}` : '',
-      'END:VEVENT',
-      'END:VCALENDAR',
-    ]
-      .filter(Boolean)
-      .join('\n');
-    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
-  }
 }

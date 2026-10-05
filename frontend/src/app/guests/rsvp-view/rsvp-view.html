@@ -65,6 +65,13 @@
           <span class="check">✓</span>
           <p>¡Gracias! Tu respuesta quedó registrada.</p>
         </div>
+        @if (confirmed() && calendarHref(); as href) {
+          <a class="calendar-btn" [href]="href"
+            [download]="(v.invitation.title || 'evento') + '.ics'"
+            [style.background]="v.invitation.customization.primary || '#b8860b'">
+            Agregar al calendario
+          </a>
+        }
         @if (pass()?.hasPass) {
           <div class="pass">
             <p class="pass-title">Tu pase de acceso</p>
