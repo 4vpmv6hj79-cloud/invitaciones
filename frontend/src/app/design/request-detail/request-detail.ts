@@ -88,7 +88,11 @@ export class RequestDetail implements OnInit {
   // Envía un comentario o una solicitud de cambios (que consume una revisión).
   send(requestChanges: boolean): void {
     const body = this.reply.trim();
-    if (!body) return;
+    if (!body) {
+      // Antes el clic se ignoraba en silencio y parecía que el botón no hacía nada.
+      this.actionError.set('Escribe un mensaje antes de enviar.');
+      return;
+    }
     this.sending.set(true);
     this.actionError.set(null);
     this.service.addMessage(this.id, body, requestChanges).subscribe({
