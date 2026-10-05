@@ -5,7 +5,8 @@ export interface EventData {
   coupleOrHonoree?: string;
   message?: string;
   date?: string; // YYYY-MM-DD
-  time?: string; // HH:mm
+  time?: string; // HH:mm (inicio)
+  endTime?: string; // HH:mm (fin, opcional)
   timezone?: string;
   locationName?: string;
   mapsUrl?: string; // enlace de Google Maps del evento

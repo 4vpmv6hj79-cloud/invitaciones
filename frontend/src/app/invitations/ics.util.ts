@@ -63,12 +63,13 @@ export function buildCalendarHref(title: string, data: EventData): string | null
   const eventTitle = title || 'Evento';
   const vevents: string[] = [];
 
-  // Evento principal.
+  // Evento principal. Usa la hora de fin indicada; si no hay, estima +3 h.
   vevents.push(
     ...buildVEvent({
       title: eventTitle,
       date: data.date,
       startTime: data.time,
+      endTime: data.endTime || addHours(data.time, 3),
       location: data.locationName,
     }),
   );

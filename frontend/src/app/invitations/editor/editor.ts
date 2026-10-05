@@ -38,6 +38,7 @@ export class Editor implements OnInit {
     message: [''],
     date: [''],
     time: [''],
+    endTime: [''],
     locationName: [''],
     mapsUrl: [''],
     // Evento religioso (misa)
@@ -87,6 +88,7 @@ export class Editor implements OnInit {
       message: d.message ?? '',
       date: d.date ?? '',
       time: d.time ?? '',
+      endTime: d.endTime ?? '',
       locationName: d.locationName ?? '',
       mapsUrl: d.mapsUrl ?? '',
       religiousEnabled: d.religiousEnabled ?? false,
@@ -124,6 +126,7 @@ export class Editor implements OnInit {
         message: v.message,
         date: v.date,
         time: v.time,
+        endTime: v.endTime,
         locationName: v.locationName,
         mapsUrl: v.mapsUrl,
         religiousEnabled: v.religiousEnabled,
@@ -189,7 +192,9 @@ export class Editor implements OnInit {
     const v = this.value();
     const parts: string[] = [];
     if (v.date) parts.push(v.date);
-    if (v.time) parts.push(`${v.time} h`);
+    if (v.time) {
+      parts.push(v.endTime ? `${v.time} – ${v.endTime} h` : `${v.time} h`);
+    }
     return parts.join(' · ');
   }
 }

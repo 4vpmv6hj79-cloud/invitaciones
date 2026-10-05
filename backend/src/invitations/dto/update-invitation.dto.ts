@@ -26,7 +26,12 @@ export class EventDataDto {
 
   @IsOptional()
   @IsString()
-  time?: string; // HH:mm
+  time?: string; // HH:mm (hora de inicio)
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(10)
+  endTime?: string; // HH:mm (hora de finalización, opcional)
 
   @IsOptional()
   @IsString()

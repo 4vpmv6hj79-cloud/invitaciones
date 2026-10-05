@@ -103,7 +103,8 @@ export class RsvpViewComponent implements OnInit {
   protected when(): string {
     const d = this.view()?.invitation.data;
     if (!d) return '';
-    return [d.date, d.time ? `${d.time} h` : ''].filter(Boolean).join(' · ');
+    const time = d.time ? (d.endTime ? `${d.time} – ${d.endTime} h` : `${d.time} h`) : '';
+    return [d.date, time].filter(Boolean).join(' · ');
   }
 
   // Enlace .ics (evento principal + misa) para agregar al calendario.
