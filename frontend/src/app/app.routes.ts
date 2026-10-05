@@ -52,6 +52,12 @@ export const routes: Routes = [
     loadComponent: () => import('./invitations/editor/editor').then((m) => m.Editor),
   },
   {
+    path: 'vista-previa/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./invitations/preview/preview').then((m) => m.InvitationPreview),
+  },
+  {
     path: 'pago/exito',
     canActivate: [authGuard],
     loadComponent: () =>

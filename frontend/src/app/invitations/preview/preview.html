@@ -1,0 +1,84 @@
+@if (loading()) {
+  <p class="state">Cargando vista previa…</p>
+} @else if (error() || !invitation()) {
+  <p class="state state--error">No se pudo cargar la vista previa.</p>
+} @else if (invitation(); as inv) {
+  <div class="preview-bar">
+    <span class="preview-tag">Vista previa · así la verán tus invitados</span>
+    <a class="preview-back" [routerLink]="backToEditor()">← Volver a editar</a>
+  </div>
+
+  <main
+    class="invitation"
+    [style.background]="inv.customization.background || '#faf7ef'"
+    [style.fontFamily]="inv.customization.bodyFont || 'serif'"
+  >
+    <p class="eyebrow" [style.color]="inv.customization.secondary || '#777'">Te invitamos a</p>
+    <h1
+      class="title"
+      [style.color]="inv.customization.primary || '#333'"
+      [style.fontFamily]="inv.customization.headingFont || 'serif'"
+    >
+      {{ inv.event.title || 'Nuestro evento' }}
+    </h1>
+
+    @if (inv.event.data.coupleOrHonoree) {
+      <p class="names" [style.color]="inv.customization.secondary || '#555'">
+        {{ inv.event.data.coupleOrHonoree }}
+      </p>
+    }
+
+    <div class="divider" [style.background]="inv.customization.primary || '#333'"></div>
+
+    @if (when()) {
+      <p class="line" [style.color]="inv.customization.secondary || '#555'">{{ when() }}</p>
+    }
+    @if (inv.event.data.locationName) {
+      <p class="line" [style.color]="inv.customization.secondary || '#555'">
+        {{ inv.event.data.locationName }}
+      </p>
+    }
+    @if (inv.event.data.mapsUrl) {
+      <a class="maps-link" [href]="inv.event.data.mapsUrl" target="_blank" rel="noopener"
+        [style.color]="inv.customization.primary || '#b8860b'">📍 Ver ubicación</a>
+    }
+
+    @if (inv.event.data.religiousEnabled) {
+      <div class="religious" [style.borderColor]="inv.customization.primary || '#b8860b'">
+        <p class="religious-head" [style.color]="inv.customization.primary || '#b8860b'">
+          Evento religioso
+        </p>
+        @if (inv.event.data.religiousTime) {
+          <p class="line" [style.color]="inv.customization.secondary || '#555'">
+            {{ inv.event.data.religiousTime }} h
+          </p>
+        }
+        @if (inv.event.data.religiousSameLocation) {
+          <p class="line" [style.color]="inv.customization.secondary || '#555'">
+            En el mismo lugar del evento
+          </p>
+        } @else {
+          @if (inv.event.data.religiousLocationName) {
+            <p class="line" [style.color]="inv.customization.secondary || '#555'">
+              {{ inv.event.data.religiousLocationName }}
+            </p>
+          }
+          @if (inv.event.data.religiousMapsUrl) {
+            <a class="maps-link" [href]="inv.event.data.religiousMapsUrl" target="_blank" rel="noopener"
+              [style.color]="inv.customization.primary || '#b8860b'">📍 Ver ubicación</a>
+          }
+        }
+      </div>
+    }
+
+    @if (inv.event.data.message) {
+      <p class="message" [style.color]="inv.customization.secondary || '#555'">
+        {{ inv.event.data.message }}
+      </p>
+    }
+
+    <span class="cta" [style.background]="inv.customization.primary || '#b8860b'">
+      Confirmar asistencia
+    </span>
+  </main>
+}

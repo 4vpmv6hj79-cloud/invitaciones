@@ -152,6 +152,13 @@ export class Editor implements OnInit {
     this.previewMode.set(mode);
   }
 
+  // Abre la vista previa completa (como la verán los invitados) en una pestaña nueva.
+  // Guarda antes para que refleje los últimos cambios.
+  openPreview(): void {
+    this.save();
+    window.open(`/vista-previa/${this.invitationId}`, '_blank');
+  }
+
   // Guarda y luego inicia el pago para publicar la invitación.
   publish(): void {
     if (this.publishing()) return;

@@ -136,6 +136,11 @@
       <button type="button" class="save-btn" (click)="save()">Guardar borrador</button>
       <p class="hint">Los cambios se guardan automáticamente mientras editas.</p>
 
+      <button type="button" class="preview-btn" (click)="openPreview()">
+        Vista previa completa
+      </button>
+      <p class="hint">Mira la invitación como la verán tus invitados, en una pestaña nueva.</p>
+
       <button type="button" class="publish-btn" (click)="publish()" [disabled]="publishing()">
         {{ publishing() ? 'Redirigiendo al pago…' : 'Publicar y compartir' }}
       </button>
