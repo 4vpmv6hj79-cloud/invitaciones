@@ -1,33 +1,88 @@
 <nav class="topbar">
-  @if (auth.isLoggedIn()) {
-    <a routerLink="/mis-invitaciones">Mis invitaciones</a>
-    <button type="button" (click)="logout()">Salir</button>
-  } @else {
-    <a routerLink="/login">Iniciar sesión</a>
-    <a routerLink="/registro" class="hl">Crear cuenta</a>
-  }
+  <span class="brand">Invitaciones</span>
+  <div class="topbar-links">
+    @if (auth.isLoggedIn()) {
+      <a routerLink="/mis-invitaciones">Mis invitaciones</a>
+      <button type="button" (click)="logout()">Salir</button>
+    } @else {
+      <a routerLink="/login">Iniciar sesión</a>
+      <a routerLink="/registro" class="hl">Crear cuenta</a>
+    }
+  </div>
 </nav>
 
 <main class="home">
+  <!-- Hero -->
   <section class="hero">
-    <h1>Invitaciones Digitales</h1>
+    <span class="eyebrow">Invitaciones digitales para cada ocasión</span>
+    <h1>Crea invitaciones que <span class="accent">enamoran</span></h1>
     <p class="subtitle">
-      Crea, personaliza y comparte invitaciones elegantes para cualquier evento.
+      Diseña, personaliza y comparte invitaciones elegantes en minutos.
+      Confirma asistencia, comparte por WhatsApp y controla a tus invitados, todo en un solo lugar.
     </p>
-    <a class="cta" routerLink="/catalogo">Explorar catálogo</a>
-  </section>
-
-  <section class="status">
-    @if (backendStatus() === 'checking') {
-      <span class="badge badge--checking">Conectando con el servidor…</span>
-    } @else if (backendStatus() === 'ok') {
-      <span class="badge badge--ok">Servidor conectado</span>
-      <p class="status-detail">
-        Base de datos: {{ health()?.database }} · {{ health()?.service }}
-      </p>
-    } @else {
-      <span class="badge badge--error">Sin conexión con el servidor</span>
-      <p class="status-detail">Verifica que el backend esté corriendo en el puerto 3000.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" routerLink="/catalogo">Explorar catálogo</a>
+      <a class="btn btn-ghost" routerLink="/registro">Crear cuenta gratis</a>
+    </div>
+    @if (backendStatus() === 'error') {
+      <p class="offline-note">Estamos teniendo problemas de conexión. Intenta de nuevo en un momento.</p>
     }
   </section>
+
+  <!-- Cómo funciona -->
+  <section class="section">
+    <h2>Así de fácil</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1</span>
+        <h3>Elige una plantilla</h3>
+        <p>Explora el catálogo por tipo de evento y estilo.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">2</span>
+        <h3>Personalízala</h3>
+        <p>Colores, fotos, ubicación, cuenta regresiva y más.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">3</span>
+        <h3>Compártela</h3>
+        <p>Envía el enlace por WhatsApp y recibe confirmaciones.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tipos de evento -->
+  <section class="section">
+    <h2>Para cualquier celebración</h2>
+    <div class="events">
+      @for (e of eventTypes; track e) {
+        <a class="event-chip" routerLink="/catalogo">{{ e }}</a>
+      }
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section">
+    <h2>Todo lo que necesitas</h2>
+    <div class="features">
+      @for (f of features; track f.title) {
+        <div class="feature">
+          <span class="feature-icon">{{ f.icon }}</span>
+          <h3>{{ f.title }}</h3>
+          <p>{{ f.desc }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- CTA final -->
+  <section class="final-cta">
+    <h2>¿List@ para tu evento?</h2>
+    <p>Empieza ahora y ten tu invitación lista hoy mismo.</p>
+    <a class="btn btn-primary" routerLink="/catalogo">Explorar catálogo</a>
+  </section>
+
+  <footer class="foot">
+    <span>Invitaciones Digitales</span>
+  </footer>
 </main>

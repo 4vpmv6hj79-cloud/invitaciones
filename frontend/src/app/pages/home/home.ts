@@ -21,9 +21,33 @@ export class Home implements OnInit {
   private readonly http = inject(HttpClient);
   protected readonly auth = inject(AuthService);
 
-  // Estado del backend, para verificar la comunicación front-back en la Etapa 0.
+  // Estado del backend (health check silencioso; solo se avisa si falla).
   protected readonly backendStatus = signal<'checking' | 'ok' | 'error'>('checking');
   protected readonly health = signal<HealthResponse | null>(null);
+
+  // Tipos de evento para la sección de la landing.
+  protected readonly eventTypes = [
+    'Boda',
+    'XV años',
+    'Bautizo',
+    'Baby shower',
+    'Cumpleaños',
+    'Aniversario',
+    'Graduación',
+    'Primera comunión',
+    'Fiesta infantil',
+    'Despedida',
+  ];
+
+  // Features destacadas de la plataforma.
+  protected readonly features = [
+    { icon: '✅', title: 'Confirmación de asistencia', desc: 'Tus invitados confirman con un toque y tú ves todo en tiempo real.' },
+    { icon: '💬', title: 'Compartir por WhatsApp', desc: 'Envía a cada invitado su enlace personal directo a su chat.' },
+    { icon: '📍', title: 'Ubicación con mapa', desc: 'Agrega la ubicación del evento y de la misa con Google Maps.' },
+    { icon: '⏳', title: 'Cuenta regresiva', desc: 'Genera emoción con un contador hasta el gran día.' },
+    { icon: '🖼️', title: 'Portada y galería', desc: 'Sube tus fotos favoritas para una invitación con tu sello.' },
+    { icon: '🎟️', title: 'Boletos con QR', desc: 'Controla el acceso con pases y validación en la entrada.' },
+  ];
 
   logout(): void {
     this.auth.logout();
