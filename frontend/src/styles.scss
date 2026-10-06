@@ -1,1 +1,65 @@
-/* You can add global styles to this file, and also import other style files */
+/* ============================================================
+   Sistema de design tokens de la plataforma.
+   Estas variables centralizan colores, espaciado, radios,
+   sombras y tipografía de la UID del SaaS (NO de las invitaciones,
+   que siguen usando su propio theme por invitación).
+   Se agregan sin modificar los estilos de componentes existentes;
+   la migración a tokens se hará de forma incremental.
+   ============================================================ */
+
+:root {
+  /* --- Color: superficie y tinta --- */
+  --color-bg: #fbf9f6;          /* fondo general cálido */
+  --color-surface: #ffffff;     /* tarjetas, paneles */
+  --color-surface-2: #f5f2ee;   /* superficie alterna */
+  --color-ink: #1c1a24;         /* texto principal */
+  --color-muted: #6b6773;       /* texto secundario */
+  --color-border: #ece8f0;      /* bordes sutiles */
+
+  /* --- Color: acento de marca y estados --- */
+  --color-accent: #6b5b95;      /* violeta de marca (ya usado en la app) */
+  --color-accent-strong: #574a7d;
+  --color-accent-soft: #f3f0fa;
+  --color-gold: #b8860b;        /* dorado (CTAs de invitación/éxito) */
+  --color-success: #2f9e44;
+  --color-danger: #b4342c;
+  --color-warning: #c77700;
+
+  /* --- Radios --- */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  /* --- Espaciado (escala 4px) --- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 40px;
+
+  /* --- Sombras --- */
+  --shadow-sm: 0 2px 8px rgba(28, 26, 36, 0.06);
+  --shadow-card: 0 6px 24px rgba(28, 26, 36, 0.08);
+  --shadow-lg: 0 14px 40px rgba(28, 26, 36, 0.12);
+
+  /* --- Tipografía --- */
+  --font-display: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* --- Transiciones --- */
+  --transition-fast: 150ms ease;
+  --transition: 220ms ease;
+}
+
+/* Respeta la preferencia de reducir movimiento. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

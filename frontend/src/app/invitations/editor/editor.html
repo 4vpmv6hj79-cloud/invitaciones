@@ -97,6 +97,30 @@
 
       <h2>Diseño</h2>
 
+      <div class="field">
+        <label>Paletas de color</label>
+        <div class="palettes">
+          @for (p of palettes; track p.id) {
+            <button
+              type="button"
+              class="palette"
+              [class.active]="isPaletteActive(p)"
+              (click)="applyPalette(p)"
+              [attr.aria-label]="'Aplicar paleta ' + p.name"
+              [attr.aria-pressed]="isPaletteActive(p)"
+            >
+              <span class="palette-swatches">
+                <span class="sw" [style.background]="p.background"></span>
+                <span class="sw" [style.background]="p.primary"></span>
+                <span class="sw" [style.background]="p.secondary"></span>
+              </span>
+              <span class="palette-name">{{ p.name }}</span>
+            </button>
+          }
+        </div>
+        <small class="help">Elige una paleta lista o ajusta los colores manualmente abajo.</small>
+      </div>
+
       <div class="row">
         <div class="field">
           <label for="primary">Color principal</label>

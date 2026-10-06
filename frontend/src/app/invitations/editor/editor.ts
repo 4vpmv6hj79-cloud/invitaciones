@@ -5,6 +5,7 @@ import { debounceTime } from 'rxjs';
 import { InvitationService } from '../invitation.service';
 import { Invitation, UpdateInvitationPayload } from '../invitation.model';
 import { OrderService } from '../../orders/order.service';
+import { PALETTES, Palette } from '../palettes';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 type PreviewMode = 'mobile' | 'desktop';
@@ -30,6 +31,9 @@ export class Editor implements OnInit {
   protected readonly publishError = signal(false);
 
   private invitationId = '';
+
+  // Paletas curadas disponibles en el selector.
+  protected readonly palettes = PALETTES;
 
   // Formulario de contenido + personalización. Alimenta la vista previa en vivo.
   protected readonly form = this.fb.nonNullable.group({
@@ -153,6 +157,28 @@ export class Editor implements OnInit {
 
   setPreview(mode: PreviewMode): void {
     this.previewMode.set(mode);
+  }
+
+  // Aplica una paleta curada: rellena colores y fuentes del formulario.
+  // Dispara valueChanges, por lo que autosave y preview se actualizan solos.
+  applyPalette(p: Palette): void {
+    this.form.patchValue({
+      primary: p.primary,
+      secondary: p.secondary,
+      background: p.background,
+      headingFont: p.headingFont,
+      bodyFont: p.bodyFont,
+    });
+  }
+
+  // Indica si la paleta coincide con los colores actuales (para resaltar la seleccionada).
+  isPaletteActive(p: Palette): boolean {
+    const v = this.value();
+    return (
+      v.primary === p.primary &&
+      v.secondary === p.secondary &&
+      v.background === p.background
+    );
   }
 
   // Abre la vista previa completa (como la verán los invitados) en una pestaña nueva.
