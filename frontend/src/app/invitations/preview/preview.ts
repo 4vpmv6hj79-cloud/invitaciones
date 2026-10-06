@@ -57,6 +57,23 @@ export class InvitationPreview implements OnInit {
     return this.service.fileUrl(url);
   }
 
+  // Ancho de la portada en % (fallback desde coverSize).
+  protected coverWidth(): string {
+    const d = this.invitation()?.event?.data;
+    const pct = d?.coverWidthPct ?? this.sizeToPct(d?.coverSize);
+    return `${pct}%`;
+  }
+
+  protected galleryItemWidth(): string {
+    return `${this.invitation()?.event?.data?.galleryItemPct ?? 31}%`;
+  }
+
+  private sizeToPct(size: string | undefined): number {
+    if (size === 's') return 55;
+    if (size === 'l') return 100;
+    return 80;
+  }
+
   protected when(): string {
     const d = this.invitation()?.event?.data;
     if (!d) return '';

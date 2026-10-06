@@ -515,10 +515,16 @@
 
 .invitation .gallery-img {
   width: calc(33.333% - 6px);
-  max-width: 120px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: var(--radius-sm, 8px);
+}
+
+/* Deslizador de tamaño (portada y galería) */
+.size-slider {
+  width: 100%;
+  accent-color: var(--color-accent, #6b5b95);
+  cursor: pointer;
 }
 
 /* ---- Selector de estilo de portada ---- */

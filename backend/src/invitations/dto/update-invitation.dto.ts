@@ -3,10 +3,13 @@ import {
   ArrayMaxSize,
   IsArray,
   IsBoolean,
+  IsNumber,
   IsObject,
   IsOptional,
   IsString,
+  Max,
   MaxLength,
+  Min,
   ValidateNested,
 } from 'class-validator';
 
@@ -68,11 +71,25 @@ export class EventDataDto {
   @MaxLength(20)
   coverStyle?: string;
 
-  // Tamaño de la portada (banner/marco): 's' | 'm' | 'l'.
+  // Tamaño de la portada (banner/marco): 's' | 'm' | 'l'. (Compatibilidad; ahora se usa coverWidthPct.)
   @IsOptional()
   @IsString()
   @MaxLength(5)
   coverSize?: string;
+
+  // Ancho de la portada como porcentaje del contenedor (40–100). Control fino con deslizador.
+  @IsOptional()
+  @IsNumber()
+  @Min(30)
+  @Max(100)
+  coverWidthPct?: number;
+
+  // Tamaño de las fotos de la galería como porcentaje de ancho por foto (20–100).
+  @IsOptional()
+  @IsNumber()
+  @Min(20)
+  @Max(100)
+  galleryItemPct?: number;
 
   // Galería de fotos (URLs o rutas /uploads/...). Máximo 12. Opcional.
   @IsOptional()

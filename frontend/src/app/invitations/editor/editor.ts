@@ -60,6 +60,8 @@ export class Editor implements OnInit {
     coverImageUrl: [''],
     coverStyle: ['banner'],
     coverSize: ['m'],
+    coverWidthPct: [80],
+    galleryItemPct: [31],
     // Evento religioso (misa)
     religiousEnabled: [false],
     religiousSameLocation: [true],
@@ -114,6 +116,9 @@ export class Editor implements OnInit {
       coverImageUrl: d.coverImageUrl ?? '',
       coverStyle: d.coverStyle ?? 'banner',
       coverSize: d.coverSize ?? 'm',
+      // Fallback: si no hay porcentaje guardado, lo derivamos del tamaño antiguo (s/m/l).
+      coverWidthPct: d.coverWidthPct ?? this.sizeToPct(d.coverSize),
+      galleryItemPct: d.galleryItemPct ?? 31,
       religiousEnabled: d.religiousEnabled ?? false,
       // (galleryImages se maneja en una signal aparte, no en el form)
       religiousSameLocation: d.religiousSameLocation ?? true,
@@ -158,6 +163,8 @@ export class Editor implements OnInit {
         coverImageUrl: v.coverImageUrl,
         coverStyle: v.coverStyle as 'banner' | 'fondo' | 'marco',
         coverSize: v.coverSize as 's' | 'm' | 'l',
+        coverWidthPct: Number(v.coverWidthPct),
+        galleryItemPct: Number(v.galleryItemPct),
         galleryImages: this.gallery(),
         religiousEnabled: v.religiousEnabled,
         religiousSameLocation: v.religiousSameLocation,
@@ -215,11 +222,28 @@ export class Editor implements OnInit {
     return this.service.fileUrl(this.value().coverImageUrl || '');
   }
 
+  // Convierte el tamaño antiguo (s/m/l) a un porcentaje de ancho.
+  private sizeToPct(size: string | undefined): number {
+    if (size === 's') return 55;
+    if (size === 'l') return 100;
+    return 80; // 'm' o indefinido
+  }
+
+  // Ancho de la portada en % para la preview.
+  coverWidth(): string {
+    return `${this.value().coverWidthPct || 80}%`;
+  }
+
   // --- Galería ---
 
   // Resuelve una URL de la galería para mostrarla.
   gallerySrc(url: string): string {
     return this.service.fileUrl(url);
+  }
+
+  // Ancho de cada foto de galería en % para la preview.
+  galleryItemWidth(): string {
+    return `${this.value().galleryItemPct || 31}%`;
   }
 
   // Agrega una imagen por URL escrita manualmente.

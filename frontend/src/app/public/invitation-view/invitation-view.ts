@@ -31,6 +31,24 @@ export class InvitationView implements OnInit {
     return this.invitationService.fileUrl(url);
   }
 
+  // Ancho de la portada en % (fallback desde coverSize para invitaciones viejas).
+  protected coverWidth(): string {
+    const d = this.invitation()?.data;
+    const pct = d?.coverWidthPct ?? this.sizeToPct(d?.coverSize);
+    return `${pct}%`;
+  }
+
+  // Ancho de cada foto de galería en %.
+  protected galleryItemWidth(): string {
+    return `${this.invitation()?.data?.galleryItemPct ?? 31}%`;
+  }
+
+  private sizeToPct(size: string | undefined): number {
+    if (size === 's') return 55;
+    if (size === 'l') return 100;
+    return 80;
+  }
+
   ngOnInit(): void {
     const token = this.route.snapshot.paramMap.get('token');
     if (!token) {

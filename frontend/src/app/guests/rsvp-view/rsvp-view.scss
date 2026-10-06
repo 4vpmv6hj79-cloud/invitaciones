@@ -258,7 +258,6 @@
 
 .gallery-img {
   width: calc(33.333% - 6px);
-  max-width: 130px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: var(--radius-sm, 8px);

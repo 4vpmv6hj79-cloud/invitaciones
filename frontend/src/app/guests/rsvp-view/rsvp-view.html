@@ -17,7 +17,8 @@
       <div class="inv-content">
       @if (v.invitation.data.coverImageUrl && v.invitation.data.coverStyle !== 'fondo') {
         <img
-          [class]="'cover cover--size-' + (v.invitation.data.coverSize || 'm') + (v.invitation.data.coverStyle === 'marco' ? ' cover--marco' : '')"
+          [class]="v.invitation.data.coverStyle === 'marco' ? 'cover cover--marco' : 'cover'"
+          [style.width]="coverWidth()"
           [src]="coverSrc()" alt="Portada de la invitación" />
       }
       <p class="eyebrow" [style.color]="v.invitation.customization.secondary || '#777'">
@@ -82,7 +83,8 @@
       @if (v.invitation.data.galleryImages && v.invitation.data.galleryImages.length > 0) {
         <div class="gallery">
           @for (img of v.invitation.data.galleryImages; track $index) {
-            <img class="gallery-img" [src]="gallerySrc(img)" alt="Foto del evento" />
+            <img class="gallery-img" [style.width]="galleryItemWidth()"
+              [src]="gallerySrc(img)" alt="Foto del evento" />
           }
         </div>
       }

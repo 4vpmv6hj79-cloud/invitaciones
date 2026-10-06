@@ -66,18 +66,11 @@
 
           @if (value().coverStyle !== 'fondo') {
             <div class="cover-style">
-              <span class="cover-style-label">Tamaño de la imagen</span>
-              <div class="cover-size-options">
-                <label class="cover-size-opt" [class.active]="value().coverSize === 's'">
-                  <input type="radio" formControlName="coverSize" value="s" /> Chica
-                </label>
-                <label class="cover-size-opt" [class.active]="value().coverSize === 'm'">
-                  <input type="radio" formControlName="coverSize" value="m" /> Mediana
-                </label>
-                <label class="cover-size-opt" [class.active]="value().coverSize === 'l'">
-                  <input type="radio" formControlName="coverSize" value="l" /> Grande
-                </label>
-              </div>
+              <span class="cover-style-label">
+                Tamaño de la imagen · {{ value().coverWidthPct }}%
+              </span>
+              <input type="range" class="size-slider" min="30" max="100" step="1"
+                formControlName="coverWidthPct" />
             </div>
           }
 
@@ -113,6 +106,16 @@
             [disabled]="galleryUploading()" />
         </label>
         @if (galleryError()) { <small class="help help--error">{{ galleryError() }}</small> }
+
+        @if (gallery().length > 0) {
+          <div class="cover-style">
+            <span class="cover-style-label">
+              Tamaño de las fotos · {{ value().galleryItemPct }}%
+            </span>
+            <input type="range" class="size-slider" min="20" max="100" step="1"
+              formControlName="galleryItemPct" />
+          </div>
+        }
       </div>
 
       <div class="field">
@@ -298,7 +301,8 @@
           <div class="inv-content">
           @if (value().coverImageUrl && value().coverStyle !== 'fondo') {
             <img
-              [class]="'cover cover--size-' + value().coverSize + (value().coverStyle === 'marco' ? ' cover--marco' : '')"
+              [class]="value().coverStyle === 'marco' ? 'cover cover--marco' : 'cover'"
+              [style.width]="coverWidth()"
               [src]="coverSrc()" alt="Portada de la invitación" />
           }
           <p class="eyebrow" [style.color]="value().secondary">Te invitamos a</p>
@@ -356,7 +360,8 @@
           @if (gallery().length > 0) {
             <div class="gallery">
               @for (img of gallery(); track $index) {
-                <img class="gallery-img" [src]="gallerySrc(img)" alt="Foto del evento" />
+                <img class="gallery-img" [style.width]="galleryItemWidth()"
+                  [src]="gallerySrc(img)" alt="Foto del evento" />
               }
             </div>
           }

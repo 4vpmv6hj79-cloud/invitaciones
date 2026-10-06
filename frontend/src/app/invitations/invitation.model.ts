@@ -13,7 +13,9 @@ export interface EventData {
   showCountdown?: boolean; // mostrar cuenta regresiva al evento
   coverImageUrl?: string; // imagen de portada (URL o /uploads/...)
   coverStyle?: 'banner' | 'fondo' | 'marco'; // cómo se muestra la portada
-  coverSize?: 's' | 'm' | 'l'; // tamaño de la portada (banner/marco)
+  coverSize?: 's' | 'm' | 'l'; // (compatibilidad) tamaño de la portada
+  coverWidthPct?: number; // ancho de la portada en % (30–100)
+  galleryItemPct?: number; // ancho por foto de la galería en % (20–100)
   galleryImages?: string[]; // galería de fotos (URLs o /uploads/...)
 
   // Evento religioso (misa), opcional.
