@@ -58,6 +58,7 @@ export class Editor implements OnInit {
     showCountdown: [false],
     coverImageUrl: [''],
     coverStyle: ['banner'],
+    coverSize: ['m'],
     // Evento religioso (misa)
     religiousEnabled: [false],
     religiousSameLocation: [true],
@@ -111,6 +112,7 @@ export class Editor implements OnInit {
       showCountdown: d.showCountdown ?? false,
       coverImageUrl: d.coverImageUrl ?? '',
       coverStyle: d.coverStyle ?? 'banner',
+      coverSize: d.coverSize ?? 'm',
       religiousEnabled: d.religiousEnabled ?? false,
       // (galleryImages se maneja en una signal aparte, no en el form)
       religiousSameLocation: d.religiousSameLocation ?? true,
@@ -154,6 +156,7 @@ export class Editor implements OnInit {
         showCountdown: v.showCountdown,
         coverImageUrl: v.coverImageUrl,
         coverStyle: v.coverStyle as 'banner' | 'fondo' | 'marco',
+        coverSize: v.coverSize as 's' | 'm' | 'l',
         galleryImages: this.gallery(),
         religiousEnabled: v.religiousEnabled,
         religiousSameLocation: v.religiousSameLocation,

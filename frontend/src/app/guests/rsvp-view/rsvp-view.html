@@ -16,7 +16,8 @@
       }
       <div class="inv-content">
       @if (v.invitation.data.coverImageUrl && v.invitation.data.coverStyle !== 'fondo') {
-        <img class="cover" [class.cover--marco]="v.invitation.data.coverStyle === 'marco'"
+        <img
+          [class]="'cover cover--size-' + (v.invitation.data.coverSize || 'm') + (v.invitation.data.coverStyle === 'marco' ? ' cover--marco' : '')"
           [src]="coverSrc()" alt="Portada de la invitación" />
       }
       <p class="eyebrow" [style.color]="v.invitation.customization.secondary || '#777'">

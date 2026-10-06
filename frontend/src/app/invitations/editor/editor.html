@@ -63,6 +63,29 @@
               </label>
             </div>
           </div>
+
+          @if (value().coverStyle !== 'fondo') {
+            <div class="cover-style">
+              <span class="cover-style-label">Tamaño de la imagen</span>
+              <div class="cover-size-options">
+                <label class="cover-size-opt" [class.active]="value().coverSize === 's'">
+                  <input type="radio" formControlName="coverSize" value="s" /> Chica
+                </label>
+                <label class="cover-size-opt" [class.active]="value().coverSize === 'm'">
+                  <input type="radio" formControlName="coverSize" value="m" /> Mediana
+                </label>
+                <label class="cover-size-opt" [class.active]="value().coverSize === 'l'">
+                  <input type="radio" formControlName="coverSize" value="l" /> Grande
+                </label>
+              </div>
+            </div>
+          }
+
+          <small class="help">
+            Para que no se vea pixelada, usa una foto en <strong>JPG, PNG o WebP</strong>
+            de buena resolución (ancho de 1200 px o más). Evita <strong>SVG</strong> para
+            fotografías: ese formato es solo para logos o ilustraciones.
+          </small>
         }
       </div>
 
@@ -274,7 +297,8 @@
           }
           <div class="inv-content">
           @if (value().coverImageUrl && value().coverStyle !== 'fondo') {
-            <img class="cover" [class.cover--marco]="value().coverStyle === 'marco'"
+            <img
+              [class]="'cover cover--size-' + value().coverSize + (value().coverStyle === 'marco' ? ' cover--marco' : '')"
               [src]="coverSrc()" alt="Portada de la invitación" />
           }
           <p class="eyebrow" [style.color]="value().secondary">Te invitamos a</p>
