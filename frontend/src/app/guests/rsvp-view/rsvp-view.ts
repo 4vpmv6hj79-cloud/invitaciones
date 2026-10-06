@@ -4,11 +4,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RsvpService, RsvpView } from '../rsvp.service';
 import { TicketService, GuestPass } from '../../tickets/ticket.service';
 import { buildCalendarHref } from '../../invitations/ics.util';
+import { Countdown } from '../../invitations/countdown/countdown';
 
 @Component({
   selector: 'app-rsvp-view',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, Countdown],
   templateUrl: './rsvp-view.html',
   styleUrl: './rsvp-view.scss',
 })

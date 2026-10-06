@@ -2,13 +2,14 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { InvitationService } from '../invitation.service';
 import { Invitation } from '../invitation.model';
+import { Countdown } from '../countdown/countdown';
 
 // Vista previa de la invitación tal como la verán los invitados,
 // usando el borrador (por id) y SIN necesidad de publicar/pagar.
 @Component({
   selector: 'app-invitation-preview',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, Countdown],
   templateUrl: './preview.html',
   styleUrl: './preview.scss',
 })

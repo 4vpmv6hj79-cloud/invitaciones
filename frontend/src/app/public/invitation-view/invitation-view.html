@@ -31,6 +31,14 @@
       @if (when()) {
         <p class="line" [style.color]="inv.customization.secondary || '#555'">{{ when() }}</p>
       }
+      @if (inv.data.showCountdown && inv.data.date) {
+        <app-countdown
+          [date]="inv.data.date"
+          [time]="inv.data.time || ''"
+          [accent]="inv.customization.primary || '#b8860b'"
+          [muted]="inv.customization.secondary || '#777'"
+        />
+      }
       @if (inv.data.locationName) {
         <p class="line" [style.color]="inv.customization.secondary || '#555'">
           {{ inv.data.locationName }}

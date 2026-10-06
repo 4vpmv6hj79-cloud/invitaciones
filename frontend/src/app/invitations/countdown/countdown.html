@@ -1,0 +1,24 @@
+@if (remaining(); as r) {
+  @if (finished()) {
+    <p class="countdown-done" [style.color]="accent">¡Hoy es el gran día!</p>
+  } @else {
+    <div class="countdown" role="timer" aria-label="Cuenta regresiva al evento">
+      <div class="unit">
+        <span class="num" [style.color]="accent">{{ r.days }}</span>
+        <span class="lbl" [style.color]="muted">días</span>
+      </div>
+      <div class="unit">
+        <span class="num" [style.color]="accent">{{ r.hours }}</span>
+        <span class="lbl" [style.color]="muted">hrs</span>
+      </div>
+      <div class="unit">
+        <span class="num" [style.color]="accent">{{ r.minutes }}</span>
+        <span class="lbl" [style.color]="muted">min</span>
+      </div>
+      <div class="unit">
+        <span class="num" [style.color]="accent">{{ r.seconds }}</span>
+        <span class="lbl" [style.color]="muted">seg</span>
+      </div>
+    </div>
+  }
+}

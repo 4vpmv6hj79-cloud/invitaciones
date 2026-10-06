@@ -239,3 +239,21 @@ table {
     }
   }
 }
+
+/* Botón de envío por WhatsApp por invitado */
+.wa-btn {
+  margin-left: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  background: #25d366;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm, 8px);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast, 150ms ease);
+
+  &:hover {
+    background: #1ebe5b;
+  }
+}

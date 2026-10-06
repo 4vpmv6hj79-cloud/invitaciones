@@ -93,6 +93,25 @@ export class GuestsPanel implements OnInit {
     });
   }
 
+  // Abre WhatsApp con un mensaje y el enlace personal del invitado.
+  // Si el contacto parece un teléfono, lo precarga; si no, abre WhatsApp
+  // para que el organizador elija el destinatario.
+  whatsappGuest(g: Guest): void {
+    const link = this.service.guestLink(g.accessToken);
+    const text = `¡Hola ${g.name}! Te comparto tu invitación. Confirma tu asistencia aquí: ${link}`;
+    const phone = this.normalizePhone(g.contact);
+    const base = phone ? `https://wa.me/${phone}` : 'https://wa.me/';
+    window.open(`${base}?text=${encodeURIComponent(text)}`, '_blank');
+  }
+
+  // Extrae solo dígitos del contacto. Devuelve '' si no parece un teléfono válido.
+  private normalizePhone(contact?: string | null): string {
+    if (!contact) return '';
+    const digits = contact.replace(/\D/g, '');
+    // Un teléfono útil para wa.me tiene al menos 10 dígitos (nacional) y suele llevar lada país.
+    return digits.length >= 10 ? digits : '';
+  }
+
   download(): void {
     window.open(this.service.exportUrl(this.invitationId), '_blank');
   }

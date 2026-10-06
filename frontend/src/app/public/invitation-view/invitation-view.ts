@@ -1,11 +1,12 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PublicInvitationService, PublicInvitation } from '../public-invitation.service';
+import { Countdown } from '../../invitations/countdown/countdown';
 
 @Component({
   selector: 'app-invitation-view',
   standalone: true,
-  imports: [],
+  imports: [Countdown],
   templateUrl: './invitation-view.html',
   styleUrl: './invitation-view.scss',
 })

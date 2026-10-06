@@ -49,6 +49,11 @@ export class EventDataDto {
   @MaxLength(600)
   mapsUrl?: string;
 
+  // Mostrar cuenta regresiva al evento en la invitación (opcional).
+  @IsOptional()
+  @IsBoolean()
+  showCountdown?: boolean;
+
   // --- Evento religioso (misa), opcional ---
 
   // Indica si la invitación incluye un evento religioso.

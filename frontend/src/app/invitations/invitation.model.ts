@@ -10,6 +10,7 @@ export interface EventData {
   timezone?: string;
   locationName?: string;
   mapsUrl?: string; // enlace de Google Maps del evento
+  showCountdown?: boolean; // mostrar cuenta regresiva al evento
 
   // Evento religioso (misa), opcional.
   religiousEnabled?: boolean;

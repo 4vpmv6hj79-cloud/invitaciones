@@ -90,6 +90,9 @@
               <button type="button" class="link-btn" (click)="copyLink(g)">
                 {{ copiedToken() === g.accessToken ? 'Copiado' : 'Copiar enlace' }}
               </button>
+              <button type="button" class="wa-btn" (click)="whatsappGuest(g)">
+                WhatsApp
+              </button>
             </td>
             <td>
               <button type="button" class="del" (click)="removeGuest(g)">Eliminar</button>

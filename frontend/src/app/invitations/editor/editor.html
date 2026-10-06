@@ -63,6 +63,11 @@
         <small class="help">En Google Maps: Compartir → Copiar enlace, y pégalo aquí.</small>
       </div>
 
+      <label class="check-field">
+        <input type="checkbox" formControlName="showCountdown" />
+        <span>Mostrar cuenta regresiva al evento</span>
+      </label>
+
       <h2>Evento religioso</h2>
 
       <label class="check-field">
@@ -209,6 +214,14 @@
           <div class="divider" [style.background]="value().primary"></div>
           @if (formattedWhen()) {
             <p class="when" [style.color]="value().secondary">{{ formattedWhen() }}</p>
+          }
+          @if (value().showCountdown && value().date) {
+            <app-countdown
+              [date]="value().date"
+              [time]="value().time"
+              [accent]="value().primary"
+              [muted]="value().secondary"
+            />
           }
           @if (value().locationName) {
             <p class="where" [style.color]="value().secondary">{{ value().locationName }}</p>

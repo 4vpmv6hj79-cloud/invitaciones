@@ -6,6 +6,7 @@ import { InvitationService } from '../invitation.service';
 import { Invitation, UpdateInvitationPayload } from '../invitation.model';
 import { OrderService } from '../../orders/order.service';
 import { PALETTES, Palette } from '../palettes';
+import { Countdown } from '../countdown/countdown';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 type PreviewMode = 'mobile' | 'desktop';
@@ -13,7 +14,7 @@ type PreviewMode = 'mobile' | 'desktop';
 @Component({
   selector: 'app-editor',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, Countdown],
   templateUrl: './editor.html',
   styleUrl: './editor.scss',
 })
@@ -45,6 +46,7 @@ export class Editor implements OnInit {
     endTime: [''],
     locationName: [''],
     mapsUrl: [''],
+    showCountdown: [false],
     // Evento religioso (misa)
     religiousEnabled: [false],
     religiousSameLocation: [true],
@@ -95,6 +97,7 @@ export class Editor implements OnInit {
       endTime: d.endTime ?? '',
       locationName: d.locationName ?? '',
       mapsUrl: d.mapsUrl ?? '',
+      showCountdown: d.showCountdown ?? false,
       religiousEnabled: d.religiousEnabled ?? false,
       religiousSameLocation: d.religiousSameLocation ?? true,
       religiousTime: d.religiousTime ?? '',
@@ -133,6 +136,7 @@ export class Editor implements OnInit {
         endTime: v.endTime,
         locationName: v.locationName,
         mapsUrl: v.mapsUrl,
+        showCountdown: v.showCountdown,
         religiousEnabled: v.religiousEnabled,
         religiousSameLocation: v.religiousSameLocation,
         religiousTime: v.religiousEnabled ? v.religiousTime : '',

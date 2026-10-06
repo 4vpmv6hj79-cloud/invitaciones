@@ -22,6 +22,14 @@
       @if (when()) {
         <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">{{ when() }}</p>
       }
+      @if (v.invitation.data.showCountdown && v.invitation.data.date) {
+        <app-countdown
+          [date]="v.invitation.data.date"
+          [time]="v.invitation.data.time || ''"
+          [accent]="v.invitation.customization.primary || '#b8860b'"
+          [muted]="v.invitation.customization.secondary || '#777'"
+        />
+      }
       @if (v.invitation.data.locationName) {
         <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">
           {{ v.invitation.data.locationName }}
