@@ -86,6 +86,14 @@
         </p>
       }
 
+      @if (inv.data.galleryImages && inv.data.galleryImages.length > 0) {
+        <div class="gallery">
+          @for (img of inv.data.galleryImages; track $index) {
+            <img class="gallery-img" [src]="gallerySrc(img)" alt="Foto del evento" />
+          }
+        </div>
+      }
+
       <div class="actions">
         <!-- Botón de muestra: este enlace público general no identifica al invitado,
              por eso el RSVP real vive en el enlace por invitado (/r/:token). -->

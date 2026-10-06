@@ -51,6 +51,11 @@ export class InvitationPreview implements OnInit {
     return this.service.fileUrl(this.invitation()?.event?.data?.coverImageUrl || '');
   }
 
+  // Resuelve una URL de la galería.
+  protected gallerySrc(url: string): string {
+    return this.service.fileUrl(url);
+  }
+
   protected when(): string {
     const d = this.invitation()?.event?.data;
     if (!d) return '';

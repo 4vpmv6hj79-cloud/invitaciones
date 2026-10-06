@@ -26,6 +26,11 @@ export class RsvpViewComponent implements OnInit {
     return this.invitationService.fileUrl(this.view()?.invitation.data.coverImageUrl || '');
   }
 
+  // Resuelve una URL de la galería.
+  protected gallerySrc(url: string): string {
+    return this.invitationService.fileUrl(url);
+  }
+
   private token = '';
   protected readonly loading = signal(true);
   protected readonly error = signal(false);

@@ -71,6 +71,14 @@
         </div>
       }
 
+      @if (v.invitation.data.galleryImages && v.invitation.data.galleryImages.length > 0) {
+        <div class="gallery">
+          @for (img of v.invitation.data.galleryImages; track $index) {
+            <img class="gallery-img" [src]="gallerySrc(img)" alt="Foto del evento" />
+          }
+        </div>
+      }
+
       @if (done()) {
         <div class="result">
           <span class="check">✓</span>

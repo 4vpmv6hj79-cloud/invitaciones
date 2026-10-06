@@ -1,5 +1,7 @@
 import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
+  IsArray,
   IsBoolean,
   IsObject,
   IsOptional,
@@ -59,6 +61,14 @@ export class EventDataDto {
   @IsString()
   @MaxLength(600)
   coverImageUrl?: string;
+
+  // Galería de fotos (URLs o rutas /uploads/...). Máximo 12. Opcional.
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(12)
+  @IsString({ each: true })
+  @MaxLength(600, { each: true })
+  galleryImages?: string[];
 
   // --- Evento religioso (misa), opcional ---
 

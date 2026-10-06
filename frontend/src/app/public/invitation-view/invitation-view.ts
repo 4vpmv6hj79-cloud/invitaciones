@@ -25,6 +25,11 @@ export class InvitationView implements OnInit {
     return this.invitationService.fileUrl(this.invitation()?.data?.coverImageUrl || '');
   }
 
+  // Resuelve una URL de la galería.
+  protected gallerySrc(url: string): string {
+    return this.invitationService.fileUrl(url);
+  }
+
   ngOnInit(): void {
     const token = this.route.snapshot.paramMap.get('token');
     if (!token) {

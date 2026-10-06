@@ -44,6 +44,32 @@
       </div>
 
       <div class="field">
+        <label>Galería de fotos ({{ gallery().length }}/{{ GALLERY_MAX }})</label>
+        @if (gallery().length > 0) {
+          <div class="gallery-grid">
+            @for (img of gallery(); track $index) {
+              <div class="gallery-thumb">
+                <img [src]="gallerySrc(img)" alt="Foto de galería" />
+                <button type="button" class="gallery-remove" (click)="removeGalleryAt($index)"
+                  aria-label="Quitar foto">✕</button>
+              </div>
+            }
+          </div>
+        }
+        <div class="gallery-add">
+          <input type="url" [(ngModel)]="newGalleryUrl" [ngModelOptions]="{ standalone: true }"
+            placeholder="Pega la URL de una foto" (keyup.enter)="addGalleryUrl()" />
+          <button type="button" (click)="addGalleryUrl()">Agregar</button>
+        </div>
+        <label class="cover-upload">
+          {{ galleryUploading() ? 'Subiendo…' : 'o subir una foto' }}
+          <input type="file" accept="image/*" (change)="onGalleryFile($event)" hidden
+            [disabled]="galleryUploading()" />
+        </label>
+        @if (galleryError()) { <small class="help help--error">{{ galleryError() }}</small> }
+      </div>
+
+      <div class="field">
         <label for="couple">Nombres</label>
         <input id="couple" type="text" formControlName="coupleOrHonoree" placeholder="Ej. María y José" />
       </div>
@@ -272,6 +298,13 @@
           }
           @if (value().message) {
             <p class="message" [style.color]="value().secondary">{{ value().message }}</p>
+          }
+          @if (gallery().length > 0) {
+            <div class="gallery">
+              @for (img of gallery(); track $index) {
+                <img class="gallery-img" [src]="gallerySrc(img)" alt="Foto del evento" />
+              }
+            </div>
           }
           <span class="cta" [style.background]="value().primary">Confirmar asistencia</span>
         </article>

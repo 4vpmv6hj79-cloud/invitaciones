@@ -88,6 +88,14 @@
       </p>
     }
 
+    @if (inv.event.data.galleryImages && inv.event.data.galleryImages.length > 0) {
+      <div class="gallery">
+        @for (img of inv.event.data.galleryImages; track $index) {
+          <img class="gallery-img" [src]="gallerySrc(img)" alt="Foto del evento" />
+        }
+      </div>
+    }
+
     <span class="cta" [style.background]="inv.customization.primary || '#b8860b'">
       Confirmar asistencia
     </span>

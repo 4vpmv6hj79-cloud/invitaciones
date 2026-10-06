@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { InvitationService } from '../invitation.service';
 import { Invitation, UpdateInvitationPayload } from '../invitation.model';
@@ -14,7 +14,7 @@ type PreviewMode = 'mobile' | 'desktop';
 @Component({
   selector: 'app-editor',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, Countdown],
+  imports: [ReactiveFormsModule, FormsModule, RouterLink, Countdown],
   templateUrl: './editor.html',
   styleUrl: './editor.scss',
 })
@@ -32,6 +32,12 @@ export class Editor implements OnInit {
   protected readonly publishError = signal(false);
   protected readonly coverUploading = signal(false);
   protected readonly coverError = signal<string | null>(null);
+  // Galería de fotos (lista dinámica, no es un form control simple).
+  protected readonly gallery = signal<string[]>([]);
+  protected readonly galleryUploading = signal(false);
+  protected readonly galleryError = signal<string | null>(null);
+  protected newGalleryUrl = '';
+  protected readonly GALLERY_MAX = 12;
 
   private invitationId = '';
 
@@ -103,6 +109,7 @@ export class Editor implements OnInit {
       showCountdown: d.showCountdown ?? false,
       coverImageUrl: d.coverImageUrl ?? '',
       religiousEnabled: d.religiousEnabled ?? false,
+      // (galleryImages se maneja en una signal aparte, no en el form)
       religiousSameLocation: d.religiousSameLocation ?? true,
       religiousTime: d.religiousTime ?? '',
       religiousLocationName: d.religiousLocationName ?? '',
@@ -113,6 +120,7 @@ export class Editor implements OnInit {
       headingFont: c.headingFont ?? 'serif',
       bodyFont: c.bodyFont ?? 'sans-serif',
     });
+    this.gallery.set(Array.isArray(d.galleryImages) ? [...d.galleryImages] : []);
     this.value.set(this.form.getRawValue());
   }
 
@@ -142,6 +150,7 @@ export class Editor implements OnInit {
         mapsUrl: v.mapsUrl,
         showCountdown: v.showCountdown,
         coverImageUrl: v.coverImageUrl,
+        galleryImages: this.gallery(),
         religiousEnabled: v.religiousEnabled,
         religiousSameLocation: v.religiousSameLocation,
         religiousTime: v.religiousEnabled ? v.religiousTime : '',
@@ -196,6 +205,59 @@ export class Editor implements OnInit {
   // Resuelve la URL de la portada para mostrarla (soporta /uploads y URLs).
   coverSrc(): string {
     return this.service.fileUrl(this.value().coverImageUrl || '');
+  }
+
+  // --- Galería ---
+
+  // Resuelve una URL de la galería para mostrarla.
+  gallerySrc(url: string): string {
+    return this.service.fileUrl(url);
+  }
+
+  // Agrega una imagen por URL escrita manualmente.
+  addGalleryUrl(): void {
+    const url = this.newGalleryUrl.trim();
+    if (!url) return;
+    if (this.gallery().length >= this.GALLERY_MAX) {
+      this.galleryError.set(`Máximo ${this.GALLERY_MAX} fotos.`);
+      return;
+    }
+    this.gallery.update((list) => [...list, url]);
+    this.newGalleryUrl = '';
+    this.galleryError.set(null);
+    this.save();
+  }
+
+  // Sube un archivo y lo agrega a la galería.
+  onGalleryFile(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    if (this.gallery().length >= this.GALLERY_MAX) {
+      this.galleryError.set(`Máximo ${this.GALLERY_MAX} fotos.`);
+      input.value = '';
+      return;
+    }
+    this.galleryUploading.set(true);
+    this.galleryError.set(null);
+    this.service.uploadImage(this.invitationId, file).subscribe({
+      next: (res) => {
+        this.gallery.update((list) => [...list, res.url]);
+        this.galleryUploading.set(false);
+        this.save();
+      },
+      error: (e) => {
+        this.galleryUploading.set(false);
+        this.galleryError.set(e?.error?.message ?? 'No se pudo subir la imagen');
+      },
+    });
+    input.value = '';
+  }
+
+  // Quita una foto de la galería por índice.
+  removeGalleryAt(index: number): void {
+    this.gallery.update((list) => list.filter((_, i) => i !== index));
+    this.save();
   }
 
   // Aplica una paleta curada: rellena colores y fuentes del formulario.
