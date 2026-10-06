@@ -46,6 +46,11 @@ export class InvitationPreview implements OnInit {
     return `/editor/${this.id}`;
   }
 
+  // Resuelve la URL de la portada (soporta rutas /uploads y URLs externas).
+  protected coverSrc(): string {
+    return this.service.fileUrl(this.invitation()?.event?.data?.coverImageUrl || '');
+  }
+
   protected when(): string {
     const d = this.invitation()?.event?.data;
     if (!d) return '';

@@ -9,6 +9,9 @@
     [style.fontFamily]="v.invitation.customization.bodyFont || 'serif'"
   >
     <section class="card">
+      @if (v.invitation.data.coverImageUrl) {
+        <img class="cover" [src]="coverSrc()" alt="Portada de la invitación" />
+      }
       <p class="eyebrow" [style.color]="v.invitation.customization.secondary || '#777'">
         Hola {{ v.guest.name }}, te invitamos a
       </p>

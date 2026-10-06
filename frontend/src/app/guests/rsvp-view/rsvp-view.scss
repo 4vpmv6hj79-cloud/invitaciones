@@ -235,3 +235,13 @@
     opacity: 0.92;
   }
 }
+
+/* Imagen de portada */
+.card .cover {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: var(--radius-md, 14px);
+  margin-bottom: 1rem;
+  display: block;
+}

@@ -30,6 +30,8 @@ export class Editor implements OnInit {
   protected readonly previewMode = signal<PreviewMode>('mobile');
   protected readonly publishing = signal(false);
   protected readonly publishError = signal(false);
+  protected readonly coverUploading = signal(false);
+  protected readonly coverError = signal<string | null>(null);
 
   private invitationId = '';
 
@@ -47,6 +49,7 @@ export class Editor implements OnInit {
     locationName: [''],
     mapsUrl: [''],
     showCountdown: [false],
+    coverImageUrl: [''],
     // Evento religioso (misa)
     religiousEnabled: [false],
     religiousSameLocation: [true],
@@ -98,6 +101,7 @@ export class Editor implements OnInit {
       locationName: d.locationName ?? '',
       mapsUrl: d.mapsUrl ?? '',
       showCountdown: d.showCountdown ?? false,
+      coverImageUrl: d.coverImageUrl ?? '',
       religiousEnabled: d.religiousEnabled ?? false,
       religiousSameLocation: d.religiousSameLocation ?? true,
       religiousTime: d.religiousTime ?? '',
@@ -137,6 +141,7 @@ export class Editor implements OnInit {
         locationName: v.locationName,
         mapsUrl: v.mapsUrl,
         showCountdown: v.showCountdown,
+        coverImageUrl: v.coverImageUrl,
         religiousEnabled: v.religiousEnabled,
         religiousSameLocation: v.religiousSameLocation,
         religiousTime: v.religiousEnabled ? v.religiousTime : '',
@@ -161,6 +166,36 @@ export class Editor implements OnInit {
 
   setPreview(mode: PreviewMode): void {
     this.previewMode.set(mode);
+  }
+
+  // Sube la imagen de portada y guarda su URL en el formulario.
+  onCoverFile(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.coverUploading.set(true);
+    this.coverError.set(null);
+    this.service.uploadImage(this.invitationId, file).subscribe({
+      next: (res) => {
+        this.form.patchValue({ coverImageUrl: res.url });
+        this.coverUploading.set(false);
+      },
+      error: (e) => {
+        this.coverUploading.set(false);
+        this.coverError.set(e?.error?.message ?? 'No se pudo subir la imagen');
+      },
+    });
+    input.value = '';
+  }
+
+  // Quita la portada.
+  clearCover(): void {
+    this.form.patchValue({ coverImageUrl: '' });
+  }
+
+  // Resuelve la URL de la portada para mostrarla (soporta /uploads y URLs).
+  coverSrc(): string {
+    return this.service.fileUrl(this.value().coverImageUrl || '');
   }
 
   // Aplica una paleta curada: rellena colores y fuentes del formulario.

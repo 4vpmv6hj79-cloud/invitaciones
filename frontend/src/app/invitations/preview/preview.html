@@ -13,6 +13,9 @@
     [style.background]="inv.customization.background || '#faf7ef'"
     [style.fontFamily]="inv.customization.bodyFont || 'serif'"
   >
+    @if (inv.event.data.coverImageUrl) {
+      <img class="cover" [src]="coverSrc()" alt="Portada de la invitación" />
+    }
     <p class="eyebrow" [style.color]="inv.customization.secondary || '#777'">Te invitamos a</p>
     <h1
       class="title"

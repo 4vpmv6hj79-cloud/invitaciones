@@ -54,6 +54,12 @@ export class EventDataDto {
   @IsBoolean()
   showCountdown?: boolean;
 
+  // Imagen de portada de la invitación (URL o ruta /uploads/...). Opcional.
+  @IsOptional()
+  @IsString()
+  @MaxLength(600)
+  coverImageUrl?: string;
+
   // --- Evento religioso (misa), opcional ---
 
   // Indica si la invitación incluye un evento religioso.

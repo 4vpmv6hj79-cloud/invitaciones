@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -8,13 +9,38 @@ import {
   Post,
   Query,
   Res,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { randomBytes } from 'crypto';
+import { extname } from 'path';
 import { InvitationsService } from './invitations.service';
 import { PdfService } from './pdf.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { CurrentUser } from '../auth/decorators';
+
+// Config de Multer: guarda en uploads/ con nombre aleatorio; solo imágenes; 5 MB máx.
+const imageUpload = {
+  storage: diskStorage({
+    destination: './uploads',
+    filename: (_req, file, cb) => {
+      const name = randomBytes(16).toString('hex') + extname(file.originalname).toLowerCase();
+      cb(null, name);
+    },
+  }),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (_req: unknown, file: Express.Multer.File, cb: (e: Error | null, ok: boolean) => void) => {
+    if (/^image\/(jpeg|png|webp|gif)$/.test(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new BadRequestException('Solo se permiten imágenes (jpg, png, webp, gif)'), false);
+    }
+  },
+};
 
 // Todas estas rutas requieren un organizador autenticado (guard global).
 @Controller('invitations')
@@ -71,5 +97,22 @@ export class InvitationsController {
     @CurrentUser() user: { id: string },
   ) {
     return this.service.update(id, dto, user.id);
+  }
+
+  // Sube una imagen (portada o galería) y devuelve su URL pública.
+  // multipart form-data, campo 'file'. Solo el dueño de la invitación.
+  @Post(':id/upload-image')
+  @UseInterceptors(FileInterceptor('file', imageUpload))
+  async uploadImage(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @CurrentUser() user: { id: string },
+  ) {
+    if (!file) {
+      throw new BadRequestException('No se recibió ninguna imagen');
+    }
+    // Verifica que el usuario sea dueño de la invitación antes de aceptar la imagen.
+    await this.service.findOwned(id, user.id);
+    return { url: `/uploads/${file.filename}` };
   }
 }

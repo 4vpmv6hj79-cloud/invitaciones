@@ -5,6 +5,7 @@ import { RsvpService, RsvpView } from '../rsvp.service';
 import { TicketService, GuestPass } from '../../tickets/ticket.service';
 import { buildCalendarHref } from '../../invitations/ics.util';
 import { Countdown } from '../../invitations/countdown/countdown';
+import { InvitationService } from '../../invitations/invitation.service';
 
 @Component({
   selector: 'app-rsvp-view',
@@ -17,7 +18,13 @@ export class RsvpViewComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly service = inject(RsvpService);
   private readonly tickets = inject(TicketService);
+  private readonly invitationService = inject(InvitationService);
   private readonly fb = inject(FormBuilder);
+
+  // Resuelve la URL de la portada (soporta rutas /uploads y URLs externas).
+  protected coverSrc(): string {
+    return this.invitationService.fileUrl(this.view()?.invitation.data.coverImageUrl || '');
+  }
 
   private token = '';
   protected readonly loading = signal(true);

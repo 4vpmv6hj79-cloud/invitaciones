@@ -11,6 +11,7 @@ export interface EventData {
   locationName?: string;
   mapsUrl?: string; // enlace de Google Maps del evento
   showCountdown?: boolean; // mostrar cuenta regresiva al evento
+  coverImageUrl?: string; // imagen de portada (URL o /uploads/...)
 
   // Evento religioso (misa), opcional.
   religiousEnabled?: boolean;

@@ -26,6 +26,24 @@
       </div>
 
       <div class="field">
+        <label for="cover">Imagen de portada</label>
+        @if (value().coverImageUrl) {
+          <div class="cover-preview">
+            <img [src]="coverSrc()" alt="Portada" />
+            <button type="button" class="cover-remove" (click)="clearCover()">Quitar</button>
+          </div>
+        }
+        <input id="cover" type="url" formControlName="coverImageUrl"
+          placeholder="Pega la URL de una imagen" />
+        <label class="cover-upload">
+          {{ coverUploading() ? 'Subiendo…' : 'o subir una imagen' }}
+          <input type="file" accept="image/*" (change)="onCoverFile($event)" hidden
+            [disabled]="coverUploading()" />
+        </label>
+        @if (coverError()) { <small class="help help--error">{{ coverError() }}</small> }
+      </div>
+
+      <div class="field">
         <label for="couple">Nombres</label>
         <input id="couple" type="text" formControlName="coupleOrHonoree" placeholder="Ej. María y José" />
       </div>
@@ -200,6 +218,9 @@
           [style.background]="value().background"
           [style.fontFamily]="value().bodyFont"
         >
+          @if (value().coverImageUrl) {
+            <img class="cover" [src]="coverSrc()" alt="Portada de la invitación" />
+          }
           <p class="eyebrow" [style.color]="value().secondary">Te invitamos a</p>
           <h1
             class="title"

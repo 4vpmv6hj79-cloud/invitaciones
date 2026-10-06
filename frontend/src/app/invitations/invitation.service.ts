@@ -33,6 +33,21 @@ export class InvitationService {
     return this.http.patch<Invitation>(`${this.baseUrl}/${id}`, payload);
   }
 
+  // Sube una imagen (portada/galería) a la invitación. Devuelve la URL guardada.
+  uploadImage(id: string, file: File): Observable<{ url: string }> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<{ url: string }>(`${this.baseUrl}/${id}/upload-image`, form);
+  }
+
+  // Resuelve una ruta de imagen a URL absoluta.
+  // Las rutas /uploads/... las sirve el backend; las URLs http(s) se dejan igual.
+  fileUrl(url: string): string {
+    if (!url) return '';
+    if (/^https?:\/\//i.test(url)) return url;
+    return `${environment.apiBaseUrl}${url}`;
+  }
+
   // Descarga el PDF imprimible. La petición lleva el token (vía interceptor);
   // recibimos un blob y disparamos la descarga en el navegador.
   downloadPdf(id: string, filename = 'invitacion.pdf', size = 'A5'): Observable<Blob> {
