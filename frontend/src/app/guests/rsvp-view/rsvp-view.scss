@@ -248,16 +248,51 @@
 
 /* Galería de fotos */
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 6px;
   width: 100%;
   margin: 1rem 0;
 }
 
 .gallery-img {
-  width: 100%;
+  width: calc(33.333% - 6px);
+  max-width: 130px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: var(--radius-sm, 8px);
+}
+
+/* ---- Modos de portada ---- */
+.card .cover--marco {
+  max-width: 70%;
+  max-height: 300px;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  margin: 0 auto 1rem;
+}
+
+.card.has-bg-cover {
+  position: relative;
+  background-size: cover !important;
+  background-position: center !important;
+  color: #fff;
+  overflow: hidden;
+
+  .bg-veil {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.62) 100%);
+    z-index: 0;
+  }
+}
+
+.card .inv-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

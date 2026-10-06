@@ -8,9 +8,16 @@
     [style.background]="v.invitation.customization.background || '#faf7ef'"
     [style.fontFamily]="v.invitation.customization.bodyFont || 'serif'"
   >
-    <section class="card">
-      @if (v.invitation.data.coverImageUrl) {
-        <img class="cover" [src]="coverSrc()" alt="Portada de la invitación" />
+    <section class="card"
+      [class.has-bg-cover]="v.invitation.data.coverImageUrl && v.invitation.data.coverStyle === 'fondo'"
+      [style.backgroundImage]="v.invitation.data.coverImageUrl && v.invitation.data.coverStyle === 'fondo' ? 'url(' + coverSrc() + ')' : null">
+      @if (v.invitation.data.coverImageUrl && v.invitation.data.coverStyle === 'fondo') {
+        <div class="bg-veil"></div>
+      }
+      <div class="inv-content">
+      @if (v.invitation.data.coverImageUrl && v.invitation.data.coverStyle !== 'fondo') {
+        <img class="cover" [class.cover--marco]="v.invitation.data.coverStyle === 'marco'"
+          [src]="coverSrc()" alt="Portada de la invitación" />
       }
       <p class="eyebrow" [style.color]="v.invitation.customization.secondary || '#777'">
         Hola {{ v.guest.name }}, te invitamos a
@@ -132,6 +139,7 @@
           </div>
         </div>
       }
+      </div>
     </section>
   </main>
 }

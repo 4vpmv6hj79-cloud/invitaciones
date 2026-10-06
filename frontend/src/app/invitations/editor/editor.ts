@@ -57,6 +57,7 @@ export class Editor implements OnInit {
     mapsUrl: [''],
     showCountdown: [false],
     coverImageUrl: [''],
+    coverStyle: ['banner'],
     // Evento religioso (misa)
     religiousEnabled: [false],
     religiousSameLocation: [true],
@@ -109,6 +110,7 @@ export class Editor implements OnInit {
       mapsUrl: d.mapsUrl ?? '',
       showCountdown: d.showCountdown ?? false,
       coverImageUrl: d.coverImageUrl ?? '',
+      coverStyle: d.coverStyle ?? 'banner',
       religiousEnabled: d.religiousEnabled ?? false,
       // (galleryImages se maneja en una signal aparte, no en el form)
       religiousSameLocation: d.religiousSameLocation ?? true,
@@ -151,6 +153,7 @@ export class Editor implements OnInit {
         mapsUrl: v.mapsUrl,
         showCountdown: v.showCountdown,
         coverImageUrl: v.coverImageUrl,
+        coverStyle: v.coverStyle as 'banner' | 'fondo' | 'marco',
         galleryImages: this.gallery(),
         religiousEnabled: v.religiousEnabled,
         religiousSameLocation: v.religiousSameLocation,

@@ -41,6 +41,29 @@
             [disabled]="coverUploading()" />
         </label>
         @if (coverError()) { <small class="help help--error">{{ coverError() }}</small> }
+
+        @if (value().coverImageUrl) {
+          <div class="cover-style">
+            <span class="cover-style-label">¿Cómo mostrar la imagen?</span>
+            <div class="cover-style-options">
+              <label class="cover-style-opt" [class.active]="value().coverStyle === 'banner'">
+                <input type="radio" formControlName="coverStyle" value="banner" />
+                <span>Banner</span>
+                <small>Arriba, horizontal</small>
+              </label>
+              <label class="cover-style-opt" [class.active]="value().coverStyle === 'marco'">
+                <input type="radio" formControlName="coverStyle" value="marco" />
+                <span>Marco</span>
+                <small>Foto centrada</small>
+              </label>
+              <label class="cover-style-opt" [class.active]="value().coverStyle === 'fondo'">
+                <input type="radio" formControlName="coverStyle" value="fondo" />
+                <span>Fondo</span>
+                <small>Cubre todo</small>
+              </label>
+            </div>
+          </div>
+        }
       </div>
 
       <div class="field">
@@ -241,11 +264,18 @@
       <div class="preview-frame" [class.desktop]="previewMode() === 'desktop'">
         <article
           class="invitation"
+          [class.has-bg-cover]="value().coverImageUrl && value().coverStyle === 'fondo'"
           [style.background]="value().background"
           [style.fontFamily]="value().bodyFont"
+          [style.backgroundImage]="value().coverImageUrl && value().coverStyle === 'fondo' ? 'url(' + coverSrc() + ')' : null"
         >
-          @if (value().coverImageUrl) {
-            <img class="cover" [src]="coverSrc()" alt="Portada de la invitación" />
+          @if (value().coverImageUrl && value().coverStyle === 'fondo') {
+            <div class="bg-veil"></div>
+          }
+          <div class="inv-content">
+          @if (value().coverImageUrl && value().coverStyle !== 'fondo') {
+            <img class="cover" [class.cover--marco]="value().coverStyle === 'marco'"
+              [src]="coverSrc()" alt="Portada de la invitación" />
           }
           <p class="eyebrow" [style.color]="value().secondary">Te invitamos a</p>
           <h1
@@ -307,6 +337,7 @@
             </div>
           }
           <span class="cta" [style.background]="value().primary">Confirmar asistencia</span>
+          </div>
         </article>
       </div>
     </section>

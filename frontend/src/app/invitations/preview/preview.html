@@ -10,11 +10,18 @@
 
   <main
     class="invitation"
+    [class.has-bg-cover]="inv.event.data.coverImageUrl && inv.event.data.coverStyle === 'fondo'"
     [style.background]="inv.customization.background || '#faf7ef'"
     [style.fontFamily]="inv.customization.bodyFont || 'serif'"
+    [style.backgroundImage]="inv.event.data.coverImageUrl && inv.event.data.coverStyle === 'fondo' ? 'url(' + coverSrc() + ')' : null"
   >
-    @if (inv.event.data.coverImageUrl) {
-      <img class="cover" [src]="coverSrc()" alt="Portada de la invitación" />
+    @if (inv.event.data.coverImageUrl && inv.event.data.coverStyle === 'fondo') {
+      <div class="bg-veil"></div>
+    }
+    <div class="inv-content">
+    @if (inv.event.data.coverImageUrl && inv.event.data.coverStyle !== 'fondo') {
+      <img class="cover" [class.cover--marco]="inv.event.data.coverStyle === 'marco'"
+        [src]="coverSrc()" alt="Portada de la invitación" />
     }
     <p class="eyebrow" [style.color]="inv.customization.secondary || '#777'">Te invitamos a</p>
     <h1
@@ -99,5 +106,6 @@
     <span class="cta" [style.background]="inv.customization.primary || '#b8860b'">
       Confirmar asistencia
     </span>
+    </div>
   </main>
 }

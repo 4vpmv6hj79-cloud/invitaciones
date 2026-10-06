@@ -62,6 +62,12 @@ export class EventDataDto {
   @MaxLength(600)
   coverImageUrl?: string;
 
+  // Estilo de la portada: 'banner' (arriba), 'fondo' (cubre todo) o 'marco' (retrato).
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  coverStyle?: string;
+
   // Galería de fotos (URLs o rutas /uploads/...). Máximo 12. Opcional.
   @IsOptional()
   @IsArray()
