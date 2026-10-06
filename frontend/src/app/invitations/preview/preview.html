@@ -61,7 +61,7 @@
         </p>
         @if (inv.event.data.religiousTime) {
           <p class="line" [style.color]="inv.customization.secondary || '#555'">
-            {{ inv.event.data.religiousTime }} h
+            {{ fmtTime(inv.event.data.religiousTime) }}
           </p>
         }
         @if (inv.event.data.religiousSameLocation) {

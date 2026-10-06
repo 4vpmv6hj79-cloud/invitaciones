@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PublicInvitationService, PublicInvitation } from '../public-invitation.service';
 import { Countdown } from '../../invitations/countdown/countdown';
 import { InvitationService } from '../../invitations/invitation.service';
+import { formatTime12h } from '../../invitations/time-format';
 
 @Component({
   selector: 'app-invitation-view',
@@ -49,11 +50,20 @@ export class InvitationView implements OnInit {
     });
   }
 
-  // Texto de fecha/hora para mostrar.
+  // Texto de fecha/hora para mostrar (12h con a.m./p.m.).
   protected when(): string {
     const d = this.invitation()?.data;
     if (!d) return '';
-    const time = d.time ? (d.endTime ? `${d.time} – ${d.endTime} h` : `${d.time} h`) : '';
+    let time = '';
+    if (d.time) {
+      const start = formatTime12h(d.time);
+      time = d.endTime ? `${start} – ${formatTime12h(d.endTime)}` : start;
+    }
     return [d.date, time].filter(Boolean).join(' · ');
+  }
+
+  // Hora en formato 12h (evento religioso).
+  protected fmtTime(time: string | undefined): string {
+    return formatTime12h(time);
   }
 }

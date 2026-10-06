@@ -7,6 +7,7 @@ import { Invitation, UpdateInvitationPayload } from '../invitation.model';
 import { OrderService } from '../../orders/order.service';
 import { PALETTES, Palette } from '../palettes';
 import { Countdown } from '../countdown/countdown';
+import { formatTime12h } from '../time-format';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 type PreviewMode = 'mobile' | 'desktop';
@@ -314,14 +315,20 @@ export class Editor implements OnInit {
     });
   }
 
-  // Texto de fecha/hora formateado para la previsualización.
+  // Texto de fecha/hora formateado para la previsualización (12h con a.m./p.m.).
   protected formattedWhen(): string {
     const v = this.value();
     const parts: string[] = [];
     if (v.date) parts.push(v.date);
     if (v.time) {
-      parts.push(v.endTime ? `${v.time} – ${v.endTime} h` : `${v.time} h`);
+      const start = formatTime12h(v.time);
+      parts.push(v.endTime ? `${start} – ${formatTime12h(v.endTime)}` : start);
     }
     return parts.join(' · ');
+  }
+
+  // Hora en formato 12h para mostrar (ej. evento religioso).
+  protected fmtTime(time: string | undefined): string {
+    return formatTime12h(time);
   }
 }

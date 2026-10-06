@@ -59,7 +59,7 @@
           </p>
           @if (inv.data.religiousTime) {
             <p class="line" [style.color]="inv.customization.secondary || '#555'">
-              {{ inv.data.religiousTime }} h
+              {{ fmtTime(inv.data.religiousTime) }}
             </p>
           }
           @if (inv.data.religiousSameLocation) {

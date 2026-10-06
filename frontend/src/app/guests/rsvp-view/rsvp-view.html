@@ -50,7 +50,7 @@
           </p>
           @if (v.invitation.data.religiousTime) {
             <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">
-              {{ v.invitation.data.religiousTime }} h
+              {{ fmtTime(v.invitation.data.religiousTime) }}
             </p>
           }
           @if (v.invitation.data.religiousSameLocation) {

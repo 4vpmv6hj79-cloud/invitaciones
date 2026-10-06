@@ -281,7 +281,7 @@
             <div class="religious" [style.borderColor]="value().primary">
               <p class="religious-head" [style.color]="value().primary">Evento religioso</p>
               @if (value().religiousTime) {
-                <p class="line" [style.color]="value().secondary">{{ value().religiousTime }} h</p>
+                <p class="line" [style.color]="value().secondary">{{ fmtTime(value().religiousTime) }}</p>
               }
               @if (value().religiousSameLocation) {
                 <p class="line" [style.color]="value().secondary">En el mismo lugar del evento</p>

@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { InvitationService } from '../invitation.service';
 import { Invitation } from '../invitation.model';
 import { Countdown } from '../countdown/countdown';
+import { formatTime12h } from '../time-format';
 
 // Vista previa de la invitación tal como la verán los invitados,
 // usando el borrador (por id) y SIN necesidad de publicar/pagar.
@@ -59,7 +60,16 @@ export class InvitationPreview implements OnInit {
   protected when(): string {
     const d = this.invitation()?.event?.data;
     if (!d) return '';
-    const time = d.time ? (d.endTime ? `${d.time} – ${d.endTime} h` : `${d.time} h`) : '';
+    let time = '';
+    if (d.time) {
+      const start = formatTime12h(d.time);
+      time = d.endTime ? `${start} – ${formatTime12h(d.endTime)}` : start;
+    }
     return [d.date, time].filter(Boolean).join(' · ');
+  }
+
+  // Hora en formato 12h (evento religioso).
+  protected fmtTime(time: string | undefined): string {
+    return formatTime12h(time);
   }
 }
