@@ -1,0 +1,37 @@
+# Blueprint de Render para el backend (NestJS).
+# La base de datos vive en Neon (Postgres gratis), no en Render,
+# así que aquí solo se define el servicio web.
+services:
+  - type: web
+    name: invitaciones-backend
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "20"
+      - key: DB_SSL
+        value: "true"
+      - key: DB_SYNCHRONIZE
+        value: "true"
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: PUBLISH_PRICE_CENTS
+        value: "19900"
+      - key: PUBLISH_VALIDITY_DAYS
+        value: "180"
+      # Estas se configuran manualmente en el panel de Render (son secretos o URLs):
+      # - DATABASE_URL  -> cadena de conexión de Neon
+      # - JWT_SECRET    -> secreto largo y aleatorio
+      # - CORS_ORIGIN   -> https://invitaciones-eight-nu.vercel.app
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
