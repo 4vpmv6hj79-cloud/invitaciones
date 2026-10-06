@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { InvitationService } from '../invitation.service';
@@ -21,6 +21,7 @@ type PreviewMode = 'mobile' | 'desktop';
 })
 export class Editor implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly service = inject(InvitationService);
   private readonly orders = inject(OrderService);
   private readonly fb = inject(FormBuilder);
@@ -289,11 +290,11 @@ export class Editor implements OnInit {
     );
   }
 
-  // Abre la vista previa completa (como la verán los invitados) en una pestaña nueva.
-  // Guarda antes para que refleje los últimos cambios.
+  // Abre la vista previa completa (como la verán los invitados) en la MISMA pestaña.
+  // Guarda antes para que refleje los últimos cambios; desde la preview se vuelve al editor.
   openPreview(): void {
     this.save();
-    window.open(`/vista-previa/${this.invitationId}`, '_blank');
+    this.router.navigate(['/vista-previa', this.invitationId]);
   }
 
   // Guarda y luego inicia el pago para publicar la invitación.
