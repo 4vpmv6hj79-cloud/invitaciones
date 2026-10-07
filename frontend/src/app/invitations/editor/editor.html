@@ -244,22 +244,38 @@
         <div class="field">
           <label for="headingFont">Tipografía de títulos</label>
           <select id="headingFont" formControlName="headingFont">
-            <option value="Playfair Display">Playfair Display</option>
-            <option value="Cormorant Garamond">Cormorant Garamond</option>
-            <option value="Poppins">Poppins</option>
-            <option value="Montserrat">Montserrat</option>
-            <option value="Baloo 2">Baloo 2</option>
+            <optgroup label="Elegantes">
+              <option value="Playfair Display">Playfair Display</option>
+              <option value="Cormorant Garamond">Cormorant Garamond</option>
+            </optgroup>
+            <optgroup label="Modernas">
+              <option value="Poppins">Poppins</option>
+              <option value="Montserrat">Montserrat</option>
+              <option value="Baloo 2">Baloo 2</option>
+            </optgroup>
+            <optgroup label="Manuscritas">
+              <option value="Great Vibes">Great Vibes</option>
+              <option value="Dancing Script">Dancing Script</option>
+              <option value="Parisienne">Parisienne</option>
+              <option value="Sacramento">Sacramento</option>
+            </optgroup>
             <option value="serif">Serif (sistema)</option>
           </select>
         </div>
         <div class="field">
           <label for="bodyFont">Tipografía de texto</label>
           <select id="bodyFont" formControlName="bodyFont">
-            <option value="Lato">Lato</option>
-            <option value="Inter">Inter</option>
-            <option value="Nunito">Nunito</option>
-            <option value="Nunito Sans">Nunito Sans</option>
-            <option value="Poppins">Poppins</option>
+            <optgroup label="Legibles">
+              <option value="Lato">Lato</option>
+              <option value="Inter">Inter</option>
+              <option value="Nunito">Nunito</option>
+              <option value="Nunito Sans">Nunito Sans</option>
+              <option value="Poppins">Poppins</option>
+            </optgroup>
+            <optgroup label="Manuscritas">
+              <option value="Dancing Script">Dancing Script</option>
+              <option value="Parisienne">Parisienne</option>
+            </optgroup>
             <option value="sans-serif">Sans-serif (sistema)</option>
           </select>
         </div>
