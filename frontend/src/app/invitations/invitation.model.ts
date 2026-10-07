@@ -11,6 +11,8 @@ export interface EventData {
   locationName?: string;
   mapsUrl?: string; // enlace de Google Maps del evento
   showCountdown?: boolean; // mostrar cuenta regresiva al evento
+  rsvpMode?: 'abierto' | 'cerrado'; // cómo se pregunta la asistencia en el enlace público
+  rsvpCompanions?: number; // acompañantes (adicionales al invitado) en modo cerrado
   coverImageUrl?: string; // imagen de portada (URL o /uploads/...)
   coverStyle?: 'banner' | 'fondo' | 'marco'; // cómo se muestra la portada
   coverSize?: 's' | 'm' | 'l'; // (compatibilidad) tamaño de la portada

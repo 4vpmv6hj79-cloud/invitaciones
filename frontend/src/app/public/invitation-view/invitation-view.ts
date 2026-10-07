@@ -37,10 +37,21 @@ export class InvitationView implements OnInit {
     dietaryNotes: [''],
   });
 
+  // Modo de confirmación definido por el organizador.
+  protected rsvpMode(): 'abierto' | 'cerrado' {
+    return this.invitation()?.data?.rsvpMode === 'cerrado' ? 'cerrado' : 'abierto';
+  }
+
+  // Acompañantes (adicionales al invitado) en modo cerrado.
+  protected rsvpCompanions(): number {
+    return Math.max(0, Number(this.invitation()?.data?.rsvpCompanions) || 0);
+  }
+
   // Confirma asistencia desde el enlace compartido.
   confirmRsvp(): void {
-    if (this.rsvpForm.invalid) {
-      this.rsvpForm.markAllAsTouched();
+    // El nombre siempre es obligatorio; los lugares solo importan en modo abierto.
+    if (!this.rsvpForm.controls.name.value.trim()) {
+      this.rsvpForm.controls.name.markAsTouched();
       this.rsvpError.set('Escribe tu nombre para confirmar.');
       return;
     }
@@ -59,13 +70,16 @@ export class InvitationView implements OnInit {
 
   private sendRsvp(status: 'confirmed' | 'declined'): void {
     const v = this.rsvpForm.getRawValue();
+    // En modo cerrado, los lugares = acompañantes + 1 (el invitado).
+    // En modo abierto, lo que eligió en el selector.
+    const seats =
+      this.rsvpMode() === 'cerrado' ? this.rsvpCompanions() + 1 : Number(v.seats);
     this.rsvpSending.set(true);
     this.rsvpError.set(null);
     this.service
       .rsvp(this.token, {
         name: v.name.trim(),
-        // El <select> entrega texto; el backend espera un entero.
-        seats: Number(v.seats),
+        seats,
         dietaryNotes: v.dietaryNotes || undefined,
         status,
       })

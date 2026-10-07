@@ -8,6 +8,8 @@ export declare class EventDataDto {
     locationName?: string;
     mapsUrl?: string;
     showCountdown?: boolean;
+    rsvpMode?: string;
+    rsvpCompanions?: number;
     coverImageUrl?: string;
     coverStyle?: string;
     coverSize?: string;

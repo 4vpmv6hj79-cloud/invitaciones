@@ -69,6 +69,19 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(10),
+    __metadata("design:type", String)
+], EventDataDto.prototype, "rsvpMode", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(0),
+    (0, class_validator_1.Max)(20),
+    __metadata("design:type", Number)
+], EventDataDto.prototype, "rsvpCompanions", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
     (0, class_validator_1.MaxLength)(600),
     __metadata("design:type", String)
 ], EventDataDto.prototype, "coverImageUrl", void 0);

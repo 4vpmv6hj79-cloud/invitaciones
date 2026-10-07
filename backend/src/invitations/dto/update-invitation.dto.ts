@@ -59,6 +59,20 @@ export class EventDataDto {
   @IsBoolean()
   showCountdown?: boolean;
 
+  // Modo de confirmación en el enlace público: 'abierto' (el invitado elige cuántos)
+  // o 'cerrado' (confirma con un número fijo de acompañantes definido por el organizador).
+  @IsOptional()
+  @IsString()
+  @MaxLength(10)
+  rsvpMode?: string;
+
+  // Número de acompañantes (adicionales al invitado) en el modo 'cerrado'.
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(20)
+  rsvpCompanions?: number;
+
   // Imagen de portada de la invitación (URL o ruta /uploads/...). Opcional.
   @IsOptional()
   @IsString()

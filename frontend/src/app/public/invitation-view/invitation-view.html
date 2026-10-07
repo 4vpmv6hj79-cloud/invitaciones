@@ -124,14 +124,24 @@
             <input type="text" formControlName="name" placeholder="Nombre y apellido" />
           </label>
 
-          <label class="rsvp-field">
-            <span>¿Cuántos asistirán?</span>
-            <select formControlName="seats">
-              @for (n of seatOptions(); track n) {
-                <option [value]="n">{{ n }}</option>
+          @if (rsvpMode() === 'cerrado') {
+            <p class="rsvp-fixed" [style.color]="inv.customization.secondary || '#555'">
+              @if (rsvpCompanions() > 0) {
+                ¿Confirmas asistencia con {{ rsvpCompanions() }} acompañante(s)?
+              } @else {
+                ¿Confirmas tu asistencia?
               }
-            </select>
-          </label>
+            </p>
+          } @else {
+            <label class="rsvp-field">
+              <span>¿Cuántos asistirán?</span>
+              <select formControlName="seats">
+                @for (n of seatOptions(); track n) {
+                  <option [value]="n">{{ n }}</option>
+                }
+              </select>
+            </label>
+          }
 
           <label class="rsvp-field">
             <span>Preferencias o alergias (opcional)</span>

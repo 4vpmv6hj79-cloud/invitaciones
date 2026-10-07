@@ -161,6 +161,29 @@
         <span>Mostrar cuenta regresiva al evento</span>
       </label>
 
+      <div class="field">
+        <label for="rsvpMode">Confirmación de asistencia</label>
+        <select id="rsvpMode" formControlName="rsvpMode">
+          <option value="abierto">Preguntar cuántos asistirán</option>
+          <option value="cerrado">Confirmar con un número fijo de acompañantes</option>
+        </select>
+        <small class="help">
+          "Abierto": cada invitado elige cuántas personas asistirán.
+          "Cerrado": el invitado solo confirma la cantidad que tú defines.
+        </small>
+      </div>
+
+      @if (value().rsvpMode === 'cerrado') {
+        <div class="field">
+          <label for="rsvpCompanions">Acompañantes por invitado (además del invitado)</label>
+          <input id="rsvpCompanions" type="number" min="0" max="20"
+            formControlName="rsvpCompanions" />
+          <small class="help">
+            Se mostrará: "¿Confirmas asistencia con {{ value().rsvpCompanions }} acompañante(s)?"
+          </small>
+        </div>
+      }
+
       <h2>Evento religioso</h2>
 
       <label class="check-field">
