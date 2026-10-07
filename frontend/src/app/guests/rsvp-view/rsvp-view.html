@@ -112,16 +112,26 @@
       } @else {
         <div class="form" [formGroup]="form">
           <p class="prompt">¿Nos acompañas?</p>
-          <p class="seats-hint">Tienes {{ v.guest.allowedSeats }} lugar(es) reservado(s).</p>
 
-          <label class="field">
-            <span>¿Cuántos asistirán?</span>
-            <select formControlName="seats">
-              @for (n of seatOptions(); track n) {
-                <option [value]="n">{{ n }}</option>
+          @if (isClosedMode()) {
+            <p class="seats-hint">
+              @if (v.guest.allowedSeats > 1) {
+                Tu confirmación es para {{ v.guest.allowedSeats }} lugares.
+              } @else {
+                Tu confirmación es para 1 lugar.
               }
-            </select>
-          </label>
+            </p>
+          } @else {
+            <p class="seats-hint">Tienes {{ v.guest.allowedSeats }} lugar(es) reservado(s).</p>
+            <label class="field">
+              <span>¿Cuántos asistirán?</span>
+              <select formControlName="seats">
+                @for (n of seatOptions(); track n) {
+                  <option [value]="n">{{ n }}</option>
+                }
+              </select>
+            </label>
+          }
 
           <label class="field">
             <span>Preferencias o alergias (opcional)</span>

@@ -5,6 +5,8 @@ import { environment } from '../../environments/environment';
 
 export type RsvpStatus = 'pending' | 'confirmed' | 'declined';
 
+export type GuestRsvpMode = 'abierto' | 'cerrado';
+
 export interface Guest {
   id: string;
   invitationId: string;
@@ -12,6 +14,7 @@ export interface Guest {
   name: string;
   contact?: string | null;
   allowedSeats: number;
+  rsvpMode: GuestRsvpMode;
   rsvpStatus: RsvpStatus;
   confirmedSeats: number;
   dietaryNotes?: string | null;
@@ -31,6 +34,7 @@ export interface CreateGuestPayload {
   name: string;
   contact?: string;
   allowedSeats: number;
+  rsvpMode?: GuestRsvpMode;
   groupId?: string;
 }
 

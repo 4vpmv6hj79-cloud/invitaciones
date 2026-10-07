@@ -8,6 +8,7 @@ export interface RsvpView {
   guest: {
     name: string;
     allowedSeats: number;
+    rsvpMode: 'abierto' | 'cerrado';
     rsvpStatus: 'pending' | 'confirmed' | 'declined';
     confirmedSeats: number;
     dietaryNotes: string | null;

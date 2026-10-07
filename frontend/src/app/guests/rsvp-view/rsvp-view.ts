@@ -109,13 +109,20 @@ export class RsvpViewComponent implements OnInit {
     return Array.from({ length: max }, (_, i) => i + 1);
   }
 
+  // ¿El invitado tiene modo cerrado (lugares fijos)?
+  protected isClosedMode(): boolean {
+    return this.view()?.guest.rsvpMode === 'cerrado';
+  }
+
   confirm(): void {
     this.submitError.set(null);
     const v = this.form.getRawValue();
+    // En modo cerrado no se elige: el backend usa allowedSeats fijo.
+    const seats = this.isClosedMode() ? (this.view()?.guest.allowedSeats ?? 1) : Number(v.seats);
     this.service
       .respond(this.token, {
         status: 'confirmed',
-        seats: v.seats,
+        seats,
         dietaryNotes: v.dietaryNotes || undefined,
       })
       .subscribe({

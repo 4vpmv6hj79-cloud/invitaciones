@@ -19,8 +19,16 @@
     <input type="text" formControlName="name" placeholder="Nombre o familia" />
     <input type="text" formControlName="contact" placeholder="Contacto (opcional)" />
     <input type="number" formControlName="allowedSeats" min="1" placeholder="Lugares" />
+    <select formControlName="rsvpMode" title="Modo de confirmación">
+      <option value="abierto">Abierto (elige cuántos)</option>
+      <option value="cerrado">Cerrado (lugares fijos)</option>
+    </select>
     <button type="submit">Agregar</button>
   </form>
+  <p class="mode-hint">
+    "Abierto": el invitado elige cuántos asisten (hasta sus lugares).
+    "Cerrado": confirma exactamente los lugares que le asignas.
+  </p>
 
   <div class="io">
     <label class="io-btn">
@@ -78,7 +86,10 @@
       <tbody>
         @for (g of guests(); track g.id) {
           <tr>
-            <td>{{ g.name }}</td>
+            <td>
+              {{ g.name }}
+              <span class="mode-badge">{{ g.rsvpMode === 'cerrado' ? 'Cerrado' : 'Abierto' }}</span>
+            </td>
             <td>{{ g.confirmedSeats }}/{{ g.allowedSeats }}</td>
             <td>
               <span class="status" [class.ok]="g.rsvpStatus === 'confirmed'"

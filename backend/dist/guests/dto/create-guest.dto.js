@@ -34,6 +34,11 @@ __decorate([
 ], CreateGuestDto.prototype, "allowedSeats", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsIn)(['abierto', 'cerrado']),
+    __metadata("design:type", String)
+], CreateGuestDto.prototype, "rsvpMode", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsUUID)('4'),
     __metadata("design:type", String)
 ], CreateGuestDto.prototype, "groupId", void 0);

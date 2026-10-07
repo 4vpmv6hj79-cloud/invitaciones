@@ -35,6 +35,7 @@ let GuestsService = class GuestsService {
             name: dto.name,
             contact: dto.contact ?? null,
             allowedSeats: dto.allowedSeats,
+            rsvpMode: dto.rsvpMode === 'cerrado' ? guest_entity_1.GuestRsvpMode.Cerrado : guest_entity_1.GuestRsvpMode.Abierto,
             groupId: dto.groupId ?? null,
             accessToken: (0, crypto_1.randomBytes)(18).toString('hex'),
         });
@@ -109,6 +110,10 @@ let GuestsService = class GuestsService {
         if (dto.status === 'declined') {
             guest.rsvpStatus = guest_entity_1.RsvpStatus.Declined;
             guest.confirmedSeats = 0;
+        }
+        else if (guest.rsvpMode === guest_entity_1.GuestRsvpMode.Cerrado) {
+            guest.rsvpStatus = guest_entity_1.RsvpStatus.Confirmed;
+            guest.confirmedSeats = guest.allowedSeats;
         }
         else {
             const seats = dto.seats ?? 1;

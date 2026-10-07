@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { randomBytes } from 'crypto';
-import { Guest, RsvpStatus } from './guest.entity';
+import { Guest, RsvpStatus, GuestRsvpMode } from './guest.entity';
 import { GuestGroup } from './guest-group.entity';
 import { CreateGuestDto } from './dto/create-guest.dto';
 import { CreateGroupDto } from './dto/create-group.dto';
@@ -36,6 +36,7 @@ export class GuestsService {
       name: dto.name,
       contact: dto.contact ?? null,
       allowedSeats: dto.allowedSeats,
+      rsvpMode: dto.rsvpMode === 'cerrado' ? GuestRsvpMode.Cerrado : GuestRsvpMode.Abierto,
       groupId: dto.groupId ?? null,
       accessToken: randomBytes(18).toString('hex'),
     });
@@ -143,8 +144,12 @@ export class GuestsService {
     if (dto.status === 'declined') {
       guest.rsvpStatus = RsvpStatus.Declined;
       guest.confirmedSeats = 0;
+    } else if (guest.rsvpMode === GuestRsvpMode.Cerrado) {
+      // Modo cerrado: confirma exactamente los lugares autorizados (no elige cantidad).
+      guest.rsvpStatus = RsvpStatus.Confirmed;
+      guest.confirmedSeats = guest.allowedSeats;
     } else {
-      // Al confirmar, por defecto usa 1 lugar si no indica cuántos.
+      // Modo abierto: el invitado elige cuántos, hasta su cupo.
       const seats = dto.seats ?? 1;
       if (seats < 1) {
         throw new BadRequestException('Debes confirmar al menos un lugar');

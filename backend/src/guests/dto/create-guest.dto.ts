@@ -1,4 +1,5 @@
 import {
+  IsIn,
   IsInt,
   IsOptional,
   IsString,
@@ -25,6 +26,11 @@ export class CreateGuestDto {
   @Min(1)
   @Max(50)
   allowedSeats!: number;
+
+  // Modo de confirmación: 'abierto' (elige cuántos) o 'cerrado' (fijo a allowedSeats).
+  @IsOptional()
+  @IsIn(['abierto', 'cerrado'])
+  rsvpMode?: 'abierto' | 'cerrado';
 
   @IsOptional()
   @IsUUID('4')

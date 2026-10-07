@@ -5,6 +5,10 @@ export declare enum RsvpStatus {
     Confirmed = "confirmed",
     Declined = "declined"
 }
+export declare enum GuestRsvpMode {
+    Abierto = "abierto",
+    Cerrado = "cerrado"
+}
 export declare class Guest {
     id: string;
     invitation: Invitation;
@@ -14,6 +18,7 @@ export declare class Guest {
     name: string;
     contact?: string | null;
     allowedSeats: number;
+    rsvpMode: GuestRsvpMode;
     rsvpStatus: RsvpStatus;
     confirmedSeats: number;
     dietaryNotes?: string | null;

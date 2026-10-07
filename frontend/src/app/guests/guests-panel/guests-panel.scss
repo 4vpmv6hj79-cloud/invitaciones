@@ -257,3 +257,22 @@ table {
     background: #1ebe5b;
   }
 }
+
+/* Modo de confirmación por invitado */
+.mode-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.8rem;
+  color: var(--color-muted, #8a8591);
+}
+
+.mode-badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--color-surface-2, #f3f0f6);
+  color: var(--color-muted, #6b6773);
+  font-size: 0.7rem;
+  font-weight: 600;
+  vertical-align: middle;
+}

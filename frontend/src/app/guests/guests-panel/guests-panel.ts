@@ -36,6 +36,7 @@ export class GuestsPanel implements OnInit {
     name: ['', [Validators.required, Validators.minLength(2)]],
     contact: [''],
     allowedSeats: [1, [Validators.required, Validators.min(1)]],
+    rsvpMode: ['abierto' as 'abierto' | 'cerrado'],
   });
 
   ngOnInit(): void {
@@ -72,10 +73,11 @@ export class GuestsPanel implements OnInit {
         name: v.name,
         contact: v.contact || undefined,
         allowedSeats: v.allowedSeats,
+        rsvpMode: v.rsvpMode,
       })
       .subscribe({
         next: () => {
-          this.form.reset({ name: '', contact: '', allowedSeats: 1 });
+          this.form.reset({ name: '', contact: '', allowedSeats: 1, rsvpMode: 'abierto' });
           this.reload();
         },
       });

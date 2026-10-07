@@ -14,6 +14,7 @@ export declare class RsvpController {
         guest: {
             name: string;
             allowedSeats: number;
+            rsvpMode: import("./guest.entity").GuestRsvpMode;
             rsvpStatus: import("./guest.entity").RsvpStatus;
             confirmedSeats: number;
             dietaryNotes: string | null;

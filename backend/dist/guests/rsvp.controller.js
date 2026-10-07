@@ -34,6 +34,7 @@ let RsvpController = class RsvpController {
             guest: {
                 name: guest.name,
                 allowedSeats: guest.allowedSeats,
+                rsvpMode: guest.rsvpMode,
                 rsvpStatus: guest.rsvpStatus,
                 confirmedSeats: guest.confirmedSeats,
                 dietaryNotes: guest.dietaryNotes ?? null,

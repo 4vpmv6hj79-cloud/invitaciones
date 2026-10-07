@@ -17,6 +17,14 @@ export enum RsvpStatus {
   Declined = 'declined',
 }
 
+// Modo de confirmación por invitado:
+// - Abierto: el invitado elige cuántos asisten (hasta allowedSeats).
+// - Cerrado: confirma exactamente allowedSeats (solo acepta o declina).
+export enum GuestRsvpMode {
+  Abierto = 'abierto',
+  Cerrado = 'cerrado',
+}
+
 // Datos privados de un invitado. Nunca se exponen públicamente ni a otros invitados.
 @Entity('guests')
 export class Guest {
@@ -48,6 +56,10 @@ export class Guest {
   // Lugares autorizados para este invitado (incluye acompañantes).
   @Column({ name: 'allowed_seats', type: 'int', default: 1 })
   allowedSeats!: number;
+
+  // Modo de confirmación de este invitado (abierto: elige; cerrado: fijo a allowedSeats).
+  @Column({ name: 'rsvp_mode', type: 'enum', enum: GuestRsvpMode, default: GuestRsvpMode.Abierto })
+  rsvpMode!: GuestRsvpMode;
 
   @Column({ name: 'rsvp_status', type: 'enum', enum: RsvpStatus, default: RsvpStatus.Pending })
   rsvpStatus!: RsvpStatus;

@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Guest = exports.RsvpStatus = void 0;
+exports.Guest = exports.GuestRsvpMode = exports.RsvpStatus = void 0;
 const typeorm_1 = require("typeorm");
 const invitation_entity_1 = require("../invitations/invitation.entity");
 const guest_group_entity_1 = require("./guest-group.entity");
@@ -19,6 +19,11 @@ var RsvpStatus;
     RsvpStatus["Confirmed"] = "confirmed";
     RsvpStatus["Declined"] = "declined";
 })(RsvpStatus || (exports.RsvpStatus = RsvpStatus = {}));
+var GuestRsvpMode;
+(function (GuestRsvpMode) {
+    GuestRsvpMode["Abierto"] = "abierto";
+    GuestRsvpMode["Cerrado"] = "cerrado";
+})(GuestRsvpMode || (exports.GuestRsvpMode = GuestRsvpMode = {}));
 let Guest = class Guest {
 };
 exports.Guest = Guest;
@@ -56,6 +61,10 @@ __decorate([
     (0, typeorm_1.Column)({ name: 'allowed_seats', type: 'int', default: 1 }),
     __metadata("design:type", Number)
 ], Guest.prototype, "allowedSeats", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'rsvp_mode', type: 'enum', enum: GuestRsvpMode, default: GuestRsvpMode.Abierto }),
+    __metadata("design:type", String)
+], Guest.prototype, "rsvpMode", void 0);
 __decorate([
     (0, typeorm_1.Column)({ name: 'rsvp_status', type: 'enum', enum: RsvpStatus, default: RsvpStatus.Pending }),
     __metadata("design:type", String)
