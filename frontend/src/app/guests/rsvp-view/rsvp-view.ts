@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RsvpService, RsvpView } from '../rsvp.service';
 import { TicketService, GuestPass } from '../../tickets/ticket.service';
-import { buildCalendarHref } from '../../invitations/ics.util';
+import { buildGoogleCalendarUrl, downloadIcs, buildIcsContent } from '../../invitations/ics.util';
 import { Countdown } from '../../invitations/countdown/countdown';
 import { InvitationService } from '../../invitations/invitation.service';
 import { formatTime12h } from '../../invitations/time-format';
@@ -160,11 +160,23 @@ export class RsvpViewComponent implements OnInit {
     return formatTime12h(time);
   }
 
-  // Enlace .ics (evento principal + misa) para agregar al calendario.
-  // Se usa solo tras confirmar asistencia.
-  protected calendarHref(): string | null {
+  // ¿Hay datos suficientes para ofrecer agregar al calendario? (requiere fecha)
+  protected hasCalendar(): boolean {
+    const inv = this.view()?.invitation;
+    return !!inv && !!buildIcsContent(inv.title, inv.data);
+  }
+
+  // Enlace a Google Calendar (web): ideal para Android/escritorio.
+  protected googleCalendarUrl(): string | null {
     const inv = this.view()?.invitation;
     if (!inv) return null;
-    return buildCalendarHref(inv.title, inv.data);
+    return buildGoogleCalendarUrl(inv.title, inv.data);
+  }
+
+  // Descarga el archivo .ics (Apple Calendar / Outlook).
+  protected addToAppleCalendar(): void {
+    const inv = this.view()?.invitation;
+    if (!inv) return;
+    downloadIcs(inv.title, inv.data);
   }
 }

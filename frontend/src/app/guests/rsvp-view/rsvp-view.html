@@ -94,12 +94,22 @@
           <span class="check">✓</span>
           <p>¡Gracias! Tu respuesta quedó registrada.</p>
         </div>
-        @if (confirmed() && calendarHref(); as href) {
-          <a class="calendar-btn" [href]="href"
-            [download]="(v.invitation.title || 'evento') + '.ics'"
-            [style.background]="v.invitation.customization.primary || '#b8860b'">
-            Agregar al calendario
-          </a>
+        @if (confirmed() && hasCalendar()) {
+          <div class="calendar-box">
+            <p class="calendar-title">Agregar al calendario</p>
+            @if (googleCalendarUrl(); as gurl) {
+              <a class="calendar-btn" [href]="gurl" target="_blank" rel="noopener"
+                [style.background]="v.invitation.customization.primary || '#b8860b'">
+                Google Calendar
+              </a>
+            }
+            <button type="button" class="calendar-btn calendar-btn--alt"
+              [style.borderColor]="v.invitation.customization.primary || '#b8860b'"
+              [style.color]="v.invitation.customization.primary || '#b8860b'"
+              (click)="addToAppleCalendar()">
+              Apple / Outlook (.ics)
+            </button>
+          </div>
         }
         @if (pass()?.hasPass) {
           <div class="pass">
