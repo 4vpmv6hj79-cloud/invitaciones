@@ -106,6 +106,13 @@ export class EventDataDto {
   @IsBoolean()
   religiousEnabled?: boolean;
 
+  // Título personalizable de la sección religiosa (ej. "Misa", "Ceremonia").
+  // Si está vacío, se usa "Evento religioso".
+  @IsOptional()
+  @IsString()
+  @MaxLength(60)
+  religiousTitle?: string;
+
   // Si el evento religioso se celebra en el mismo lugar que el evento principal.
   @IsOptional()
   @IsBoolean()

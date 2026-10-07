@@ -170,6 +170,12 @@
 
       @if (value().religiousEnabled) {
         <div class="field">
+          <label for="religiousTitle">Título de la sección</label>
+          <input id="religiousTitle" type="text" formControlName="religiousTitle"
+            placeholder="Ej. Misa, Ceremonia religiosa, Boda religiosa…" />
+          <small class="help">Si lo dejas vacío, se mostrará "Evento religioso".</small>
+        </div>
+        <div class="field">
           <label for="religiousTime">Hora del evento religioso</label>
           <input id="religiousTime" type="time" formControlName="religiousTime" />
         </div>
@@ -337,7 +343,7 @@
           }
           @if (value().religiousEnabled) {
             <div class="religious" [style.borderColor]="value().primary">
-              <p class="religious-head" [style.color]="value().primary">Evento religioso</p>
+              <p class="religious-head" [style.color]="value().primary">{{ religiousHeading() }}</p>
               @if (value().religiousTime) {
                 <p class="line" [style.color]="value().secondary">{{ fmtTime(value().religiousTime) }}</p>
               }

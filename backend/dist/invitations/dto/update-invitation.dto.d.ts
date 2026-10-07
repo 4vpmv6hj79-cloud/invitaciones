@@ -15,6 +15,7 @@ export declare class EventDataDto {
     galleryItemPct?: number;
     galleryImages?: string[];
     religiousEnabled?: boolean;
+    religiousTitle?: string;
     religiousSameLocation?: boolean;
     religiousTime?: string;
     religiousLocationName?: string;

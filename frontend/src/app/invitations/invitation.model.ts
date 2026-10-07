@@ -20,6 +20,7 @@ export interface EventData {
 
   // Evento religioso (misa), opcional.
   religiousEnabled?: boolean;
+  religiousTitle?: string; // título personalizado de la sección (ej. "Misa")
   religiousSameLocation?: boolean; // true: misma ubicación que el evento
   religiousTime?: string; // HH:mm
   religiousLocationName?: string;

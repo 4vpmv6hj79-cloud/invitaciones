@@ -64,7 +64,7 @@
       @if (inv.data.religiousEnabled) {
         <div class="religious" [style.borderColor]="inv.customization.primary || '#b8860b'">
           <p class="religious-head" [style.color]="inv.customization.primary || '#b8860b'">
-            Evento religioso
+            {{ inv.data.religiousTitle?.trim() || 'Evento religioso' }}
           </p>
           @if (inv.data.religiousTime) {
             <p class="line" [style.color]="inv.customization.secondary || '#555'">

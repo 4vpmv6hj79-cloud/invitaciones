@@ -113,6 +113,12 @@ __decorate([
 ], EventDataDto.prototype, "religiousEnabled", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(60),
+    __metadata("design:type", String)
+], EventDataDto.prototype, "religiousTitle", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsBoolean)(),
     __metadata("design:type", Boolean)
 ], EventDataDto.prototype, "religiousSameLocation", void 0);

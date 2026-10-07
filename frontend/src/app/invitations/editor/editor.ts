@@ -64,6 +64,7 @@ export class Editor implements OnInit {
     galleryItemPct: [31],
     // Evento religioso (misa)
     religiousEnabled: [false],
+    religiousTitle: [''],
     religiousSameLocation: [true],
     religiousTime: [''],
     religiousLocationName: [''],
@@ -120,6 +121,7 @@ export class Editor implements OnInit {
       coverWidthPct: d.coverWidthPct ?? this.sizeToPct(d.coverSize),
       galleryItemPct: d.galleryItemPct ?? 31,
       religiousEnabled: d.religiousEnabled ?? false,
+      religiousTitle: d.religiousTitle ?? '',
       // (galleryImages se maneja en una signal aparte, no en el form)
       religiousSameLocation: d.religiousSameLocation ?? true,
       religiousTime: d.religiousTime ?? '',
@@ -167,6 +169,7 @@ export class Editor implements OnInit {
         galleryItemPct: Number(v.galleryItemPct),
         galleryImages: this.gallery(),
         religiousEnabled: v.religiousEnabled,
+        religiousTitle: v.religiousEnabled ? v.religiousTitle : '',
         religiousSameLocation: v.religiousSameLocation,
         religiousTime: v.religiousEnabled ? v.religiousTime : '',
         religiousLocationName: sameLoc ? '' : v.religiousEnabled ? v.religiousLocationName : '',
@@ -361,5 +364,10 @@ export class Editor implements OnInit {
   // Hora en formato 12h para mostrar (ej. evento religioso).
   protected fmtTime(time: string | undefined): string {
     return formatTime12h(time);
+  }
+
+  // Título de la sección religiosa (personalizado o por defecto).
+  protected religiousHeading(): string {
+    return this.value().religiousTitle?.trim() || 'Evento religioso';
   }
 }
