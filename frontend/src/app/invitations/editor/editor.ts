@@ -8,6 +8,7 @@ import { OrderService } from '../../orders/order.service';
 import { PALETTES, Palette } from '../palettes';
 import { Countdown } from '../countdown/countdown';
 import { formatTime12h } from '../time-format';
+import { normalizeMapsUrl } from '../maps-url';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 type PreviewMode = 'mobile' | 'desktop';
@@ -369,5 +370,10 @@ export class Editor implements OnInit {
   // Título de la sección religiosa (personalizado o por defecto).
   protected religiousHeading(): string {
     return this.value().religiousTitle?.trim() || 'Evento religioso';
+  }
+
+  // Normaliza el enlace de ubicación para que siempre abra Google Maps.
+  protected mapsHref(value: string | undefined): string {
+    return normalizeMapsUrl(value);
   }
 }

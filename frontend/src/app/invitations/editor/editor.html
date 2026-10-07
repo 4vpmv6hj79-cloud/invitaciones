@@ -153,7 +153,7 @@
         <label for="mapsUrl">Ubicación (enlace de Google Maps)</label>
         <input id="mapsUrl" type="url" formControlName="mapsUrl"
           placeholder="Pega aquí el enlace de Google Maps" />
-        <small class="help">En Google Maps: Compartir → Copiar enlace, y pégalo aquí.</small>
+        <small class="help">Pega el enlace de Google Maps (Compartir → Copiar enlace), o también sirve una dirección o coordenadas.</small>
       </div>
 
       <label class="check-field">
@@ -354,7 +354,7 @@
             <p class="where" [style.color]="value().secondary">{{ value().locationName }}</p>
           }
           @if (value().mapsUrl) {
-            <a class="maps-link" [href]="value().mapsUrl" target="_blank" rel="noopener"
+            <a class="maps-link" [href]="mapsHref(value().mapsUrl)" target="_blank" rel="noopener"
               [style.color]="value().primary">📍 Ver ubicación</a>
           }
           @if (value().religiousEnabled) {
@@ -370,7 +370,7 @@
                   <p class="line" [style.color]="value().secondary">{{ value().religiousLocationName }}</p>
                 }
                 @if (value().religiousMapsUrl) {
-                  <a class="maps-link" [href]="value().religiousMapsUrl" target="_blank" rel="noopener"
+                  <a class="maps-link" [href]="mapsHref(value().religiousMapsUrl)" target="_blank" rel="noopener"
                     [style.color]="value().primary">📍 Ver ubicación</a>
                 }
               }

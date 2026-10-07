@@ -7,6 +7,7 @@ import { buildCalendarHref } from '../../invitations/ics.util';
 import { Countdown } from '../../invitations/countdown/countdown';
 import { InvitationService } from '../../invitations/invitation.service';
 import { formatTime12h } from '../../invitations/time-format';
+import { normalizeMapsUrl } from '../../invitations/maps-url';
 
 @Component({
   selector: 'app-rsvp-view',
@@ -30,6 +31,11 @@ export class RsvpViewComponent implements OnInit {
   // Resuelve una URL de la galería.
   protected gallerySrc(url: string): string {
     return this.invitationService.fileUrl(url);
+  }
+
+  // Normaliza el enlace de ubicación para que siempre abra Google Maps.
+  protected mapsHref(value: string | undefined): string {
+    return normalizeMapsUrl(value);
   }
 
   // Ancho de la portada en % (fallback desde coverSize para invitaciones viejas).

@@ -48,7 +48,7 @@
         </p>
       }
       @if (v.invitation.data.mapsUrl) {
-        <a class="maps-link" [href]="v.invitation.data.mapsUrl" target="_blank" rel="noopener"
+        <a class="maps-link" [href]="mapsHref(v.invitation.data.mapsUrl)" target="_blank" rel="noopener"
           [style.color]="v.invitation.customization.primary || '#b8860b'">📍 Ver ubicación</a>
       }
 
@@ -73,7 +73,7 @@
               </p>
             }
             @if (v.invitation.data.religiousMapsUrl) {
-              <a class="maps-link" [href]="v.invitation.data.religiousMapsUrl" target="_blank" rel="noopener"
+              <a class="maps-link" [href]="mapsHref(v.invitation.data.religiousMapsUrl)" target="_blank" rel="noopener"
                 [style.color]="v.invitation.customization.primary || '#b8860b'">📍 Ver ubicación</a>
             }
           }

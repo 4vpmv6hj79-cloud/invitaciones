@@ -4,6 +4,7 @@ import { InvitationService } from '../invitation.service';
 import { Invitation } from '../invitation.model';
 import { Countdown } from '../countdown/countdown';
 import { formatTime12h } from '../time-format';
+import { normalizeMapsUrl } from '../maps-url';
 
 // Vista previa de la invitación tal como la verán los invitados,
 // usando el borrador (por id) y SIN necesidad de publicar/pagar.
@@ -55,6 +56,11 @@ export class InvitationPreview implements OnInit {
   // Resuelve una URL de la galería.
   protected gallerySrc(url: string): string {
     return this.service.fileUrl(url);
+  }
+
+  // Normaliza el enlace de ubicación para que siempre abra Google Maps.
+  protected mapsHref(value: string | undefined): string {
+    return normalizeMapsUrl(value);
   }
 
   // Ancho de la portada en % (fallback desde coverSize).

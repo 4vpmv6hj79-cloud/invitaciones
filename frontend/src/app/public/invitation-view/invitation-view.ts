@@ -4,6 +4,7 @@ import { PublicInvitationService, PublicInvitation } from '../public-invitation.
 import { Countdown } from '../../invitations/countdown/countdown';
 import { InvitationService } from '../../invitations/invitation.service';
 import { formatTime12h } from '../../invitations/time-format';
+import { normalizeMapsUrl } from '../../invitations/maps-url';
 
 @Component({
   selector: 'app-invitation-view',
@@ -29,6 +30,11 @@ export class InvitationView implements OnInit {
   // Resuelve una URL de la galería.
   protected gallerySrc(url: string): string {
     return this.invitationService.fileUrl(url);
+  }
+
+  // Normaliza el enlace de ubicación para que siempre abra Google Maps.
+  protected mapsHref(value: string | undefined): string {
+    return normalizeMapsUrl(value);
   }
 
   // Ancho de la portada en % (fallback desde coverSize para invitaciones viejas).
