@@ -6,6 +6,9 @@ dist/
 build/
 *.tsbuildinfo
 .angular/
+# Excepción: el dist del backend SÍ se versiona (deploy en Render sin compilar).
+!backend/dist/
+!backend/dist/**
 
 # ===== Entorno (secretos) — nunca subir =====
 .env

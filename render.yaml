@@ -7,8 +7,9 @@ services:
     runtime: node
     rootDir: backend
     plan: free
-    # --include=dev fuerza instalar devDependencies (nest cli, typescript) aun con NODE_ENV=production.
-    buildCommand: npm install --include=dev && npm run build
+    # El dist ya viene compilado en el repo (el plan Free no tiene RAM para compilar).
+    # Aquí solo instalamos dependencias de runtime.
+    buildCommand: npm install
     startCommand: npm run start:prod
     healthCheckPath: /health
     envVars:

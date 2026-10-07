@@ -2,7 +2,9 @@
 /node_modules
 
 # Compilado
-/dist
+# NOTA: /dist se versiona a propósito para desplegar en Render sin compilar
+# en el servidor (el plan Free se queda sin memoria al compilar). Se regenera
+# con `npm run build` antes de cada commit de despliegue.
 *.tsbuildinfo
 
 # Entorno (secretos) — nunca subir
