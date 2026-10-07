@@ -64,7 +64,8 @@ export class InvitationView implements OnInit {
     this.service
       .rsvp(this.token, {
         name: v.name.trim(),
-        seats: v.seats,
+        // El <select> entrega texto; el backend espera un entero.
+        seats: Number(v.seats),
         dietaryNotes: v.dietaryNotes || undefined,
         status,
       })
