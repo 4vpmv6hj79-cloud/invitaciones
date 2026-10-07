@@ -97,6 +97,45 @@ export class GuestsService {
     return guest;
   }
 
+  // ---- RSVP público (enlace compartido /i/:token) ----
+
+  // Confirma asistencia desde el enlace público general: crea un invitado
+  // auto-registrado en la invitación publicada. Así un solo enlace sirve para
+  // todos los invitados, que confirman poniendo su nombre.
+  async publicRsvp(
+    publicToken: string,
+    data: { name: string; seats?: number; dietaryNotes?: string; status?: 'confirmed' | 'declined' },
+  ): Promise<{ ok: true; status: string }> {
+    // Valida que la invitación exista, esté publicada y no haya expirado.
+    const invitation = await this.invitations.getPublishedByToken(publicToken);
+    if (invitation.expiresAt && invitation.expiresAt < new Date()) {
+      throw new BadRequestException('Esta invitación ya no está disponible');
+    }
+
+    const name = (data.name ?? '').trim();
+    if (!name) {
+      throw new BadRequestException('Escribe tu nombre para confirmar');
+    }
+
+    const declined = data.status === 'declined';
+    const seats = declined ? 0 : Math.max(1, Number(data.seats) || 1);
+
+    const guest = this.guests.create({
+      invitationId: invitation.id,
+      name,
+      contact: null,
+      // Auto-registrado: autorizamos los lugares que indica (no hay tope previo).
+      allowedSeats: declined ? 1 : seats,
+      confirmedSeats: seats,
+      rsvpStatus: declined ? RsvpStatus.Declined : RsvpStatus.Confirmed,
+      dietaryNotes: data.dietaryNotes?.trim() || null,
+      accessToken: randomBytes(18).toString('hex'),
+      respondedAt: new Date(),
+    });
+    await this.guests.save(guest);
+    return { ok: true, status: guest.rsvpStatus };
+  }
+
   // Confirmación de asistencia con control de lugares.
   async respond(token: string, dto: RsvpDto): Promise<Guest> {
     const guest = await this.getByToken(token);

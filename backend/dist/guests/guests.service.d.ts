@@ -24,6 +24,15 @@ export declare class GuestsService {
     }>;
     removeGuest(invitationId: string, guestId: string): Promise<void>;
     getByToken(token: string): Promise<Guest>;
+    publicRsvp(publicToken: string, data: {
+        name: string;
+        seats?: number;
+        dietaryNotes?: string;
+        status?: 'confirmed' | 'declined';
+    }): Promise<{
+        ok: true;
+        status: string;
+    }>;
     respond(token: string, dto: RsvpDto): Promise<Guest>;
     exportCsv(invitationId: string): Promise<string>;
     importCsv(invitationId: string, csv: string): Promise<{

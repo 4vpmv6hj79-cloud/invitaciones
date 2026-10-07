@@ -17,11 +17,15 @@ const common_1 = require("@nestjs/common");
 const guests_service_1 = require("./guests.service");
 const invitations_service_1 = require("../invitations/invitations.service");
 const rsvp_dto_1 = require("./dto/rsvp.dto");
+const public_rsvp_dto_1 = require("./dto/public-rsvp.dto");
 const decorators_1 = require("../auth/decorators");
 let RsvpController = class RsvpController {
     constructor(guests, invitations) {
         this.guests = guests;
         this.invitations = invitations;
+    }
+    publicRsvp(publicToken, dto) {
+        return this.guests.publicRsvp(publicToken, dto);
     }
     async view(token) {
         const guest = await this.guests.getByToken(token);
@@ -52,6 +56,14 @@ let RsvpController = class RsvpController {
     }
 };
 exports.RsvpController = RsvpController;
+__decorate([
+    (0, common_1.Post)('public/:publicToken'),
+    __param(0, (0, common_1.Param)('publicToken')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, public_rsvp_dto_1.PublicRsvpDto]),
+    __metadata("design:returntype", void 0)
+], RsvpController.prototype, "publicRsvp", null);
 __decorate([
     (0, common_1.Get)(':token'),
     __param(0, (0, common_1.Param)('token')),

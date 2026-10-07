@@ -79,6 +79,31 @@ let GuestsService = class GuestsService {
         }
         return guest;
     }
+    async publicRsvp(publicToken, data) {
+        const invitation = await this.invitations.getPublishedByToken(publicToken);
+        if (invitation.expiresAt && invitation.expiresAt < new Date()) {
+            throw new common_1.BadRequestException('Esta invitación ya no está disponible');
+        }
+        const name = (data.name ?? '').trim();
+        if (!name) {
+            throw new common_1.BadRequestException('Escribe tu nombre para confirmar');
+        }
+        const declined = data.status === 'declined';
+        const seats = declined ? 0 : Math.max(1, Number(data.seats) || 1);
+        const guest = this.guests.create({
+            invitationId: invitation.id,
+            name,
+            contact: null,
+            allowedSeats: declined ? 1 : seats,
+            confirmedSeats: seats,
+            rsvpStatus: declined ? guest_entity_1.RsvpStatus.Declined : guest_entity_1.RsvpStatus.Confirmed,
+            dietaryNotes: data.dietaryNotes?.trim() || null,
+            accessToken: (0, crypto_1.randomBytes)(18).toString('hex'),
+            respondedAt: new Date(),
+        });
+        await this.guests.save(guest);
+        return { ok: true, status: guest.rsvpStatus };
+    }
     async respond(token, dto) {
         const guest = await this.getByToken(token);
         if (dto.status === 'declined') {

@@ -189,3 +189,93 @@
   flex-direction: column;
   align-items: center;
 }
+
+/* ---- Formulario RSVP público ---- */
+.rsvp-form {
+  width: 100%;
+  max-width: 360px;
+  margin: 1.5rem auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.rsvp-prompt {
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+.rsvp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+
+  span {
+    font-weight: 600;
+  }
+
+  input,
+  select {
+    padding: 0.6rem 0.7rem;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: var(--radius-sm, 8px);
+    font-size: 0.95rem;
+    background: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.rsvp-err {
+  margin: 0;
+  color: var(--color-danger, #b4342c);
+  font-size: 0.85rem;
+}
+
+.rsvp-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.rsvp-actions .cta {
+  border: none;
+  cursor: pointer;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-pill, 999px);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.rsvp-decline {
+  background: transparent;
+  border: none;
+  color: var(--color-muted, #6b6773);
+  font-size: 0.88rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.rsvp-result {
+  margin: 1.5rem auto 0;
+  text-align: center;
+
+  .check {
+    font-size: 2.2rem;
+    display: block;
+  }
+
+  p {
+    margin: 0.4rem 0 0;
+    font-weight: 600;
+  }
+}

@@ -13,11 +13,26 @@ export interface PublicInvitation {
   expired: boolean;
 }
 
+export interface PublicRsvpPayload {
+  name: string;
+  seats?: number;
+  dietaryNotes?: string;
+  status?: 'confirmed' | 'declined';
+}
+
 @Injectable({ providedIn: 'root' })
 export class PublicInvitationService {
   private readonly http = inject(HttpClient);
 
   getByToken(token: string): Observable<PublicInvitation> {
     return this.http.get<PublicInvitation>(`${environment.apiBaseUrl}/p/${token}`);
+  }
+
+  // Confirma asistencia desde el enlace compartido (el invitado se auto-registra).
+  rsvp(token: string, payload: PublicRsvpPayload): Observable<{ ok: boolean; status: string }> {
+    return this.http.post<{ ok: boolean; status: string }>(
+      `${environment.apiBaseUrl}/rsvp/public/${token}`,
+      payload,
+    );
   }
 }

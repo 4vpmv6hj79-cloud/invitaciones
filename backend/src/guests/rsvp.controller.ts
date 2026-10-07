@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { GuestsService } from './guests.service';
 import { InvitationsService } from '../invitations/invitations.service';
 import { RsvpDto } from './dto/rsvp.dto';
+import { PublicRsvpDto } from './dto/public-rsvp.dto';
 import { Public } from '../auth/decorators';
 
 // Acceso del invitado por token opaco (sin cuenta).
@@ -13,6 +14,13 @@ export class RsvpController {
     private readonly guests: GuestsService,
     private readonly invitations: InvitationsService,
   ) {}
+
+  // POST /rsvp/public/:publicToken -> confirmación desde el enlace compartido (/i/:token).
+  // El invitado se auto-registra con su nombre; no necesita enlace personal.
+  @Post('public/:publicToken')
+  publicRsvp(@Param('publicToken') publicToken: string, @Body() dto: PublicRsvpDto) {
+    return this.guests.publicRsvp(publicToken, dto);
+  }
 
   // GET /rsvp/:token -> datos del invitado + invitación pública para mostrar y confirmar.
   @Get(':token')

@@ -1,10 +1,15 @@
 import { GuestsService } from './guests.service';
 import { InvitationsService } from '../invitations/invitations.service';
 import { RsvpDto } from './dto/rsvp.dto';
+import { PublicRsvpDto } from './dto/public-rsvp.dto';
 export declare class RsvpController {
     private readonly guests;
     private readonly invitations;
     constructor(guests: GuestsService, invitations: InvitationsService);
+    publicRsvp(publicToken: string, dto: PublicRsvpDto): Promise<{
+        ok: true;
+        status: string;
+    }>;
     view(token: string): Promise<{
         guest: {
             name: string;

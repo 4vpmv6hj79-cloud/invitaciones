@@ -104,13 +104,56 @@
         </div>
       }
 
-      <div class="actions">
-        <!-- Botón de muestra: este enlace público general no identifica al invitado,
-             por eso el RSVP real vive en el enlace por invitado (/r/:token). -->
-        <span class="cta" [style.background]="inv.customization.primary || '#b8860b'">
-          Confirmar asistencia
-        </span>
-      </div>
+      @if (rsvpDone()) {
+        <div class="rsvp-result">
+          <span class="check" [style.color]="inv.customization.primary || '#b8860b'">✓</span>
+          @if (rsvpConfirmed()) {
+            <p>¡Gracias! Tu asistencia quedó confirmada.</p>
+          } @else {
+            <p>Gracias por avisarnos. ¡Te extrañaremos!</p>
+          }
+        </div>
+      } @else {
+        <form class="rsvp-form" [formGroup]="rsvpForm" (ngSubmit)="confirmRsvp()">
+          <p class="rsvp-prompt" [style.color]="inv.customization.secondary || '#555'">
+            ¿Nos acompañas?
+          </p>
+
+          <label class="rsvp-field">
+            <span>Tu nombre</span>
+            <input type="text" formControlName="name" placeholder="Nombre y apellido" />
+          </label>
+
+          <label class="rsvp-field">
+            <span>¿Cuántos asistirán?</span>
+            <select formControlName="seats">
+              @for (n of seatOptions(); track n) {
+                <option [value]="n">{{ n }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="rsvp-field">
+            <span>Preferencias o alergias (opcional)</span>
+            <input type="text" formControlName="dietaryNotes" />
+          </label>
+
+          @if (rsvpError()) {
+            <p class="rsvp-err">{{ rsvpError() }}</p>
+          }
+
+          <div class="rsvp-actions">
+            <button type="submit" class="cta" [disabled]="rsvpSending()"
+              [style.background]="inv.customization.primary || '#b8860b'">
+              {{ rsvpSending() ? 'Enviando…' : 'Confirmar asistencia' }}
+            </button>
+            <button type="button" class="rsvp-decline" [disabled]="rsvpSending()"
+              (click)="declineRsvp()">
+              No podré asistir
+            </button>
+          </div>
+        </form>
+      }
       </div>
     </main>
   }
