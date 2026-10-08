@@ -48,6 +48,11 @@ export class RsvpViewComponent implements OnInit {
     return groupScale(this.view()?.invitation.customization, group);
   }
 
+  // Ancho de cada imagen de ejemplo del dress code en %.
+  protected dressImgWidth(): string {
+    return `${this.view()?.invitation.customization?.dressImagePct ?? 30}%`;
+  }
+
   // Ancho de la portada en % (fallback desde coverSize para invitaciones viejas).
   protected coverWidth(): string {
     const d = this.view()?.invitation.data;

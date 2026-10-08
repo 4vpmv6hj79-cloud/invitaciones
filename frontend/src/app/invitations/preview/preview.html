@@ -135,7 +135,7 @@
         @if (inv.event.data.dressCodeImages && inv.event.data.dressCodeImages.length > 0) {
           <div class="dress-imgs">
             @for (img of inv.event.data.dressCodeImages; track $index) {
-              <img [src]="gallerySrc(img)" alt="Ejemplo de vestimenta" />
+              <img [src]="gallerySrc(img)" [style.width]="dressImgWidth()" alt="Ejemplo de vestimenta" />
             }
           </div>
         }

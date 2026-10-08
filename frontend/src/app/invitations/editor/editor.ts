@@ -110,6 +110,7 @@ export class Editor implements OnInit {
     messageScale: [1],
     sectionHeadingFont: [''],
     sectionScale: [1],
+    dressImagePct: [30],
   });
 
   // Grupos de tipografía avanzada (nivel 2) para generar los controles.
@@ -212,6 +213,7 @@ export class Editor implements OnInit {
       messageScale: c.messageScale ?? 1,
       sectionHeadingFont: c.sectionHeadingFont ?? '',
       sectionScale: c.sectionScale ?? 1,
+      dressImagePct: c.dressImagePct ?? 30,
     });
     this.gallery.set(Array.isArray(d.galleryImages) ? [...d.galleryImages] : []);
     this.dressImages.set(Array.isArray(d.dressCodeImages) ? [...d.dressCodeImages] : []);
@@ -282,6 +284,7 @@ export class Editor implements OnInit {
         messageScale: Number(v.messageScale),
         sectionHeadingFont: v.sectionHeadingFont,
         sectionScale: Number(v.sectionScale),
+        dressImagePct: Number(v.dressImagePct),
       },
     };
 
@@ -400,6 +403,11 @@ export class Editor implements OnInit {
 
   dressSrc(url: string): string {
     return this.service.fileUrl(url);
+  }
+
+  // Ancho de cada imagen de ejemplo del dress code en % (para la preview).
+  dressImgWidth(): string {
+    return `${this.value().dressImagePct || 30}%`;
   }
 
   addDressUrl(): void {

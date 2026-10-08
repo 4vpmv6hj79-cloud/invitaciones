@@ -262,6 +262,15 @@
             [disabled]="dressUploading()" />
         </label>
         @if (dressError()) { <small class="help help--error">{{ dressError() }}</small> }
+        @if (dressImages().length > 0) {
+          <div class="cover-style">
+            <span class="cover-style-label">
+              Tamaño de las imágenes · {{ value().dressImagePct }}%
+            </span>
+            <input type="range" class="size-slider" min="15" max="100" step="1"
+              formControlName="dressImagePct" />
+          </div>
+        }
       </div>
 
       <h2>Música</h2>
@@ -559,7 +568,7 @@
               @if (dressImages().length > 0) {
                 <div class="dress-imgs">
                   @for (img of dressImages(); track $index) {
-                    <img [src]="dressSrc(img)" alt="Ejemplo de vestimenta" />
+                    <img [src]="dressSrc(img)" [style.width]="dressImgWidth()" alt="Ejemplo de vestimenta" />
                   }
                 </div>
               }

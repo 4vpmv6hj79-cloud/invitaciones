@@ -703,8 +703,7 @@
   margin-top: 0.5rem;
 
   img {
-    width: 64px;
-    height: 64px;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: var(--radius-sm, 8px);
   }

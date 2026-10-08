@@ -21,6 +21,9 @@ export interface TemplateTheme {
   messageScale?: number;
   sectionHeadingFont?: string;
   sectionScale?: number;
+
+  // Tamaño de las imágenes de ejemplo del código de vestimenta (% de ancho por imagen).
+  dressImagePct?: number;
 }
 
 export interface Template {
