@@ -364,3 +364,12 @@
   letter-spacing: 0.06em;
   font-weight: 700;
 }
+
+/* Nota en el enlace público: dirige a confirmar por el enlace personal */
+.rsvp-note {
+  margin: 1.5rem auto 0;
+  max-width: 36ch;
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
