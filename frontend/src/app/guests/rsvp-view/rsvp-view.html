@@ -182,31 +182,40 @@
         }
       } @else {
         <div class="form" [formGroup]="form">
-          <p class="prompt">¿Nos acompañas?</p>
-
           @if (isClosedMode()) {
-            <p class="seats-hint">
+            <!-- Modo cerrado: confirma exactamente su cupo. -->
+            <p class="prompt">
               @if (v.guest.allowedSeats > 1) {
-                Tu confirmación es para {{ v.guest.allowedSeats }} lugares.
+                {{ firstName(v.guest.name) }}, ¿confirmas que {{ v.guest.allowedSeats }} personas asistirán contigo?
               } @else {
-                Tu confirmación es para 1 lugar.
+                {{ firstName(v.guest.name) }}, ¿confirmas tu asistencia?
               }
             </p>
           } @else {
-            <p class="seats-hint">Tienes {{ v.guest.allowedSeats }} lugar(es) reservado(s).</p>
-            <label class="field">
-              <span>¿Cuántos asistirán?</span>
-              <select formControlName="seats">
-                @for (n of seatOptions(); track n) {
-                  <option [value]="n">{{ n }}</option>
-                }
-              </select>
-            </label>
+            <!-- Modo abierto: puede confirmar todos sus lugares o elegir menos. -->
+            <p class="prompt">
+              @if (v.guest.allowedSeats > 1) {
+                {{ firstName(v.guest.name) }}, ¿puedes confirmar que {{ v.guest.allowedSeats }} personas estarán asistiendo contigo?
+              } @else {
+                {{ firstName(v.guest.name) }}, ¿confirmas tu asistencia?
+              }
+            </p>
+
+            @if (chooseLess() && v.guest.allowedSeats > 1) {
+              <label class="field">
+                <span>¿Cuántas personas asistirán?</span>
+                <select formControlName="seats">
+                  @for (n of seatOptions(); track n) {
+                    <option [value]="n">{{ n }}</option>
+                  }
+                </select>
+              </label>
+            }
           }
 
           <label class="field">
-            <span>Preferencias o alergias (opcional)</span>
-            <input type="text" formControlName="dietaryNotes" />
+            <span>¿Tienes alguna alergia a algún alimento?</span>
+            <input type="text" formControlName="dietaryNotes" placeholder="Escríbelo aquí (opcional)" />
           </label>
 
           @if (submitError()) {
@@ -214,11 +223,24 @@
           }
 
           <div class="actions">
-            <button type="button" class="confirm"
-              [style.background]="v.invitation.customization.primary || '#b8860b'"
-              (click)="confirm()">
-              Confirmar asistencia
-            </button>
+            @if (!isClosedMode() && v.guest.allowedSeats > 1 && !chooseLess()) {
+              <!-- Botones Sí / No (para elegir menos) -->
+              <button type="button" class="confirm"
+                [style.background]="v.invitation.customization.primary || '#b8860b'"
+                (click)="confirmAll()">
+                Sí, asistiremos {{ v.guest.allowedSeats }}
+              </button>
+              <button type="button" class="decline" (click)="chooseLess.set(true)">
+                No, seremos menos
+              </button>
+            } @else {
+              <!-- Confirmación directa (cerrado, o 1 lugar, o ya eligió "menos") -->
+              <button type="button" class="confirm"
+                [style.background]="v.invitation.customization.primary || '#b8860b'"
+                (click)="confirm()">
+                Confirmar asistencia
+              </button>
+            }
             <button type="button" class="decline" (click)="decline()">No podré asistir</button>
           </div>
         </div>

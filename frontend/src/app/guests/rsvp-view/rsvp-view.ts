@@ -79,6 +79,8 @@ export class RsvpViewComponent implements OnInit {
   protected readonly confirmed = signal(false);
   protected readonly submitError = signal<string | null>(null);
   protected readonly pass = signal<GuestPass | null>(null);
+  // El invitado eligió confirmar con menos personas que su cupo.
+  protected readonly chooseLess = signal(false);
 
   protected readonly form = this.fb.nonNullable.group({
     seats: [1, [Validators.required, Validators.min(1)]],
@@ -129,21 +131,28 @@ export class RsvpViewComponent implements OnInit {
     return this.view()?.guest.rsvpMode === 'cerrado';
   }
 
+  // Primer nombre del invitado (para el saludo "Miriam, ...").
+  protected firstName(fullName: string | undefined): string {
+    return (fullName ?? '').trim().split(/\s+/)[0] || '';
+  }
+
+  // Confirma todos los lugares autorizados (cuando responde "Sí").
+  confirmAll(): void {
+    const max = this.view()?.guest.allowedSeats ?? 1;
+    this.sendConfirm(max);
+  }
+
+  // Confirma con el número elegido (modo cerrado = cupo fijo; abierto = selector).
   confirm(): void {
+    const v = this.form.getRawValue();
+    const seats = this.isClosedMode() ? (this.view()?.guest.allowedSeats ?? 1) : Number(v.seats);
+    this.sendConfirm(seats);
+  }
+
+  // Envía la confirmación con el número de lugares indicado.
+  private sendConfirm(seats: number): void {
     this.submitError.set(null);
     const v = this.form.getRawValue();
-    // En modo cerrado no se elige: el backend usa allowedSeats fijo.
-    const seats = this.isClosedMode() ? (this.view()?.guest.allowedSeats ?? 1) : Number(v.seats);
-
-    // Popup de confirmación con el número de asistentes.
-    const msg =
-      seats === 1
-        ? 'Confirmas tu asistencia (1 lugar). ¿Continuar?'
-        : `Los invitados que estarán asistiendo contigo son ${seats}. ¿Continuar?`;
-    if (!window.confirm(msg)) {
-      return;
-    }
-
     this.service
       .respond(this.token, {
         status: 'confirmed',
