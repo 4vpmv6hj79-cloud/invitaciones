@@ -264,6 +264,47 @@
         @if (dressError()) { <small class="help help--error">{{ dressError() }}</small> }
       </div>
 
+      <h2>Música</h2>
+
+      <div class="field">
+        <label for="musicUrl">Música de fondo (enlace de YouTube)</label>
+        <input id="musicUrl" type="url" formControlName="musicUrl"
+          placeholder="https://www.youtube.com/watch?v=..." />
+        <small class="help">
+          Pega el enlace de YouTube. En la invitación, el invitado verá un botón de música para
+          reproducirla (los navegadores no permiten que suene sola al abrir).
+        </small>
+      </div>
+
+      <h2>Imágenes entre secciones</h2>
+
+      <div class="field">
+        <label>Imágenes decorativas ({{ sectionImages().length }}/{{ SECTION_MAX }})</label>
+        @if (sectionImages().length > 0) {
+          <div class="gallery-grid">
+            @for (img of sectionImages(); track $index) {
+              <div class="gallery-thumb">
+                <img [src]="sectionSrc(img)" alt="Imagen decorativa" />
+                <button type="button" class="gallery-remove" (click)="removeSectionAt($index)"
+                  aria-label="Quitar imagen">✕</button>
+              </div>
+            }
+          </div>
+        }
+        <div class="gallery-add">
+          <input type="url" [(ngModel)]="newSectionUrl" [ngModelOptions]="{ standalone: true }"
+            placeholder="Pega la URL de una imagen" (keyup.enter)="addSectionUrl()" />
+          <button type="button" (click)="addSectionUrl()">Agregar</button>
+        </div>
+        <label class="cover-upload">
+          {{ sectionUploading() ? 'Subiendo…' : 'o subir una imagen' }}
+          <input type="file" accept="image/*" (change)="onSectionFile($event)" hidden
+            [disabled]="sectionUploading()" />
+        </label>
+        <small class="help">Se mostrarán a lo ancho, intercaladas entre las secciones de la invitación.</small>
+        @if (sectionError()) { <small class="help help--error">{{ sectionError() }}</small> }
+      </div>
+
       <h2>Mesa de regalos</h2>
 
       <div class="field">
@@ -464,6 +505,10 @@
             </div>
           }
 
+          @for (img of sectionImages(); track $index) {
+            <img class="section-img" [src]="sectionSrc(img)" alt="Imagen decorativa" />
+          }
+
           @if (value().dressCode || dressImages().length > 0) {
             <div class="info-block" [style.borderColor]="value().primary">
               <p class="info-head" [style.color]="value().primary">Código de vestimenta</p>
@@ -492,6 +537,7 @@
 
           <span class="cta" [style.background]="value().primary">Confirmar asistencia</span>
           </div>
+          <app-music-player [url]="value().musicUrl" [accent]="value().primary" />
         </article>
       </div>
     </section>

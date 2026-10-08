@@ -184,6 +184,20 @@ __decorate([
     (0, class_validator_1.MaxLength)(1500),
     __metadata("design:type", String)
 ], EventDataDto.prototype, "giftInfo", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(600),
+    __metadata("design:type", String)
+], EventDataDto.prototype, "musicUrl", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ArrayMaxSize)(6),
+    (0, class_validator_1.IsString)({ each: true }),
+    (0, class_validator_1.MaxLength)(600, { each: true }),
+    __metadata("design:type", Array)
+], EventDataDto.prototype, "sectionImages", void 0);
 class UpdateInvitationDto {
 }
 exports.UpdateInvitationDto = UpdateInvitationDto;

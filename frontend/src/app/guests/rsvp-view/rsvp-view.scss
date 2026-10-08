@@ -387,3 +387,13 @@
     border-radius: var(--radius-sm, 8px);
   }
 }
+
+/* ---- Imágenes decorativas entre secciones ---- */
+.section-img {
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  border-radius: var(--radius-md, 14px);
+  margin: 1rem 0;
+  display: block;
+}

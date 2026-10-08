@@ -257,3 +257,14 @@
     border-radius: var(--radius-sm, 8px);
   }
 }
+
+/* ---- Imágenes decorativas entre secciones ---- */
+.invitation .section-img {
+  width: 100%;
+  max-width: 600px;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: var(--radius-md, 14px);
+  margin: 1.25rem auto;
+  display: block;
+}

@@ -29,6 +29,12 @@ export interface EventData {
   // Mesa de regalos (texto libre: mesas, transferencia, sobres).
   giftInfo?: string;
 
+  // Música de fondo (enlace de YouTube).
+  musicUrl?: string;
+
+  // Imágenes decorativas intercaladas entre secciones.
+  sectionImages?: string[];
+
   // Evento religioso (misa), opcional.
   religiousEnabled?: boolean;
   religiousTitle?: string; // título personalizado de la sección (ej. "Misa")

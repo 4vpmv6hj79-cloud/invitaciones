@@ -180,6 +180,20 @@ export class EventDataDto {
   @IsString()
   @MaxLength(1500)
   giftInfo?: string;
+
+  // --- Música de fondo (enlace de YouTube) ---
+  @IsOptional()
+  @IsString()
+  @MaxLength(600)
+  musicUrl?: string;
+
+  // --- Imágenes decorativas intercaladas entre secciones (URLs o /uploads/...). Máx 6. ---
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(6)
+  @IsString({ each: true })
+  @MaxLength(600, { each: true })
+  sectionImages?: string[];
 }
 
 // Actualización del borrador: título, contenido del evento y personalización del diseño.

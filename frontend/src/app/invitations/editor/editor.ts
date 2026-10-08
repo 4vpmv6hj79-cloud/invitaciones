@@ -7,6 +7,7 @@ import { Invitation, UpdateInvitationPayload } from '../invitation.model';
 import { OrderService } from '../../orders/order.service';
 import { PALETTES, Palette } from '../palettes';
 import { Countdown } from '../countdown/countdown';
+import { MusicPlayer } from '../music-player/music-player';
 import { formatTime12h } from '../time-format';
 import { normalizeMapsUrl } from '../maps-url';
 
@@ -16,7 +17,7 @@ type PreviewMode = 'mobile' | 'desktop';
 @Component({
   selector: 'app-editor',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, RouterLink, Countdown],
+  imports: [ReactiveFormsModule, FormsModule, RouterLink, Countdown, MusicPlayer],
   templateUrl: './editor.html',
   styleUrl: './editor.scss',
 })
@@ -49,6 +50,13 @@ export class Editor implements OnInit {
   protected newDressUrl = '';
   protected readonly DRESS_MAX = 6;
 
+  // Imágenes decorativas entre secciones.
+  protected readonly sectionImages = signal<string[]>([]);
+  protected readonly sectionUploading = signal(false);
+  protected readonly sectionError = signal<string | null>(null);
+  protected newSectionUrl = '';
+  protected readonly SECTION_MAX = 6;
+
   private invitationId = '';
 
   // Paletas curadas disponibles en el selector.
@@ -69,6 +77,7 @@ export class Editor implements OnInit {
     dressCode: [''],
     dressCodeNote: [''],
     giftInfo: [''],
+    musicUrl: [''],
     rsvpMode: ['abierto'],
     rsvpCompanions: [1],
     coverImageUrl: [''],
@@ -132,6 +141,7 @@ export class Editor implements OnInit {
       dressCode: d.dressCode ?? '',
       dressCodeNote: d.dressCodeNote ?? '',
       giftInfo: d.giftInfo ?? '',
+      musicUrl: d.musicUrl ?? '',
       rsvpMode: d.rsvpMode ?? 'abierto',
       rsvpCompanions: d.rsvpCompanions ?? 1,
       coverImageUrl: d.coverImageUrl ?? '',
@@ -155,6 +165,7 @@ export class Editor implements OnInit {
     });
     this.gallery.set(Array.isArray(d.galleryImages) ? [...d.galleryImages] : []);
     this.dressImages.set(Array.isArray(d.dressCodeImages) ? [...d.dressCodeImages] : []);
+    this.sectionImages.set(Array.isArray(d.sectionImages) ? [...d.sectionImages] : []);
     this.value.set(this.form.getRawValue());
   }
 
@@ -188,6 +199,8 @@ export class Editor implements OnInit {
         dressCodeNote: v.dressCodeNote,
         dressCodeImages: this.dressImages(),
         giftInfo: v.giftInfo,
+        musicUrl: v.musicUrl,
+        sectionImages: this.sectionImages(),
         rsvpMode: v.rsvpMode as 'abierto' | 'cerrado',
         rsvpCompanions: Number(v.rsvpCompanions),
         coverImageUrl: v.coverImageUrl,
@@ -369,6 +382,55 @@ export class Editor implements OnInit {
 
   removeDressAt(index: number): void {
     this.dressImages.update((list) => list.filter((_, i) => i !== index));
+    this.save();
+  }
+
+  // --- Imágenes decorativas entre secciones ---
+
+  sectionSrc(url: string): string {
+    return this.service.fileUrl(url);
+  }
+
+  addSectionUrl(): void {
+    const url = this.newSectionUrl.trim();
+    if (!url) return;
+    if (this.sectionImages().length >= this.SECTION_MAX) {
+      this.sectionError.set(`Máximo ${this.SECTION_MAX} imágenes.`);
+      return;
+    }
+    this.sectionImages.update((list) => [...list, url]);
+    this.newSectionUrl = '';
+    this.sectionError.set(null);
+    this.save();
+  }
+
+  onSectionFile(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    if (this.sectionImages().length >= this.SECTION_MAX) {
+      this.sectionError.set(`Máximo ${this.SECTION_MAX} imágenes.`);
+      input.value = '';
+      return;
+    }
+    this.sectionUploading.set(true);
+    this.sectionError.set(null);
+    this.service.uploadImage(this.invitationId, file).subscribe({
+      next: (res) => {
+        this.sectionImages.update((list) => [...list, res.url]);
+        this.sectionUploading.set(false);
+        this.save();
+      },
+      error: (e) => {
+        this.sectionUploading.set(false);
+        this.sectionError.set(e?.error?.message ?? 'No se pudo subir la imagen');
+      },
+    });
+    input.value = '';
+  }
+
+  removeSectionAt(index: number): void {
+    this.sectionImages.update((list) => list.filter((_, i) => i !== index));
     this.save();
   }
 

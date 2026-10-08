@@ -5,6 +5,7 @@ import { RsvpService, RsvpView } from '../rsvp.service';
 import { TicketService, GuestPass } from '../../tickets/ticket.service';
 import { buildGoogleCalendarUrl, downloadIcs, buildIcsContent } from '../../invitations/ics.util';
 import { Countdown } from '../../invitations/countdown/countdown';
+import { MusicPlayer } from '../../invitations/music-player/music-player';
 import { InvitationService } from '../../invitations/invitation.service';
 import { formatTime12h } from '../../invitations/time-format';
 import { normalizeMapsUrl } from '../../invitations/maps-url';
@@ -12,7 +13,7 @@ import { normalizeMapsUrl } from '../../invitations/maps-url';
 @Component({
   selector: 'app-rsvp-view',
   standalone: true,
-  imports: [ReactiveFormsModule, Countdown],
+  imports: [ReactiveFormsModule, Countdown, MusicPlayer],
   templateUrl: './rsvp-view.html',
   styleUrl: './rsvp-view.scss',
 })

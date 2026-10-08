@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PublicInvitationService, PublicInvitation } from '../public-invitation.service';
 import { Countdown } from '../../invitations/countdown/countdown';
+import { MusicPlayer } from '../../invitations/music-player/music-player';
 import { InvitationService } from '../../invitations/invitation.service';
 import { formatTime12h } from '../../invitations/time-format';
 import { normalizeMapsUrl } from '../../invitations/maps-url';
@@ -10,7 +11,7 @@ import { normalizeMapsUrl } from '../../invitations/maps-url';
 @Component({
   selector: 'app-invitation-view',
   standalone: true,
-  imports: [Countdown, ReactiveFormsModule],
+  imports: [Countdown, MusicPlayer, ReactiveFormsModule],
   templateUrl: './invitation-view.html',
   styleUrl: './invitation-view.scss',
 })

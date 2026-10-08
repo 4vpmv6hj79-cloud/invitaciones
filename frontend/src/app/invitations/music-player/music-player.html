@@ -1,0 +1,26 @@
+@if (hasMusic()) {
+  <!-- Iframe de YouTube oculto: solo queremos el audio. -->
+  <iframe
+    #frame
+    class="yt-hidden"
+    [src]="embedUrl"
+    title="Música de fondo"
+    allow="autoplay; encrypted-media"
+    frameborder="0"
+  ></iframe>
+
+  <!-- Botón flotante para reproducir/pausar. -->
+  <button
+    type="button"
+    class="music-btn"
+    [style.background]="accent"
+    (click)="toggle()"
+    [attr.aria-label]="playing() ? 'Pausar música' : 'Reproducir música'"
+  >
+    @if (playing()) {
+      <span class="icon">⏸</span>
+    } @else {
+      <span class="icon">♪</span>
+    }
+  </button>
+}

@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { InvitationService } from '../invitation.service';
 import { Invitation } from '../invitation.model';
 import { Countdown } from '../countdown/countdown';
+import { MusicPlayer } from '../music-player/music-player';
 import { formatTime12h } from '../time-format';
 import { normalizeMapsUrl } from '../maps-url';
 
@@ -11,7 +12,7 @@ import { normalizeMapsUrl } from '../maps-url';
 @Component({
   selector: 'app-invitation-preview',
   standalone: true,
-  imports: [RouterLink, Countdown],
+  imports: [RouterLink, Countdown, MusicPlayer],
   templateUrl: './preview.html',
   styleUrl: './preview.scss',
 })

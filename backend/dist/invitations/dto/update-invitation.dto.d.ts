@@ -27,6 +27,8 @@ export declare class EventDataDto {
     dressCodeNote?: string;
     dressCodeImages?: string[];
     giftInfo?: string;
+    musicUrl?: string;
+    sectionImages?: string[];
 }
 export declare class UpdateInvitationDto {
     title?: string;

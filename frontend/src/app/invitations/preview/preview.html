@@ -107,6 +107,12 @@
       </div>
     }
 
+    @if (inv.event.data.sectionImages) {
+      @for (img of inv.event.data.sectionImages; track $index) {
+        <img class="section-img" [src]="gallerySrc(img)" alt="Imagen decorativa" />
+      }
+    }
+
     @if (inv.event.data.dressCode || (inv.event.data.dressCodeImages && inv.event.data.dressCodeImages.length > 0)) {
       <div class="info-block" [style.borderColor]="inv.customization.primary || '#b8860b'">
         <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'">
@@ -143,5 +149,6 @@
       Confirmar asistencia
     </span>
     </div>
+    <app-music-player [url]="inv.event.data.musicUrl || ''" [accent]="inv.customization.primary || '#b8860b'" />
   </main>
 }

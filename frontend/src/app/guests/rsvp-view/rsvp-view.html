@@ -90,6 +90,12 @@
         </div>
       }
 
+      @if (v.invitation.data.sectionImages) {
+        @for (img of v.invitation.data.sectionImages; track $index) {
+          <img class="section-img" [src]="gallerySrc(img)" alt="Imagen decorativa" />
+        }
+      }
+
       @if (v.invitation.data.dressCode || (v.invitation.data.dressCodeImages && v.invitation.data.dressCodeImages.length > 0)) {
         <div class="info-block" [style.borderColor]="v.invitation.customization.primary || '#b8860b'">
           <p class="info-head" [style.color]="v.invitation.customization.primary || '#b8860b'">
@@ -201,5 +207,6 @@
       }
       </div>
     </section>
+    <app-music-player [url]="v.invitation.data.musicUrl || ''" [accent]="v.invitation.customization.primary || '#b8860b'" />
   </main>
 }
