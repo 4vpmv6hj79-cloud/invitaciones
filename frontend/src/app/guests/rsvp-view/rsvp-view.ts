@@ -134,6 +134,16 @@ export class RsvpViewComponent implements OnInit {
     const v = this.form.getRawValue();
     // En modo cerrado no se elige: el backend usa allowedSeats fijo.
     const seats = this.isClosedMode() ? (this.view()?.guest.allowedSeats ?? 1) : Number(v.seats);
+
+    // Popup de confirmación con el número de asistentes.
+    const msg =
+      seats === 1
+        ? 'Confirmas tu asistencia (1 lugar). ¿Continuar?'
+        : `Los invitados que estarán asistiendo contigo son ${seats}. ¿Continuar?`;
+    if (!window.confirm(msg)) {
+      return;
+    }
+
     this.service
       .respond(this.token, {
         status: 'confirmed',
