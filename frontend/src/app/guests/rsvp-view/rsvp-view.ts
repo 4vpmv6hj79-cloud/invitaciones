@@ -7,7 +7,7 @@ import { buildGoogleCalendarUrl, downloadIcs, buildIcsContent } from '../../invi
 import { Countdown } from '../../invitations/countdown/countdown';
 import { MusicPlayer } from '../../invitations/music-player/music-player';
 import { InvitationService } from '../../invitations/invitation.service';
-import { formatTime12h } from '../../invitations/time-format';
+import { formatTime12h, formatDateLong } from '../../invitations/time-format';
 import { normalizeMapsUrl } from '../../invitations/maps-url';
 import { groupFont, groupScale, TypoGroup } from '../../invitations/typography.util';
 
@@ -162,7 +162,7 @@ export class RsvpViewComponent implements OnInit {
       const start = formatTime12h(d.time);
       time = d.endTime ? `${start} – ${formatTime12h(d.endTime)}` : start;
     }
-    return [d.date, time].filter(Boolean).join(' · ');
+    return [formatDateLong(d.date), time].filter(Boolean).join(' · ');
   }
 
   // Hora en formato 12h (evento religioso).

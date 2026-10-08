@@ -119,7 +119,7 @@
     }
 
     @if (inv.event.data.dressCode || (inv.event.data.dressCodeImages && inv.event.data.dressCodeImages.length > 0)) {
-      <div class="info-block" [style.borderColor]="inv.customization.primary || '#b8860b'">
+      <div class="info-block">
         <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'"
           [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
           Código de vestimenta
@@ -143,7 +143,7 @@
     }
 
     @if (inv.event.data.giftInfo) {
-      <div class="info-block" [style.borderColor]="inv.customization.primary || '#b8860b'">
+      <div class="info-block">
         <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'"
           [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">Mesa de regalos</p>
         <p class="line line--pre" [style.color]="inv.customization.secondary || '#555'">

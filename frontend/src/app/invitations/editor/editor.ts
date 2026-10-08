@@ -8,7 +8,7 @@ import { OrderService } from '../../orders/order.service';
 import { PALETTES, Palette } from '../palettes';
 import { Countdown } from '../countdown/countdown';
 import { MusicPlayer } from '../music-player/music-player';
-import { formatTime12h } from '../time-format';
+import { formatTime12h, formatDateLong } from '../time-format';
 import { normalizeMapsUrl } from '../maps-url';
 import { TemplateTheme } from '../../catalog/template.model';
 import { groupFont, groupScale, TypoGroup } from '../typography.util';
@@ -548,11 +548,11 @@ export class Editor implements OnInit {
     });
   }
 
-  // Texto de fecha/hora formateado para la previsualización (12h con a.m./p.m.).
+  // Texto de fecha/hora formateado para la previsualización.
   protected formattedWhen(): string {
     const v = this.value();
     const parts: string[] = [];
-    if (v.date) parts.push(v.date);
+    if (v.date) parts.push(formatDateLong(v.date));
     if (v.time) {
       const start = formatTime12h(v.time);
       parts.push(v.endTime ? `${start} – ${formatTime12h(v.endTime)}` : start);

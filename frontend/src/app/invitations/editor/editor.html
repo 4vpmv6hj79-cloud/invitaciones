@@ -545,7 +545,7 @@
           }
 
           @if (value().dressCode || dressImages().length > 0) {
-            <div class="info-block" [style.borderColor]="value().primary">
+            <div class="info-block">
               <p class="info-head" [style.color]="value().primary"
                 [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
                 Código de vestimenta
@@ -567,7 +567,7 @@
           }
 
           @if (value().giftInfo) {
-            <div class="info-block" [style.borderColor]="value().primary">
+            <div class="info-block">
               <p class="info-head" [style.color]="value().primary"
                 [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
                 Mesa de regalos

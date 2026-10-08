@@ -4,7 +4,7 @@ import { InvitationService } from '../invitation.service';
 import { Invitation } from '../invitation.model';
 import { Countdown } from '../countdown/countdown';
 import { MusicPlayer } from '../music-player/music-player';
-import { formatTime12h } from '../time-format';
+import { formatTime12h, formatDateLong } from '../time-format';
 import { normalizeMapsUrl } from '../maps-url';
 import { groupFont, groupScale, TypoGroup } from '../typography.util';
 
@@ -98,7 +98,7 @@ export class InvitationPreview implements OnInit {
       const start = formatTime12h(d.time);
       time = d.endTime ? `${start} – ${formatTime12h(d.endTime)}` : start;
     }
-    return [d.date, time].filter(Boolean).join(' · ');
+    return [formatDateLong(d.date), time].filter(Boolean).join(' · ');
   }
 
   // Hora en formato 12h (evento religioso).

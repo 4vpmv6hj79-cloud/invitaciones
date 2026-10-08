@@ -117,7 +117,7 @@
       }
 
       @if (inv.data.dressCode || (inv.data.dressCodeImages && inv.data.dressCodeImages.length > 0)) {
-        <div class="info-block" [style.borderColor]="inv.customization.primary || '#b8860b'">
+        <div class="info-block">
           <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'"
             [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
             Código de vestimenta
@@ -141,7 +141,7 @@
       }
 
       @if (inv.data.giftInfo) {
-        <div class="info-block" [style.borderColor]="inv.customization.primary || '#b8860b'">
+        <div class="info-block">
           <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'"
             [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
             Mesa de regalos

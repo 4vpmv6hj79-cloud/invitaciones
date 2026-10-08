@@ -5,7 +5,7 @@ import { PublicInvitationService, PublicInvitation } from '../public-invitation.
 import { Countdown } from '../../invitations/countdown/countdown';
 import { MusicPlayer } from '../../invitations/music-player/music-player';
 import { InvitationService } from '../../invitations/invitation.service';
-import { formatTime12h } from '../../invitations/time-format';
+import { formatTime12h, formatDateLong } from '../../invitations/time-format';
 import { normalizeMapsUrl } from '../../invitations/maps-url';
 import { groupFont, groupScale, TypoGroup } from '../../invitations/typography.util';
 
@@ -163,7 +163,7 @@ export class InvitationView implements OnInit {
     });
   }
 
-  // Texto de fecha/hora para mostrar (12h con a.m./p.m.).
+  // Texto de fecha/hora para mostrar (fecha larga en español + 12h a.m./p.m.).
   protected when(): string {
     const d = this.invitation()?.data;
     if (!d) return '';
@@ -172,7 +172,7 @@ export class InvitationView implements OnInit {
       const start = formatTime12h(d.time);
       time = d.endTime ? `${start} – ${formatTime12h(d.endTime)}` : start;
     }
-    return [d.date, time].filter(Boolean).join(' · ');
+    return [formatDateLong(d.date), time].filter(Boolean).join(' · ');
   }
 
   // Hora en formato 12h (evento religioso).
