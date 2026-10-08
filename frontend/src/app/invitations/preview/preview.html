@@ -109,16 +109,6 @@
       </p>
     }
 
-    @if (inv.event.data.galleryImages && inv.event.data.galleryImages.length > 0) {
-      <div class="gallery" [class.gallery--mosaic]="inv.event.data.galleryMosaic">
-        @for (img of inv.event.data.galleryImages; track $index) {
-          <img class="gallery-img"
-            [style.width]="inv.event.data.galleryMosaic ? null : galleryItemWidth()"
-            [src]="gallerySrc(img)" alt="Foto del evento" />
-        }
-      </div>
-    }
-
     @if (inv.event.data.sectionImages) {
       @for (img of inv.event.data.sectionImages; track $index) {
         <img class="section-img" [src]="gallerySrc(img)" alt="Imagen decorativa" />
@@ -156,6 +146,16 @@
         <p class="line line--pre" [style.color]="inv.customization.secondary || '#555'">
           {{ inv.event.data.giftInfo }}
         </p>
+      </div>
+    }
+
+    @if (inv.event.data.galleryImages && inv.event.data.galleryImages.length > 0) {
+      <div class="gallery" [class.gallery--mosaic]="inv.event.data.galleryMosaic">
+        @for (img of inv.event.data.galleryImages; track $index) {
+          <img class="gallery-img"
+            [style.width]="inv.event.data.galleryMosaic ? null : galleryItemWidth()"
+            [src]="gallerySrc(img)" alt="Foto del evento" />
+        }
       </div>
     }
 

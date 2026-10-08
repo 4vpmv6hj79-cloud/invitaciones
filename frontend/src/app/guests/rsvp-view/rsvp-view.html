@@ -90,16 +90,6 @@
           [style.color]="v.invitation.customization.primary || '#b8860b'">📍 Ver ubicación</a>
       }
 
-      @if (v.invitation.data.galleryImages && v.invitation.data.galleryImages.length > 0) {
-        <div class="gallery" [class.gallery--mosaic]="v.invitation.data.galleryMosaic">
-          @for (img of v.invitation.data.galleryImages; track $index) {
-            <img class="gallery-img"
-              [style.width]="v.invitation.data.galleryMosaic ? null : galleryItemWidth()"
-              [src]="gallerySrc(img)" alt="Foto del evento" />
-          }
-        </div>
-      }
-
       @if (v.invitation.data.sectionImages) {
         @for (img of v.invitation.data.sectionImages; track $index) {
           <img class="section-img" [src]="gallerySrc(img)" alt="Imagen decorativa" />
@@ -141,6 +131,16 @@
           <p class="line line--pre" [style.color]="v.invitation.customization.secondary || '#555'">
             {{ v.invitation.data.giftInfo }}
           </p>
+        </div>
+      }
+
+      @if (v.invitation.data.galleryImages && v.invitation.data.galleryImages.length > 0) {
+        <div class="gallery" [class.gallery--mosaic]="v.invitation.data.galleryMosaic">
+          @for (img of v.invitation.data.galleryImages; track $index) {
+            <img class="gallery-img"
+              [style.width]="v.invitation.data.galleryMosaic ? null : galleryItemWidth()"
+              [src]="gallerySrc(img)" alt="Foto del evento" />
+          }
         </div>
       }
 

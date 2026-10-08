@@ -546,15 +546,6 @@
               {{ value().message }}
             </p>
           }
-          @if (gallery().length > 0) {
-            <div class="gallery" [class.gallery--mosaic]="value().galleryMosaic">
-              @for (img of gallery(); track $index) {
-                <img class="gallery-img" [style.width]="value().galleryMosaic ? null : galleryItemWidth()"
-                  [src]="gallerySrc(img)" alt="Foto del evento" />
-              }
-            </div>
-          }
-
           @for (img of sectionImages(); track $index) {
             <img class="section-img" [src]="sectionSrc(img)" alt="Imagen decorativa" />
           }
@@ -588,6 +579,15 @@
                 Mesa de regalos
               </p>
               <p class="line line--pre" [style.color]="value().secondary">{{ value().giftInfo }}</p>
+            </div>
+          }
+
+          @if (gallery().length > 0) {
+            <div class="gallery" [class.gallery--mosaic]="value().galleryMosaic">
+              @for (img of gallery(); track $index) {
+                <img class="gallery-img" [style.width]="value().galleryMosaic ? null : galleryItemWidth()"
+                  [src]="gallerySrc(img)" alt="Foto del evento" />
+              }
             </div>
           }
 
