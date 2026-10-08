@@ -583,9 +583,8 @@
 /* Marco: foto vertical centrada, más grande */
 .invitation .cover--marco {
   max-width: 70%;
-  max-height: 320px;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   margin: 0 auto 1rem;
 }
 
@@ -649,10 +648,10 @@
 .invitation .cover--size-l { max-width: 100%; max-height: 300px; }
 
 /* En modo marco (retrato) el tamaño controla el ancho del retrato */
-.invitation .cover--marco { aspect-ratio: 3 / 4; object-fit: cover; margin: 0 auto 1rem; }
-.invitation .cover--marco.cover--size-s { max-width: 45%; max-height: 240px; }
-.invitation .cover--marco.cover--size-m { max-width: 60%; max-height: 320px; }
-.invitation .cover--marco.cover--size-l { max-width: 78%; max-height: 420px; }
+.invitation .cover--marco { height: auto; object-fit: contain; margin: 0 auto 1rem; }
+.invitation .cover--marco.cover--size-s { max-width: 45%; max-height: none; }
+.invitation .cover--marco.cover--size-m { max-width: 60%; max-height: none; }
+.invitation .cover--marco.cover--size-l { max-width: 78%; max-height: none; }
 
 /* ---- Galería en mosaico (masonry) ---- */
 .invitation .gallery--mosaic {
