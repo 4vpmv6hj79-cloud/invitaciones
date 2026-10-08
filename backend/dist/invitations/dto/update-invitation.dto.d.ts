@@ -22,6 +22,11 @@ export declare class EventDataDto {
     religiousTime?: string;
     religiousLocationName?: string;
     religiousMapsUrl?: string;
+    galleryMosaic?: boolean;
+    dressCode?: string;
+    dressCodeNote?: string;
+    dressCodeImages?: string[];
+    giftInfo?: string;
 }
 export declare class UpdateInvitationDto {
     title?: string;

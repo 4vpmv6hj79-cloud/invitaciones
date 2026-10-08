@@ -327,3 +327,63 @@
   flex-direction: column;
   align-items: center;
 }
+
+/* ---- Galería en mosaico ---- */
+.gallery--mosaic {
+  display: block;
+  column-count: 3;
+  column-gap: 6px;
+
+  .gallery-img {
+    width: 100%;
+    aspect-ratio: auto;
+    margin-bottom: 6px;
+    break-inside: avoid;
+    display: block;
+  }
+
+  @media (max-width: 480px) {
+    column-count: 2;
+  }
+}
+
+/* ---- Secciones de info (vestimenta / regalos) ---- */
+.info-block {
+  margin: 1rem auto;
+  padding: 0.8rem 1rem;
+  border: 1px solid;
+  border-radius: var(--radius-md, 14px);
+
+  .info-head {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    margin: 0 0 0.4rem;
+  }
+
+  .line--small {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  .line--pre {
+    white-space: pre-line;
+    text-align: left;
+  }
+}
+
+.dress-imgs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 0.5rem;
+
+  img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--radius-sm, 8px);
+  }
+}

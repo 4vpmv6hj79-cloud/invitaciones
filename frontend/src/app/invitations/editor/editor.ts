@@ -42,6 +42,13 @@ export class Editor implements OnInit {
   protected newGalleryUrl = '';
   protected readonly GALLERY_MAX = 12;
 
+  // Imágenes de ejemplo del código de vestimenta.
+  protected readonly dressImages = signal<string[]>([]);
+  protected readonly dressUploading = signal(false);
+  protected readonly dressError = signal<string | null>(null);
+  protected newDressUrl = '';
+  protected readonly DRESS_MAX = 6;
+
   private invitationId = '';
 
   // Paletas curadas disponibles en el selector.
@@ -58,6 +65,10 @@ export class Editor implements OnInit {
     locationName: [''],
     mapsUrl: [''],
     showCountdown: [false],
+    galleryMosaic: [false],
+    dressCode: [''],
+    dressCodeNote: [''],
+    giftInfo: [''],
     rsvpMode: ['abierto'],
     rsvpCompanions: [1],
     coverImageUrl: [''],
@@ -117,6 +128,10 @@ export class Editor implements OnInit {
       locationName: d.locationName ?? '',
       mapsUrl: d.mapsUrl ?? '',
       showCountdown: d.showCountdown ?? false,
+      galleryMosaic: d.galleryMosaic ?? false,
+      dressCode: d.dressCode ?? '',
+      dressCodeNote: d.dressCodeNote ?? '',
+      giftInfo: d.giftInfo ?? '',
       rsvpMode: d.rsvpMode ?? 'abierto',
       rsvpCompanions: d.rsvpCompanions ?? 1,
       coverImageUrl: d.coverImageUrl ?? '',
@@ -139,6 +154,7 @@ export class Editor implements OnInit {
       bodyFont: c.bodyFont ?? 'sans-serif',
     });
     this.gallery.set(Array.isArray(d.galleryImages) ? [...d.galleryImages] : []);
+    this.dressImages.set(Array.isArray(d.dressCodeImages) ? [...d.dressCodeImages] : []);
     this.value.set(this.form.getRawValue());
   }
 
@@ -167,6 +183,11 @@ export class Editor implements OnInit {
         locationName: v.locationName,
         mapsUrl: v.mapsUrl,
         showCountdown: v.showCountdown,
+        galleryMosaic: v.galleryMosaic,
+        dressCode: v.dressCode,
+        dressCodeNote: v.dressCodeNote,
+        dressCodeImages: this.dressImages(),
+        giftInfo: v.giftInfo,
         rsvpMode: v.rsvpMode as 'abierto' | 'cerrado',
         rsvpCompanions: Number(v.rsvpCompanions),
         coverImageUrl: v.coverImageUrl,
@@ -299,6 +320,55 @@ export class Editor implements OnInit {
   // Quita una foto de la galería por índice.
   removeGalleryAt(index: number): void {
     this.gallery.update((list) => list.filter((_, i) => i !== index));
+    this.save();
+  }
+
+  // --- Imágenes del código de vestimenta ---
+
+  dressSrc(url: string): string {
+    return this.service.fileUrl(url);
+  }
+
+  addDressUrl(): void {
+    const url = this.newDressUrl.trim();
+    if (!url) return;
+    if (this.dressImages().length >= this.DRESS_MAX) {
+      this.dressError.set(`Máximo ${this.DRESS_MAX} imágenes.`);
+      return;
+    }
+    this.dressImages.update((list) => [...list, url]);
+    this.newDressUrl = '';
+    this.dressError.set(null);
+    this.save();
+  }
+
+  onDressFile(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    if (this.dressImages().length >= this.DRESS_MAX) {
+      this.dressError.set(`Máximo ${this.DRESS_MAX} imágenes.`);
+      input.value = '';
+      return;
+    }
+    this.dressUploading.set(true);
+    this.dressError.set(null);
+    this.service.uploadImage(this.invitationId, file).subscribe({
+      next: (res) => {
+        this.dressImages.update((list) => [...list, res.url]);
+        this.dressUploading.set(false);
+        this.save();
+      },
+      error: (e) => {
+        this.dressUploading.set(false);
+        this.dressError.set(e?.error?.message ?? 'No se pudo subir la imagen');
+      },
+    });
+    input.value = '';
+  }
+
+  removeDressAt(index: number): void {
+    this.dressImages.update((list) => list.filter((_, i) => i !== index));
     this.save();
   }
 

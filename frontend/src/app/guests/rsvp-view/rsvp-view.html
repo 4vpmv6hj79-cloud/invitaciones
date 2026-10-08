@@ -81,11 +81,48 @@
       }
 
       @if (v.invitation.data.galleryImages && v.invitation.data.galleryImages.length > 0) {
-        <div class="gallery">
+        <div class="gallery" [class.gallery--mosaic]="v.invitation.data.galleryMosaic">
           @for (img of v.invitation.data.galleryImages; track $index) {
-            <img class="gallery-img" [style.width]="galleryItemWidth()"
+            <img class="gallery-img"
+              [style.width]="v.invitation.data.galleryMosaic ? null : galleryItemWidth()"
               [src]="gallerySrc(img)" alt="Foto del evento" />
           }
+        </div>
+      }
+
+      @if (v.invitation.data.dressCode || (v.invitation.data.dressCodeImages && v.invitation.data.dressCodeImages.length > 0)) {
+        <div class="info-block" [style.borderColor]="v.invitation.customization.primary || '#b8860b'">
+          <p class="info-head" [style.color]="v.invitation.customization.primary || '#b8860b'">
+            Código de vestimenta
+          </p>
+          @if (v.invitation.data.dressCode) {
+            <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">
+              {{ v.invitation.data.dressCode }}
+            </p>
+          }
+          @if (v.invitation.data.dressCodeNote) {
+            <p class="line line--small" [style.color]="v.invitation.customization.secondary || '#555'">
+              {{ v.invitation.data.dressCodeNote }}
+            </p>
+          }
+          @if (v.invitation.data.dressCodeImages && v.invitation.data.dressCodeImages.length > 0) {
+            <div class="dress-imgs">
+              @for (img of v.invitation.data.dressCodeImages; track $index) {
+                <img [src]="gallerySrc(img)" alt="Ejemplo de vestimenta" />
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (v.invitation.data.giftInfo) {
+        <div class="info-block" [style.borderColor]="v.invitation.customization.primary || '#b8860b'">
+          <p class="info-head" [style.color]="v.invitation.customization.primary || '#b8860b'">
+            Mesa de regalos
+          </p>
+          <p class="line line--pre" [style.color]="v.invitation.customization.secondary || '#555'">
+            {{ v.invitation.data.giftInfo }}
+          </p>
         </div>
       }
 

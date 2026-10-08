@@ -98,11 +98,44 @@
     }
 
     @if (inv.event.data.galleryImages && inv.event.data.galleryImages.length > 0) {
-      <div class="gallery">
+      <div class="gallery" [class.gallery--mosaic]="inv.event.data.galleryMosaic">
         @for (img of inv.event.data.galleryImages; track $index) {
-          <img class="gallery-img" [style.width]="galleryItemWidth()"
+          <img class="gallery-img"
+            [style.width]="inv.event.data.galleryMosaic ? null : galleryItemWidth()"
             [src]="gallerySrc(img)" alt="Foto del evento" />
         }
+      </div>
+    }
+
+    @if (inv.event.data.dressCode || (inv.event.data.dressCodeImages && inv.event.data.dressCodeImages.length > 0)) {
+      <div class="info-block" [style.borderColor]="inv.customization.primary || '#b8860b'">
+        <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'">
+          Código de vestimenta
+        </p>
+        @if (inv.event.data.dressCode) {
+          <p class="line" [style.color]="inv.customization.secondary || '#555'">{{ inv.event.data.dressCode }}</p>
+        }
+        @if (inv.event.data.dressCodeNote) {
+          <p class="line line--small" [style.color]="inv.customization.secondary || '#555'">
+            {{ inv.event.data.dressCodeNote }}
+          </p>
+        }
+        @if (inv.event.data.dressCodeImages && inv.event.data.dressCodeImages.length > 0) {
+          <div class="dress-imgs">
+            @for (img of inv.event.data.dressCodeImages; track $index) {
+              <img [src]="gallerySrc(img)" alt="Ejemplo de vestimenta" />
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (inv.event.data.giftInfo) {
+      <div class="info-block" [style.borderColor]="inv.customization.primary || '#b8860b'">
+        <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'">Mesa de regalos</p>
+        <p class="line line--pre" [style.color]="inv.customization.secondary || '#555'">
+          {{ inv.event.data.giftInfo }}
+        </p>
       </div>
     }
 

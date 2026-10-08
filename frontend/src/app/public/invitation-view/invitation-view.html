@@ -96,11 +96,46 @@
       }
 
       @if (inv.data.galleryImages && inv.data.galleryImages.length > 0) {
-        <div class="gallery">
+        <div class="gallery" [class.gallery--mosaic]="inv.data.galleryMosaic">
           @for (img of inv.data.galleryImages; track $index) {
-            <img class="gallery-img" [style.width]="galleryItemWidth()"
+            <img class="gallery-img"
+              [style.width]="inv.data.galleryMosaic ? null : galleryItemWidth()"
               [src]="gallerySrc(img)" alt="Foto del evento" />
           }
+        </div>
+      }
+
+      @if (inv.data.dressCode || (inv.data.dressCodeImages && inv.data.dressCodeImages.length > 0)) {
+        <div class="info-block" [style.borderColor]="inv.customization.primary || '#b8860b'">
+          <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'">
+            Código de vestimenta
+          </p>
+          @if (inv.data.dressCode) {
+            <p class="line" [style.color]="inv.customization.secondary || '#555'">{{ inv.data.dressCode }}</p>
+          }
+          @if (inv.data.dressCodeNote) {
+            <p class="line line--small" [style.color]="inv.customization.secondary || '#555'">
+              {{ inv.data.dressCodeNote }}
+            </p>
+          }
+          @if (inv.data.dressCodeImages && inv.data.dressCodeImages.length > 0) {
+            <div class="dress-imgs">
+              @for (img of inv.data.dressCodeImages; track $index) {
+                <img [src]="gallerySrc(img)" alt="Ejemplo de vestimenta" />
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (inv.data.giftInfo) {
+        <div class="info-block" [style.borderColor]="inv.customization.primary || '#b8860b'">
+          <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'">
+            Mesa de regalos
+          </p>
+          <p class="line line--pre" [style.color]="inv.customization.secondary || '#555'">
+            {{ inv.data.giftInfo }}
+          </p>
         </div>
       }
 

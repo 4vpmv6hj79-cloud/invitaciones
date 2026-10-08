@@ -115,6 +115,10 @@
             <input type="range" class="size-slider" min="20" max="100" step="1"
               formControlName="galleryItemPct" />
           </div>
+          <label class="check-field">
+            <input type="checkbox" formControlName="galleryMosaic" />
+            <span>Mostrar galería en mosaico</span>
+          </label>
         }
       </div>
 
@@ -221,6 +225,55 @@
           </div>
         }
       }
+
+      <h2>Código de vestimenta</h2>
+
+      <div class="field">
+        <label for="dressCode">Código de vestimenta (opcional)</label>
+        <input id="dressCode" type="text" formControlName="dressCode"
+          placeholder="Ej. Formal, Etiqueta rigurosa, Coctel" />
+      </div>
+      <div class="field">
+        <label for="dressCodeNote">Nota adicional (opcional)</label>
+        <input id="dressCodeNote" type="text" formControlName="dressCodeNote"
+          placeholder="Ej. Damas: vestido largo. Evitar color blanco." />
+      </div>
+      <div class="field">
+        <label>Imágenes de ejemplo ({{ dressImages().length }}/{{ DRESS_MAX }})</label>
+        @if (dressImages().length > 0) {
+          <div class="gallery-grid">
+            @for (img of dressImages(); track $index) {
+              <div class="gallery-thumb">
+                <img [src]="dressSrc(img)" alt="Ejemplo de vestimenta" />
+                <button type="button" class="gallery-remove" (click)="removeDressAt($index)"
+                  aria-label="Quitar imagen">✕</button>
+              </div>
+            }
+          </div>
+        }
+        <div class="gallery-add">
+          <input type="url" [(ngModel)]="newDressUrl" [ngModelOptions]="{ standalone: true }"
+            placeholder="Pega la URL de una imagen" (keyup.enter)="addDressUrl()" />
+          <button type="button" (click)="addDressUrl()">Agregar</button>
+        </div>
+        <label class="cover-upload">
+          {{ dressUploading() ? 'Subiendo…' : 'o subir una imagen' }}
+          <input type="file" accept="image/*" (change)="onDressFile($event)" hidden
+            [disabled]="dressUploading()" />
+        </label>
+        @if (dressError()) { <small class="help help--error">{{ dressError() }}</small> }
+      </div>
+
+      <h2>Mesa de regalos</h2>
+
+      <div class="field">
+        <label for="giftInfo">Información de regalos (opcional)</label>
+        <textarea id="giftInfo" formControlName="giftInfo" rows="4"
+          placeholder="Ej. Mesa de regalos Liverpool #12345&#10;Amazon: (enlace)&#10;Transferencia: Banco XXX, cuenta 0000&#10;Habrá un cofre para sobres con dinero en la recepción."></textarea>
+        <small class="help">
+          Escribe libremente: mesas de regalos, datos para transferencia o si habrá cofre/sobres.
+        </small>
+      </div>
 
       <h2>Diseño</h2>
 
@@ -403,13 +456,40 @@
             <p class="message" [style.color]="value().secondary">{{ value().message }}</p>
           }
           @if (gallery().length > 0) {
-            <div class="gallery">
+            <div class="gallery" [class.gallery--mosaic]="value().galleryMosaic">
               @for (img of gallery(); track $index) {
-                <img class="gallery-img" [style.width]="galleryItemWidth()"
+                <img class="gallery-img" [style.width]="value().galleryMosaic ? null : galleryItemWidth()"
                   [src]="gallerySrc(img)" alt="Foto del evento" />
               }
             </div>
           }
+
+          @if (value().dressCode || dressImages().length > 0) {
+            <div class="info-block" [style.borderColor]="value().primary">
+              <p class="info-head" [style.color]="value().primary">Código de vestimenta</p>
+              @if (value().dressCode) {
+                <p class="line" [style.color]="value().secondary">{{ value().dressCode }}</p>
+              }
+              @if (value().dressCodeNote) {
+                <p class="line line--small" [style.color]="value().secondary">{{ value().dressCodeNote }}</p>
+              }
+              @if (dressImages().length > 0) {
+                <div class="dress-imgs">
+                  @for (img of dressImages(); track $index) {
+                    <img [src]="dressSrc(img)" alt="Ejemplo de vestimenta" />
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          @if (value().giftInfo) {
+            <div class="info-block" [style.borderColor]="value().primary">
+              <p class="info-head" [style.color]="value().primary">Mesa de regalos</p>
+              <p class="line line--pre" [style.color]="value().secondary">{{ value().giftInfo }}</p>
+            </div>
+          }
+
           <span class="cta" [style.background]="value().primary">Confirmar asistencia</span>
           </div>
         </article>

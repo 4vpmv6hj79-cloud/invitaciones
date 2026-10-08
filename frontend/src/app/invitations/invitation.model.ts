@@ -19,6 +19,15 @@ export interface EventData {
   coverWidthPct?: number; // ancho de la portada en % (30–100)
   galleryItemPct?: number; // ancho por foto de la galería en % (20–100)
   galleryImages?: string[]; // galería de fotos (URLs o /uploads/...)
+  galleryMosaic?: boolean; // galería en estilo mosaico (masonry)
+
+  // Código de vestimenta (opcional).
+  dressCode?: string;
+  dressCodeNote?: string;
+  dressCodeImages?: string[]; // imágenes de ejemplo del dress code
+
+  // Mesa de regalos (texto libre: mesas, transferencia, sobres).
+  giftInfo?: string;
 
   // Evento religioso (misa), opcional.
   religiousEnabled?: boolean;

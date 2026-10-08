@@ -149,6 +149,37 @@ export class EventDataDto {
   @IsString()
   @MaxLength(600)
   religiousMapsUrl?: string;
+
+  // --- Galería en mosaico ---
+  // Si la galería se muestra en estilo mosaico (masonry) en vez de cuadrícula uniforme.
+  @IsOptional()
+  @IsBoolean()
+  galleryMosaic?: boolean;
+
+  // --- Código de vestimenta (opcional) ---
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  dressCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(300)
+  dressCodeNote?: string;
+
+  // Imágenes de ejemplo del código de vestimenta (URLs o /uploads/...). Máx 6.
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(6)
+  @IsString({ each: true })
+  @MaxLength(600, { each: true })
+  dressCodeImages?: string[];
+
+  // --- Mesa de regalos (texto libre: mesas, transferencia, sobres) ---
+  @IsOptional()
+  @IsString()
+  @MaxLength(1500)
+  giftInfo?: string;
 }
 
 // Actualización del borrador: título, contenido del evento y personalización del diseño.
