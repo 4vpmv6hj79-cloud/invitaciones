@@ -505,13 +505,6 @@
               [muted]="value().secondary"
             />
           }
-          @if (value().locationName) {
-            <p class="where" [style.color]="value().secondary">{{ value().locationName }}</p>
-          }
-          @if (value().mapsUrl) {
-            <a class="maps-link" [href]="mapsHref(value().mapsUrl)" target="_blank" rel="noopener"
-              [style.color]="value().primary">📍 Ver ubicación</a>
-          }
           @if (value().religiousEnabled) {
             <div class="religious" [style.borderColor]="value().primary">
               <p class="religious-head" [style.color]="value().primary"
@@ -533,6 +526,19 @@
                 }
               }
             </div>
+          }
+          @if (value().locationName) {
+            <p class="where" [style.color]="value().secondary">{{ value().locationName }}</p>
+          }
+          @if (receptionTime()) {
+            <p class="where" [style.color]="value().secondary"
+              [style.fontFamily]="gFont('data')" [style.fontSize.em]="gScale('data')">
+              Recepción: {{ receptionTime() }}
+            </p>
+          }
+          @if (value().mapsUrl) {
+            <a class="maps-link" [href]="mapsHref(value().mapsUrl)" target="_blank" rel="noopener"
+              [style.color]="value().primary">📍 Ver ubicación</a>
           }
           @if (value().message) {
             <p class="message" [style.color]="value().secondary"

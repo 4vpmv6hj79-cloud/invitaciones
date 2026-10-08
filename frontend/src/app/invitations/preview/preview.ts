@@ -96,14 +96,12 @@ export class InvitationPreview implements OnInit {
   }
 
   protected when(): string {
-    const d = this.invitation()?.event?.data;
-    if (!d) return '';
-    let time = '';
-    if (d.time) {
-      const start = formatTime12h(d.time);
-      time = d.endTime ? `${start} – ${formatTime12h(d.endTime)}` : start;
-    }
-    return [formatDateLong(d.date), time].filter(Boolean).join(' · ');
+    return formatDateLong(this.invitation()?.event?.data?.date);
+  }
+
+  // Hora de inicio del evento, para "Recepción: hora".
+  protected receptionTime(): string {
+    return formatTime12h(this.invitation()?.event?.data?.time);
   }
 
   // Hora en formato 12h (evento religioso).

@@ -168,16 +168,14 @@ export class InvitationView implements OnInit {
     });
   }
 
-  // Texto de fecha/hora para mostrar (fecha larga en español + 12h a.m./p.m.).
+  // Solo la fecha (larga en español). La hora se muestra aparte, como "Recepción".
   protected when(): string {
-    const d = this.invitation()?.data;
-    if (!d) return '';
-    let time = '';
-    if (d.time) {
-      const start = formatTime12h(d.time);
-      time = d.endTime ? `${start} – ${formatTime12h(d.endTime)}` : start;
-    }
-    return [formatDateLong(d.date), time].filter(Boolean).join(' · ');
+    return formatDateLong(this.invitation()?.data?.date);
+  }
+
+  // Hora de inicio del evento, para mostrar como "Recepción: hora".
+  protected receptionTime(): string {
+    return formatTime12h(this.invitation()?.data?.time);
   }
 
   // Hora en formato 12h (evento religioso).

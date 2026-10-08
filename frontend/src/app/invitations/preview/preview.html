@@ -56,15 +56,6 @@
         [muted]="inv.customization.secondary || '#777'"
       />
     }
-    @if (inv.event.data.locationName) {
-      <p class="line" [style.color]="inv.customization.secondary || '#555'">
-        {{ inv.event.data.locationName }}
-      </p>
-    }
-    @if (inv.event.data.mapsUrl) {
-      <a class="maps-link" [href]="mapsHref(inv.event.data.mapsUrl)" target="_blank" rel="noopener"
-        [style.color]="inv.customization.primary || '#b8860b'">📍 Ver ubicación</a>
-    }
 
     @if (inv.event.data.religiousEnabled) {
       <div class="religious" [style.borderColor]="inv.customization.primary || '#b8860b'">
@@ -93,6 +84,22 @@
           }
         }
       </div>
+    }
+
+    @if (inv.event.data.locationName) {
+      <p class="line" [style.color]="inv.customization.secondary || '#555'">
+        {{ inv.event.data.locationName }}
+      </p>
+    }
+    @if (receptionTime()) {
+      <p class="line" [style.color]="inv.customization.secondary || '#555'"
+        [style.fontFamily]="gFont('data')" [style.fontSize.em]="gScale('data')">
+        Recepción: {{ receptionTime() }}
+      </p>
+    }
+    @if (inv.event.data.mapsUrl) {
+      <a class="maps-link" [href]="mapsHref(inv.event.data.mapsUrl)" target="_blank" rel="noopener"
+        [style.color]="inv.customization.primary || '#b8860b'">📍 Ver ubicación</a>
     }
 
     @if (inv.event.data.message) {

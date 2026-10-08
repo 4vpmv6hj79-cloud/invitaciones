@@ -556,16 +556,14 @@ export class Editor implements OnInit {
     });
   }
 
-  // Texto de fecha/hora formateado para la previsualización.
+  // Solo la fecha (larga). La hora se muestra aparte como "Recepción".
   protected formattedWhen(): string {
-    const v = this.value();
-    const parts: string[] = [];
-    if (v.date) parts.push(formatDateLong(v.date));
-    if (v.time) {
-      const start = formatTime12h(v.time);
-      parts.push(v.endTime ? `${start} – ${formatTime12h(v.endTime)}` : start);
-    }
-    return parts.join(' · ');
+    return formatDateLong(this.value().date);
+  }
+
+  // Hora de inicio del evento, para "Recepción: hora".
+  protected receptionTime(): string {
+    return formatTime12h(this.value().time);
   }
 
   // Hora en formato 12h para mostrar (ej. evento religioso).
