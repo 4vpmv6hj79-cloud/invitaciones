@@ -540,16 +540,15 @@
             <a class="maps-link" [href]="mapsHref(value().mapsUrl)" target="_blank" rel="noopener"
               [style.color]="value().primary">📍 Ver ubicación</a>
           }
+          @for (img of sectionImages(); track $index) {
+            <img class="section-img" [src]="sectionSrc(img)" alt="Imagen decorativa" />
+          }
           @if (value().message) {
             <p class="message" [style.color]="value().secondary"
               [style.fontFamily]="gFont('message')" [style.fontSize.em]="gScale('message')">
               {{ value().message }}
             </p>
           }
-          @for (img of sectionImages(); track $index) {
-            <img class="section-img" [src]="sectionSrc(img)" alt="Imagen decorativa" />
-          }
-
           @if (value().dressCode || dressImages().length > 0) {
             <div class="info-block">
               <p class="info-head" [style.color]="value().primary"
