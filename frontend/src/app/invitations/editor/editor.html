@@ -398,6 +398,28 @@
         </div>
       </div>
 
+      <details class="typo-advanced">
+        <summary>Tipografía avanzada (por sección)</summary>
+        <p class="help">
+          Ajusta la fuente y el tamaño de cada parte. "Automática" usa la tipografía general de arriba.
+        </p>
+
+        @for (g of typoGroups; track g.key) {
+          <div class="typo-group">
+            <span class="typo-label">{{ g.label }}</span>
+            <div class="typo-controls">
+              <select [formControlName]="g.fontCtrl">
+                @for (f of fontOptions; track f.value) {
+                  <option [value]="f.value">{{ f.label }}</option>
+                }
+              </select>
+              <input type="range" class="size-slider" min="0.7" max="2" step="0.05"
+                [formControlName]="g.scaleCtrl" />
+            </div>
+          </div>
+        }
+      </details>
+
       <button type="button" class="save-btn" (click)="save()">Guardar borrador</button>
       <p class="hint">Los cambios se guardan automáticamente mientras editas.</p>
 
@@ -448,16 +470,23 @@
           <h1
             class="title"
             [style.color]="value().primary"
-            [style.fontFamily]="value().headingFont"
+            [style.fontFamily]="gFont('title')"
+            [style.fontSize.em]="2.2 * gScale('title')"
           >
             {{ value().title || 'Título del evento' }}
           </h1>
           @if (value().coupleOrHonoree) {
-            <p class="names" [style.color]="value().secondary">{{ value().coupleOrHonoree }}</p>
+            <p class="names" [style.color]="value().secondary"
+              [style.fontFamily]="gFont('names')" [style.fontSize.em]="gScale('names')">
+              {{ value().coupleOrHonoree }}
+            </p>
           }
           <div class="divider" [style.background]="value().primary"></div>
           @if (formattedWhen()) {
-            <p class="when" [style.color]="value().secondary">{{ formattedWhen() }}</p>
+            <p class="when" [style.color]="value().secondary"
+              [style.fontFamily]="gFont('data')" [style.fontSize.em]="gScale('data')">
+              {{ formattedWhen() }}
+            </p>
           }
           @if (value().showCountdown && value().date) {
             <app-countdown
@@ -476,7 +505,10 @@
           }
           @if (value().religiousEnabled) {
             <div class="religious" [style.borderColor]="value().primary">
-              <p class="religious-head" [style.color]="value().primary">{{ religiousHeading() }}</p>
+              <p class="religious-head" [style.color]="value().primary"
+                [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+                {{ religiousHeading() }}
+              </p>
               @if (value().religiousTime) {
                 <p class="line" [style.color]="value().secondary">{{ fmtTime(value().religiousTime) }}</p>
               }
@@ -494,7 +526,10 @@
             </div>
           }
           @if (value().message) {
-            <p class="message" [style.color]="value().secondary">{{ value().message }}</p>
+            <p class="message" [style.color]="value().secondary"
+              [style.fontFamily]="gFont('message')" [style.fontSize.em]="gScale('message')">
+              {{ value().message }}
+            </p>
           }
           @if (gallery().length > 0) {
             <div class="gallery" [class.gallery--mosaic]="value().galleryMosaic">
@@ -511,7 +546,10 @@
 
           @if (value().dressCode || dressImages().length > 0) {
             <div class="info-block" [style.borderColor]="value().primary">
-              <p class="info-head" [style.color]="value().primary">Código de vestimenta</p>
+              <p class="info-head" [style.color]="value().primary"
+                [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+                Código de vestimenta
+              </p>
               @if (value().dressCode) {
                 <p class="line" [style.color]="value().secondary">{{ value().dressCode }}</p>
               }
@@ -530,7 +568,10 @@
 
           @if (value().giftInfo) {
             <div class="info-block" [style.borderColor]="value().primary">
-              <p class="info-head" [style.color]="value().primary">Mesa de regalos</p>
+              <p class="info-head" [style.color]="value().primary"
+                [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+                Mesa de regalos
+              </p>
               <p class="line line--pre" [style.color]="value().secondary">{{ value().giftInfo }}</p>
             </div>
           }

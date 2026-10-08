@@ -8,6 +8,19 @@ export interface TemplateTheme {
   background?: string;
   headingFont?: string;
   bodyFont?: string;
+
+  // Tipografía avanzada (nivel 2): fuente + escala por grupo.
+  // Si un campo no está, se usa headingFont/bodyFont y escala 1.
+  titleFont?: string;
+  titleScale?: number; // multiplicador, p.ej. 0.8–1.6
+  namesFont?: string;
+  namesScale?: number;
+  dataFont?: string;
+  dataScale?: number;
+  messageFont?: string;
+  messageScale?: number;
+  sectionHeadingFont?: string;
+  sectionScale?: number;
 }
 
 export interface Template {

@@ -6,6 +6,7 @@ import { Countdown } from '../countdown/countdown';
 import { MusicPlayer } from '../music-player/music-player';
 import { formatTime12h } from '../time-format';
 import { normalizeMapsUrl } from '../maps-url';
+import { groupFont, groupScale, TypoGroup } from '../typography.util';
 
 // Vista previa de la invitación tal como la verán los invitados,
 // usando el borrador (por id) y SIN necesidad de publicar/pagar.
@@ -62,6 +63,14 @@ export class InvitationPreview implements OnInit {
   // Normaliza el enlace de ubicación para que siempre abra Google Maps.
   protected mapsHref(value: string | undefined): string {
     return normalizeMapsUrl(value);
+  }
+
+  // Tipografía por grupo (nivel 2).
+  protected gFont(group: TypoGroup): string {
+    return groupFont(this.invitation()?.customization, group);
+  }
+  protected gScale(group: TypoGroup): number {
+    return groupScale(this.invitation()?.customization, group);
   }
 
   // Ancho de la portada en % (fallback desde coverSize).

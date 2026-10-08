@@ -10,6 +10,8 @@ import { Countdown } from '../countdown/countdown';
 import { MusicPlayer } from '../music-player/music-player';
 import { formatTime12h } from '../time-format';
 import { normalizeMapsUrl } from '../maps-url';
+import { TemplateTheme } from '../../catalog/template.model';
+import { groupFont, groupScale, TypoGroup } from '../typography.util';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 type PreviewMode = 'mobile' | 'desktop';
@@ -97,7 +99,45 @@ export class Editor implements OnInit {
     background: ['#ffffff'],
     headingFont: ['serif'],
     bodyFont: ['sans-serif'],
+    // Tipografía avanzada (nivel 2). '' = usar la global; escala 1 = tamaño normal.
+    titleFont: [''],
+    titleScale: [1],
+    namesFont: [''],
+    namesScale: [1],
+    dataFont: [''],
+    dataScale: [1],
+    messageFont: [''],
+    messageScale: [1],
+    sectionHeadingFont: [''],
+    sectionScale: [1],
   });
+
+  // Grupos de tipografía avanzada (nivel 2) para generar los controles.
+  protected readonly typoGroups = [
+    { key: 'title', label: 'Título principal', fontCtrl: 'titleFont', scaleCtrl: 'titleScale' },
+    { key: 'names', label: 'Nombres', fontCtrl: 'namesFont', scaleCtrl: 'namesScale' },
+    { key: 'data', label: 'Fecha, hora y lugar', fontCtrl: 'dataFont', scaleCtrl: 'dataScale' },
+    { key: 'message', label: 'Mensaje', fontCtrl: 'messageFont', scaleCtrl: 'messageScale' },
+    { key: 'section', label: 'Títulos de sección', fontCtrl: 'sectionHeadingFont', scaleCtrl: 'sectionScale' },
+  ] as const;
+
+  // Opciones de fuente para los selectores de tipografía avanzada.
+  // '' significa "usar la tipografía general".
+  protected readonly fontOptions = [
+    { value: '', label: 'Automática' },
+    { value: 'Playfair Display', label: 'Playfair Display' },
+    { value: 'Cormorant Garamond', label: 'Cormorant Garamond' },
+    { value: 'Poppins', label: 'Poppins' },
+    { value: 'Montserrat', label: 'Montserrat' },
+    { value: 'Baloo 2', label: 'Baloo 2' },
+    { value: 'Lato', label: 'Lato' },
+    { value: 'Inter', label: 'Inter' },
+    { value: 'Nunito', label: 'Nunito' },
+    { value: 'Great Vibes', label: 'Great Vibes (manuscrita)' },
+    { value: 'Dancing Script', label: 'Dancing Script (manuscrita)' },
+    { value: 'Parisienne', label: 'Parisienne (manuscrita)' },
+    { value: 'Sacramento', label: 'Sacramento (manuscrita)' },
+  ];
 
   // Señal con el valor actual del formulario, para la previsualización.
   protected readonly value = signal(this.form.getRawValue());
@@ -162,6 +202,16 @@ export class Editor implements OnInit {
       background: c.background ?? '#ffffff',
       headingFont: c.headingFont ?? 'serif',
       bodyFont: c.bodyFont ?? 'sans-serif',
+      titleFont: c.titleFont ?? '',
+      titleScale: c.titleScale ?? 1,
+      namesFont: c.namesFont ?? '',
+      namesScale: c.namesScale ?? 1,
+      dataFont: c.dataFont ?? '',
+      dataScale: c.dataScale ?? 1,
+      messageFont: c.messageFont ?? '',
+      messageScale: c.messageScale ?? 1,
+      sectionHeadingFont: c.sectionHeadingFont ?? '',
+      sectionScale: c.sectionScale ?? 1,
     });
     this.gallery.set(Array.isArray(d.galleryImages) ? [...d.galleryImages] : []);
     this.dressImages.set(Array.isArray(d.dressCodeImages) ? [...d.dressCodeImages] : []);
@@ -222,6 +272,16 @@ export class Editor implements OnInit {
         background: v.background,
         headingFont: v.headingFont,
         bodyFont: v.bodyFont,
+        titleFont: v.titleFont,
+        titleScale: Number(v.titleScale),
+        namesFont: v.namesFont,
+        namesScale: Number(v.namesScale),
+        dataFont: v.dataFont,
+        dataScale: Number(v.dataScale),
+        messageFont: v.messageFont,
+        messageScale: Number(v.messageScale),
+        sectionHeadingFont: v.sectionHeadingFont,
+        sectionScale: Number(v.sectionScale),
       },
     };
 
@@ -508,6 +568,34 @@ export class Editor implements OnInit {
   // Título de la sección religiosa (personalizado o por defecto).
   protected religiousHeading(): string {
     return this.value().religiousTitle?.trim() || 'Evento religioso';
+  }
+
+  // --- Tipografía por grupo para la preview ---
+  // Construye el objeto theme a partir del formulario actual.
+  private themeFromForm(): TemplateTheme {
+    const v = this.value();
+    return {
+      headingFont: v.headingFont,
+      bodyFont: v.bodyFont,
+      titleFont: v.titleFont,
+      titleScale: Number(v.titleScale),
+      namesFont: v.namesFont,
+      namesScale: Number(v.namesScale),
+      dataFont: v.dataFont,
+      dataScale: Number(v.dataScale),
+      messageFont: v.messageFont,
+      messageScale: Number(v.messageScale),
+      sectionHeadingFont: v.sectionHeadingFont,
+      sectionScale: Number(v.sectionScale),
+    };
+  }
+
+  protected gFont(group: TypoGroup): string {
+    return groupFont(this.themeFromForm(), group);
+  }
+
+  protected gScale(group: TypoGroup): number {
+    return groupScale(this.themeFromForm(), group);
   }
 
   // Normaliza el enlace de ubicación para que siempre abra Google Maps.

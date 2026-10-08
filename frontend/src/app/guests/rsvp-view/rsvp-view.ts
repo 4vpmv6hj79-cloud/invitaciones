@@ -9,6 +9,7 @@ import { MusicPlayer } from '../../invitations/music-player/music-player';
 import { InvitationService } from '../../invitations/invitation.service';
 import { formatTime12h } from '../../invitations/time-format';
 import { normalizeMapsUrl } from '../../invitations/maps-url';
+import { groupFont, groupScale, TypoGroup } from '../../invitations/typography.util';
 
 @Component({
   selector: 'app-rsvp-view',
@@ -37,6 +38,14 @@ export class RsvpViewComponent implements OnInit {
   // Normaliza el enlace de ubicación para que siempre abra Google Maps.
   protected mapsHref(value: string | undefined): string {
     return normalizeMapsUrl(value);
+  }
+
+  // Tipografía por grupo (nivel 2).
+  protected gFont(group: TypoGroup): string {
+    return groupFont(this.view()?.invitation.customization, group);
+  }
+  protected gScale(group: TypoGroup): number {
+    return groupScale(this.view()?.invitation.customization, group);
   }
 
   // Ancho de la portada en % (fallback desde coverSize para invitaciones viejas).

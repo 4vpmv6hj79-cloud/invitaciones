@@ -27,12 +27,14 @@
       <h1
         class="title"
         [style.color]="v.invitation.customization.primary || '#333'"
-        [style.fontFamily]="v.invitation.customization.headingFont || 'serif'"
+        [style.fontFamily]="gFont('title')"
+        [style.fontSize.em]="2.2 * gScale('title')"
       >
         {{ v.invitation.title || 'Nuestro evento' }}
       </h1>
       @if (when()) {
-        <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">{{ when() }}</p>
+        <p class="line" [style.color]="v.invitation.customization.secondary || '#555'"
+          [style.fontFamily]="gFont('data')" [style.fontSize.em]="gScale('data')">{{ when() }}</p>
       }
       @if (v.invitation.data.showCountdown && v.invitation.data.date) {
         <app-countdown
@@ -54,7 +56,8 @@
 
       @if (v.invitation.data.religiousEnabled) {
         <div class="religious" [style.borderColor]="v.invitation.customization.primary || '#b8860b'">
-          <p class="religious-head" [style.color]="v.invitation.customization.primary || '#b8860b'">
+          <p class="religious-head" [style.color]="v.invitation.customization.primary || '#b8860b'"
+            [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
             {{ v.invitation.data.religiousTitle?.trim() || 'Evento religioso' }}
           </p>
           @if (v.invitation.data.religiousTime) {
@@ -98,7 +101,8 @@
 
       @if (v.invitation.data.dressCode || (v.invitation.data.dressCodeImages && v.invitation.data.dressCodeImages.length > 0)) {
         <div class="info-block" [style.borderColor]="v.invitation.customization.primary || '#b8860b'">
-          <p class="info-head" [style.color]="v.invitation.customization.primary || '#b8860b'">
+          <p class="info-head" [style.color]="v.invitation.customization.primary || '#b8860b'"
+            [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
             Código de vestimenta
           </p>
           @if (v.invitation.data.dressCode) {
@@ -123,7 +127,8 @@
 
       @if (v.invitation.data.giftInfo) {
         <div class="info-block" [style.borderColor]="v.invitation.customization.primary || '#b8860b'">
-          <p class="info-head" [style.color]="v.invitation.customization.primary || '#b8860b'">
+          <p class="info-head" [style.color]="v.invitation.customization.primary || '#b8860b'"
+            [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
             Mesa de regalos
           </p>
           <p class="line line--pre" [style.color]="v.invitation.customization.secondary || '#555'">

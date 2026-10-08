@@ -29,13 +29,15 @@
     <h1
       class="title"
       [style.color]="inv.customization.primary || '#333'"
-      [style.fontFamily]="inv.customization.headingFont || 'serif'"
+      [style.fontFamily]="gFont('title')"
+      [style.fontSize.em]="2.4 * gScale('title')"
     >
       {{ inv.event.title || 'Nuestro evento' }}
     </h1>
 
     @if (inv.event.data.coupleOrHonoree) {
-      <p class="names" [style.color]="inv.customization.secondary || '#555'">
+      <p class="names" [style.color]="inv.customization.secondary || '#555'"
+        [style.fontFamily]="gFont('names')" [style.fontSize.em]="gScale('names')">
         {{ inv.event.data.coupleOrHonoree }}
       </p>
     }
@@ -43,7 +45,8 @@
     <div class="divider" [style.background]="inv.customization.primary || '#333'"></div>
 
     @if (when()) {
-      <p class="line" [style.color]="inv.customization.secondary || '#555'">{{ when() }}</p>
+      <p class="line" [style.color]="inv.customization.secondary || '#555'"
+        [style.fontFamily]="gFont('data')" [style.fontSize.em]="gScale('data')">{{ when() }}</p>
     }
     @if (inv.event.data.showCountdown && inv.event.data.date) {
       <app-countdown
@@ -65,7 +68,8 @@
 
     @if (inv.event.data.religiousEnabled) {
       <div class="religious" [style.borderColor]="inv.customization.primary || '#b8860b'">
-        <p class="religious-head" [style.color]="inv.customization.primary || '#b8860b'">
+        <p class="religious-head" [style.color]="inv.customization.primary || '#b8860b'"
+          [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
           {{ inv.event.data.religiousTitle?.trim() || 'Evento religioso' }}
         </p>
         @if (inv.event.data.religiousTime) {
@@ -92,7 +96,8 @@
     }
 
     @if (inv.event.data.message) {
-      <p class="message" [style.color]="inv.customization.secondary || '#555'">
+      <p class="message" [style.color]="inv.customization.secondary || '#555'"
+        [style.fontFamily]="gFont('message')" [style.fontSize.em]="gScale('message')">
         {{ inv.event.data.message }}
       </p>
     }
@@ -115,7 +120,8 @@
 
     @if (inv.event.data.dressCode || (inv.event.data.dressCodeImages && inv.event.data.dressCodeImages.length > 0)) {
       <div class="info-block" [style.borderColor]="inv.customization.primary || '#b8860b'">
-        <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'">
+        <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'"
+          [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
           Código de vestimenta
         </p>
         @if (inv.event.data.dressCode) {
@@ -138,7 +144,8 @@
 
     @if (inv.event.data.giftInfo) {
       <div class="info-block" [style.borderColor]="inv.customization.primary || '#b8860b'">
-        <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'">Mesa de regalos</p>
+        <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'"
+          [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">Mesa de regalos</p>
         <p class="line line--pre" [style.color]="inv.customization.secondary || '#555'">
           {{ inv.event.data.giftInfo }}
         </p>
