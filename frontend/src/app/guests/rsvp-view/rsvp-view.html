@@ -74,20 +74,26 @@
         </div>
       }
 
-      @if (v.invitation.data.locationName) {
-        <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">
-          {{ v.invitation.data.locationName }}
+      @if (v.invitation.data.locationName || receptionTime() || v.invitation.data.mapsUrl) {
+        <p class="recepcion-head" [style.color]="v.invitation.customization.primary || '#b8860b'"
+          [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+          Recepción
         </p>
-      }
-      @if (receptionTime()) {
-        <p class="line" [style.color]="v.invitation.customization.secondary || '#555'"
-          [style.fontFamily]="gFont('data')" [style.fontSize.em]="gScale('data')">
-          Recepción: {{ receptionTime() }}
-        </p>
-      }
-      @if (v.invitation.data.mapsUrl) {
-        <a class="maps-link" [href]="mapsHref(v.invitation.data.mapsUrl)" target="_blank" rel="noopener"
-          [style.color]="v.invitation.customization.primary || '#b8860b'">📍 Ver ubicación</a>
+        @if (receptionTime()) {
+          <p class="line" [style.color]="v.invitation.customization.secondary || '#555'"
+            [style.fontFamily]="gFont('data')" [style.fontSize.em]="gScale('data')">
+            {{ receptionTime() }}
+          </p>
+        }
+        @if (v.invitation.data.locationName) {
+          <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">
+            {{ v.invitation.data.locationName }}
+          </p>
+        }
+        @if (v.invitation.data.mapsUrl) {
+          <a class="maps-link" [href]="mapsHref(v.invitation.data.mapsUrl)" target="_blank" rel="noopener"
+            [style.color]="v.invitation.customization.primary || '#b8860b'">📍 Ver ubicación</a>
+        }
       }
 
       @if (v.invitation.data.sectionImages) {

@@ -84,20 +84,26 @@
         </div>
       }
 
-      @if (inv.data.locationName) {
-        <p class="line" [style.color]="inv.customization.secondary || '#555'">
-          {{ inv.data.locationName }}
+      @if (inv.data.locationName || receptionTime() || inv.data.mapsUrl) {
+        <p class="recepcion-head" [style.color]="inv.customization.primary || '#b8860b'"
+          [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+          Recepción
         </p>
-      }
-      @if (receptionTime()) {
-        <p class="line" [style.color]="inv.customization.secondary || '#555'"
-          [style.fontFamily]="gFont('data')" [style.fontSize.em]="gScale('data')">
-          Recepción: {{ receptionTime() }}
-        </p>
-      }
-      @if (inv.data.mapsUrl) {
-        <a class="maps-link" [href]="mapsHref(inv.data.mapsUrl)" target="_blank" rel="noopener"
-          [style.color]="inv.customization.primary || '#b8860b'">📍 Ver ubicación</a>
+        @if (receptionTime()) {
+          <p class="line" [style.color]="inv.customization.secondary || '#555'"
+            [style.fontFamily]="gFont('data')" [style.fontSize.em]="gScale('data')">
+            {{ receptionTime() }}
+          </p>
+        }
+        @if (inv.data.locationName) {
+          <p class="line" [style.color]="inv.customization.secondary || '#555'">
+            {{ inv.data.locationName }}
+          </p>
+        }
+        @if (inv.data.mapsUrl) {
+          <a class="maps-link" [href]="mapsHref(inv.data.mapsUrl)" target="_blank" rel="noopener"
+            [style.color]="inv.customization.primary || '#b8860b'">📍 Ver ubicación</a>
+        }
       }
 
       @if (inv.data.sectionImages) {
