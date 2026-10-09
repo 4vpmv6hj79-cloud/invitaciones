@@ -17,9 +17,9 @@ const cloudinary_1 = require("cloudinary");
 let CloudinaryService = CloudinaryService_1 = class CloudinaryService {
     constructor(config) {
         this.logger = new common_1.Logger(CloudinaryService_1.name);
-        const cloudName = config.get('CLOUDINARY_CLOUD_NAME');
-        const apiKey = config.get('CLOUDINARY_API_KEY');
-        const apiSecret = config.get('CLOUDINARY_API_SECRET');
+        const cloudName = config.get('CLOUDINARY_CLOUD_NAME')?.trim();
+        const apiKey = config.get('CLOUDINARY_API_KEY')?.trim();
+        const apiSecret = config.get('CLOUDINARY_API_SECRET')?.trim();
         this.configured = Boolean(cloudName && apiKey && apiSecret);
         if (this.configured) {
             cloudinary_1.v2.config({
@@ -28,9 +28,18 @@ let CloudinaryService = CloudinaryService_1 = class CloudinaryService {
                 api_secret: apiSecret,
                 secure: true,
             });
+            this.logger.log(`Cloudinary configurado (cloud: ${cloudName}).`);
         }
         else {
-            this.logger.warn('Cloudinary no está configurado (faltan variables de entorno); se usará almacenamiento local.');
+            this.logger.warn('Cloudinary NO está configurado. Faltan variables: ' +
+                [
+                    cloudName ? null : 'CLOUDINARY_CLOUD_NAME',
+                    apiKey ? null : 'CLOUDINARY_API_KEY',
+                    apiSecret ? null : 'CLOUDINARY_API_SECRET',
+                ]
+                    .filter(Boolean)
+                    .join(', ') +
+                '. Se usará almacenamiento local (efímero en Render).');
         }
     }
     isConfigured() {
@@ -38,12 +47,33 @@ let CloudinaryService = CloudinaryService_1 = class CloudinaryService {
     }
     uploadImage(buffer) {
         return new Promise((resolve, reject) => {
+            let settled = false;
+            const timer = setTimeout(() => {
+                if (settled)
+                    return;
+                settled = true;
+                this.logger.error('La subida a Cloudinary excedió el tiempo de espera (30s).');
+                reject(new Error('La subida a Cloudinary tardó demasiado; inténtalo de nuevo.'));
+            }, 30_000);
             const stream = cloudinary_1.v2.uploader.upload_stream({ folder: 'invitaciones', resource_type: 'image' }, (error, result) => {
+                if (settled)
+                    return;
+                settled = true;
+                clearTimeout(timer);
                 if (error || !result) {
+                    this.logger.error(`Error al subir a Cloudinary: ${JSON.stringify(error) || 'sin resultado'}`);
                     reject(error ?? new Error('Cloudinary no devolvió resultado'));
                     return;
                 }
                 resolve(result.secure_url);
+            });
+            stream.on('error', (err) => {
+                if (settled)
+                    return;
+                settled = true;
+                clearTimeout(timer);
+                this.logger.error(`Error de stream hacia Cloudinary: ${err?.message ?? err}`);
+                reject(err);
             });
             stream.end(buffer);
         });

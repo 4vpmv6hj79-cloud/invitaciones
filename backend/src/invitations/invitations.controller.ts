@@ -115,8 +115,12 @@ export class InvitationsController {
 
     // Si Cloudinary está configurado, se sube ahí (almacenamiento permanente).
     if (this.cloudinary.isConfigured()) {
-      const url = await this.cloudinary.uploadImage(file.buffer);
-      return { url };
+      try {
+        const url = await this.cloudinary.uploadImage(file.buffer);
+        return { url };
+      } catch {
+        throw new BadRequestException('No se pudo subir la imagen a Cloudinary. Verifica las credenciales e inténtalo de nuevo.');
+      }
     }
 
     // Respaldo para desarrollo: se guarda el archivo en disco local (./uploads).

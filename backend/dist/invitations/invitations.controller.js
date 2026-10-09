@@ -71,8 +71,13 @@ let InvitationsController = class InvitationsController {
         }
         await this.service.findOwned(id, user.id);
         if (this.cloudinary.isConfigured()) {
-            const url = await this.cloudinary.uploadImage(file.buffer);
-            return { url };
+            try {
+                const url = await this.cloudinary.uploadImage(file.buffer);
+                return { url };
+            }
+            catch {
+                throw new common_1.BadRequestException('No se pudo subir la imagen a Cloudinary. Verifica las credenciales e inténtalo de nuevo.');
+            }
         }
         const name = (0, crypto_1.randomBytes)(16).toString('hex') + (0, path_1.extname)(file.originalname).toLowerCase();
         await (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), 'uploads', name), file.buffer);

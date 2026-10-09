@@ -17,9 +17,10 @@ export class CloudinaryService {
   private readonly configured: boolean;
 
   constructor(config: ConfigService) {
-    const cloudName = config.get<string>('CLOUDINARY_CLOUD_NAME');
-    const apiKey = config.get<string>('CLOUDINARY_API_KEY');
-    const apiSecret = config.get<string>('CLOUDINARY_API_SECRET');
+    // Se recortan espacios por si al pegar la variable en Render quedó algún espacio.
+    const cloudName = config.get<string>('CLOUDINARY_CLOUD_NAME')?.trim();
+    const apiKey = config.get<string>('CLOUDINARY_API_KEY')?.trim();
+    const apiSecret = config.get<string>('CLOUDINARY_API_SECRET')?.trim();
 
     this.configured = Boolean(cloudName && apiKey && apiSecret);
 
@@ -30,9 +31,19 @@ export class CloudinaryService {
         api_secret: apiSecret,
         secure: true,
       });
+      // No se registran valores sensibles, solo el cloud name para diagnóstico.
+      this.logger.log(`Cloudinary configurado (cloud: ${cloudName}).`);
     } else {
       this.logger.warn(
-        'Cloudinary no está configurado (faltan variables de entorno); se usará almacenamiento local.',
+        'Cloudinary NO está configurado. Faltan variables: ' +
+          [
+            cloudName ? null : 'CLOUDINARY_CLOUD_NAME',
+            apiKey ? null : 'CLOUDINARY_API_KEY',
+            apiSecret ? null : 'CLOUDINARY_API_SECRET',
+          ]
+            .filter(Boolean)
+            .join(', ') +
+          '. Se usará almacenamiento local (efímero en Render).',
       );
     }
   }
@@ -48,16 +59,40 @@ export class CloudinaryService {
    */
   uploadImage(buffer: Buffer): Promise<string> {
     return new Promise<string>((resolve, reject) => {
+      let settled = false;
+
+      // Red de seguridad: si Cloudinary no responde en 30s, se rechaza con un
+      // error claro para que la subida no quede colgada indefinidamente.
+      const timer = setTimeout(() => {
+        if (settled) return;
+        settled = true;
+        this.logger.error('La subida a Cloudinary excedió el tiempo de espera (30s).');
+        reject(new Error('La subida a Cloudinary tardó demasiado; inténtalo de nuevo.'));
+      }, 30_000);
+
       const stream = cloudinary.uploader.upload_stream(
         { folder: 'invitaciones', resource_type: 'image' },
         (error, result?: UploadApiResponse) => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
           if (error || !result) {
+            this.logger.error(`Error al subir a Cloudinary: ${JSON.stringify(error) || 'sin resultado'}`);
             reject(error ?? new Error('Cloudinary no devolvió resultado'));
             return;
           }
           resolve(result.secure_url);
         },
       );
+
+      stream.on('error', (err) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        this.logger.error(`Error de stream hacia Cloudinary: ${err?.message ?? err}`);
+        reject(err);
+      });
+
       stream.end(buffer);
     });
   }
