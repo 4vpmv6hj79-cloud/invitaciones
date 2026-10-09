@@ -61,8 +61,11 @@ let CloudinaryService = CloudinaryService_1 = class CloudinaryService {
                 settled = true;
                 clearTimeout(timer);
                 if (error || !result) {
-                    this.logger.error(`Error al subir a Cloudinary: ${JSON.stringify(error) || 'sin resultado'}`);
-                    reject(error ?? new Error('Cloudinary no devolvió resultado'));
+                    const detail = error?.message ??
+                        JSON.stringify(error) ??
+                        'sin resultado';
+                    this.logger.error(`Error al subir a Cloudinary: ${detail}`);
+                    reject(new Error(detail));
                     return;
                 }
                 resolve(result.secure_url);
