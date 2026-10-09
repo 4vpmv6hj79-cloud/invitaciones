@@ -118,9 +118,10 @@ export class InvitationsController {
       try {
         const url = await this.cloudinary.uploadImage(file.buffer);
         return { url };
-      } catch (e) {
-        const detail = (e as { message?: string })?.message ?? 'error desconocido';
-        throw new BadRequestException(`No se pudo subir la imagen a Cloudinary: ${detail}`);
+      } catch {
+        // El detalle del error queda en los logs del backend (CloudinaryService);
+        // al usuario se le muestra un mensaje genérico.
+        throw new BadRequestException('No se pudo subir la imagen. Inténtalo de nuevo.');
       }
     }
 
