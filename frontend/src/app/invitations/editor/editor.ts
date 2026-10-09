@@ -310,6 +310,7 @@ export class Editor implements OnInit {
       next: (res) => {
         this.form.patchValue({ coverImageUrl: res.url });
         this.coverUploading.set(false);
+        this.save();
       },
       error: (e) => {
         this.coverUploading.set(false);

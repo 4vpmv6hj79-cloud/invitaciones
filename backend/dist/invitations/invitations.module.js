@@ -14,6 +14,7 @@ const event_entity_1 = require("./event.entity");
 const template_entity_1 = require("../templates/template.entity");
 const invitations_service_1 = require("./invitations.service");
 const pdf_service_1 = require("./pdf.service");
+const cloudinary_service_1 = require("./cloudinary.service");
 const invitations_controller_1 = require("./invitations.controller");
 const public_invitation_controller_1 = require("./public-invitation.controller");
 let InvitationsModule = class InvitationsModule {
@@ -23,7 +24,7 @@ exports.InvitationsModule = InvitationsModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([invitation_entity_1.Invitation, event_entity_1.Event, template_entity_1.TemplateDefinition])],
         controllers: [invitations_controller_1.InvitationsController, public_invitation_controller_1.PublicInvitationController],
-        providers: [invitations_service_1.InvitationsService, pdf_service_1.PdfService],
+        providers: [invitations_service_1.InvitationsService, pdf_service_1.PdfService, cloudinary_service_1.CloudinaryService],
         exports: [invitations_service_1.InvitationsService],
     })
 ], InvitationsModule);

@@ -1,12 +1,14 @@
 import { Response } from 'express';
 import { InvitationsService } from './invitations.service';
 import { PdfService } from './pdf.service';
+import { CloudinaryService } from './cloudinary.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 export declare class InvitationsController {
     private readonly service;
     private readonly pdf;
-    constructor(service: InvitationsService, pdf: PdfService);
+    private readonly cloudinary;
+    constructor(service: InvitationsService, pdf: PdfService, cloudinary: CloudinaryService);
     create(dto: CreateInvitationDto, user: {
         id: string;
     }): Promise<import("./invitation.entity").Invitation>;

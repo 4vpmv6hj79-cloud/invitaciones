@@ -14,24 +14,22 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import { diskStorage, memoryStorage } from 'multer';
 import { randomBytes } from 'crypto';
-import { extname } from 'path';
+import { extname, join } from 'path';
+import { writeFile } from 'fs/promises';
 import { InvitationsService } from './invitations.service';
 import { PdfService } from './pdf.service';
+import { CloudinaryService } from './cloudinary.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 import { CurrentUser } from '../auth/decorators';
 
-// Config de Multer: guarda en uploads/ con nombre aleatorio; solo imágenes; 5 MB máx.
+// Config de Multer: la imagen se mantiene en memoria (buffer) para poder subirla
+// a Cloudinary. Si Cloudinary no está configurado, el controlador la escribe en
+// disco local como respaldo (desarrollo). Solo imágenes; 5 MB máx.
 const imageUpload = {
-  storage: diskStorage({
-    destination: './uploads',
-    filename: (_req, file, cb) => {
-      const name = randomBytes(16).toString('hex') + extname(file.originalname).toLowerCase();
-      cb(null, name);
-    },
-  }),
+  storage: memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (_req: unknown, file: Express.Multer.File, cb: (e: Error | null, ok: boolean) => void) => {
     if (/^image\/(jpeg|png|webp|gif)$/.test(file.mimetype)) {
@@ -48,6 +46,7 @@ export class InvitationsController {
   constructor(
     private readonly service: InvitationsService,
     private readonly pdf: PdfService,
+    private readonly cloudinary: CloudinaryService,
   ) {}
 
   // Crea un borrador desde una plantilla, propiedad del usuario actual.
@@ -113,6 +112,17 @@ export class InvitationsController {
     }
     // Verifica que el usuario sea dueño de la invitación antes de aceptar la imagen.
     await this.service.findOwned(id, user.id);
-    return { url: `/uploads/${file.filename}` };
+
+    // Si Cloudinary está configurado, se sube ahí (almacenamiento permanente).
+    if (this.cloudinary.isConfigured()) {
+      const url = await this.cloudinary.uploadImage(file.buffer);
+      return { url };
+    }
+
+    // Respaldo para desarrollo: se guarda el archivo en disco local (./uploads).
+    // Nota: en Render este disco es efímero y se pierde al reiniciar.
+    const name = randomBytes(16).toString('hex') + extname(file.originalname).toLowerCase();
+    await writeFile(join(process.cwd(), 'uploads', name), file.buffer);
+    return { url: `/uploads/${name}` };
   }
 }

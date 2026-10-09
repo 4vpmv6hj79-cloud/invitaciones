@@ -18,19 +18,15 @@ const platform_express_1 = require("@nestjs/platform-express");
 const multer_1 = require("multer");
 const crypto_1 = require("crypto");
 const path_1 = require("path");
+const promises_1 = require("fs/promises");
 const invitations_service_1 = require("./invitations.service");
 const pdf_service_1 = require("./pdf.service");
+const cloudinary_service_1 = require("./cloudinary.service");
 const create_invitation_dto_1 = require("./dto/create-invitation.dto");
 const update_invitation_dto_1 = require("./dto/update-invitation.dto");
 const decorators_1 = require("../auth/decorators");
 const imageUpload = {
-    storage: (0, multer_1.diskStorage)({
-        destination: './uploads',
-        filename: (_req, file, cb) => {
-            const name = (0, crypto_1.randomBytes)(16).toString('hex') + (0, path_1.extname)(file.originalname).toLowerCase();
-            cb(null, name);
-        },
-    }),
+    storage: (0, multer_1.memoryStorage)(),
     limits: { fileSize: 5 * 1024 * 1024 },
     fileFilter: (_req, file, cb) => {
         if (/^image\/(jpeg|png|webp|gif)$/.test(file.mimetype)) {
@@ -42,9 +38,10 @@ const imageUpload = {
     },
 };
 let InvitationsController = class InvitationsController {
-    constructor(service, pdf) {
+    constructor(service, pdf, cloudinary) {
         this.service = service;
         this.pdf = pdf;
+        this.cloudinary = cloudinary;
     }
     create(dto, user) {
         return this.service.createDraft(dto, user.id);
@@ -73,7 +70,13 @@ let InvitationsController = class InvitationsController {
             throw new common_1.BadRequestException('No se recibió ninguna imagen');
         }
         await this.service.findOwned(id, user.id);
-        return { url: `/uploads/${file.filename}` };
+        if (this.cloudinary.isConfigured()) {
+            const url = await this.cloudinary.uploadImage(file.buffer);
+            return { url };
+        }
+        const name = (0, crypto_1.randomBytes)(16).toString('hex') + (0, path_1.extname)(file.originalname).toLowerCase();
+        await (0, promises_1.writeFile)((0, path_1.join)(process.cwd(), 'uploads', name), file.buffer);
+        return { url: `/uploads/${name}` };
     }
 };
 exports.InvitationsController = InvitationsController;
@@ -132,6 +135,7 @@ __decorate([
 exports.InvitationsController = InvitationsController = __decorate([
     (0, common_1.Controller)('invitations'),
     __metadata("design:paramtypes", [invitations_service_1.InvitationsService,
-        pdf_service_1.PdfService])
+        pdf_service_1.PdfService,
+        cloudinary_service_1.CloudinaryService])
 ], InvitationsController);
 //# sourceMappingURL=invitations.controller.js.map
