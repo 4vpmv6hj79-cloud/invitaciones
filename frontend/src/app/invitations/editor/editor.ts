@@ -9,6 +9,7 @@ import {
   ParentItem,
   LodgingItem,
   RecommendationItem,
+  GiftRegistryItem,
 } from '../invitation.model';
 import { OrderService } from '../../orders/order.service';
 import { PALETTES, Palette } from '../palettes';
@@ -19,6 +20,7 @@ import { normalizeMapsUrl } from '../maps-url';
 import { TemplateTheme } from '../../catalog/template.model';
 import { groupFont, groupScale, TypoGroup } from '../typography.util';
 import { groupRecommendations, RecommendationGroup } from '../recommendations.util';
+import { normalizeUrl } from '../url.util';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 type PreviewMode = 'mobile' | 'desktop';
@@ -76,6 +78,9 @@ export class Editor implements OnInit {
   // Recomendaciones.
   protected readonly recommendations = signal<RecommendationItem[]>([]);
   protected readonly RECS_MAX = 40;
+  // Mesas de regalo / tiendas.
+  protected readonly giftRegistries = signal<GiftRegistryItem[]>([]);
+  protected readonly REGISTRY_MAX = 12;
 
   private invitationId = '';
 
@@ -258,6 +263,7 @@ export class Editor implements OnInit {
     this.parents.set(Array.isArray(d.parents) ? [...d.parents] : []);
     this.lodging.set(Array.isArray(d.lodging) ? [...d.lodging] : []);
     this.recommendations.set(Array.isArray(d.recommendations) ? [...d.recommendations] : []);
+    this.giftRegistries.set(Array.isArray(d.giftRegistries) ? [...d.giftRegistries] : []);
     this.value.set(this.form.getRawValue());
   }
 
@@ -322,6 +328,7 @@ export class Editor implements OnInit {
           clabe: v.bankClabe,
           note: v.bankNote,
         },
+        giftRegistries: this.giftRegistries().filter((g) => g.name?.trim()),
       },
       customization: {
         primary: v.primary,
@@ -633,6 +640,25 @@ export class Editor implements OnInit {
     this.save();
   }
 
+  // --- Mesas de regalo / tiendas ---
+  addRegistry(): void {
+    if (this.giftRegistries().length >= this.REGISTRY_MAX) return;
+    this.giftRegistries.update((list) => [...list, { name: '', url: '', note: '' }]);
+    this.save();
+  }
+
+  updateRegistry(index: number, field: 'name' | 'url' | 'note', value: string): void {
+    this.giftRegistries.update((list) =>
+      list.map((g, i) => (i === index ? { ...g, [field]: value } : g)),
+    );
+    this.save();
+  }
+
+  removeRegistryAt(index: number): void {
+    this.giftRegistries.update((list) => list.filter((_, i) => i !== index));
+    this.save();
+  }
+
   // Aplica una paleta curada: rellena colores y fuentes del formulario.
   // Dispara valueChanges, por lo que autosave y preview se actualizan solos.
   applyPalette(p: Palette): void {
@@ -762,5 +788,10 @@ export class Editor implements OnInit {
   protected hasBankInfo(): boolean {
     const v = this.value();
     return Boolean(v.bankHolder || v.bankName || v.bankClabe || v.bankNote);
+  }
+
+  // Normaliza el enlace de una tienda (mesa de regalos) para abrirlo bien.
+  protected storeHref(value: string | undefined): string {
+    return normalizeUrl(value);
   }
 }

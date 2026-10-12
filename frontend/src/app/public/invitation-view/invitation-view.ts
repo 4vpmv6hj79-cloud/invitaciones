@@ -8,6 +8,7 @@ import { formatTime12h, formatDateLong } from '../../invitations/time-format';
 import { normalizeMapsUrl } from '../../invitations/maps-url';
 import { groupFont, groupScale, TypoGroup } from '../../invitations/typography.util';
 import { groupRecommendations, RecommendationGroup } from '../../invitations/recommendations.util';
+import { normalizeUrl } from '../../invitations/url.util';
 
 // Vista pública de la invitación (enlace compartido /i/:token).
 // Solo muestra la invitación; la confirmación de asistencia se hace por el
@@ -124,5 +125,8 @@ export class InvitationView implements OnInit {
   protected hasBankInfo(): boolean {
     const b = this.invitation()?.data?.bankInfo;
     return Boolean(b && (b.holder || b.bank || b.clabe || b.note));
+  }
+  protected storeHref(value: string | undefined): string {
+    return normalizeUrl(value);
   }
 }

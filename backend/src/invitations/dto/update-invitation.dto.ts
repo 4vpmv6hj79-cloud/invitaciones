@@ -94,6 +94,24 @@ export class BankInfoDto {
   note?: string;
 }
 
+// Una mesa de regalos / tienda (física o digital).
+export class GiftRegistryItemDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(600)
+  url?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  note?: string;
+}
+
 // Contenido del evento editable desde el editor autoservicio.
 export class EventDataDto {
   @IsOptional()
@@ -331,6 +349,14 @@ export class EventDataDto {
   @ValidateNested()
   @Type(() => BankInfoDto)
   bankInfo?: BankInfoDto;
+
+  // --- Mesas de regalo / tiendas (físicas y digitales) ---
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(12)
+  @ValidateNested({ each: true })
+  @Type(() => GiftRegistryItemDto)
+  giftRegistries?: GiftRegistryItemDto[];
 }
 
 // Actualización del borrador: título, contenido del evento y personalización del diseño.

@@ -20,6 +20,11 @@ export declare class BankInfoDto {
     clabe?: string;
     note?: string;
 }
+export declare class GiftRegistryItemDto {
+    name?: string;
+    url?: string;
+    note?: string;
+}
 export declare class EventDataDto {
     coupleOrHonoree?: string;
     message?: string;
@@ -60,6 +65,7 @@ export declare class EventDataDto {
     recommendations?: RecommendationItemDto[];
     weatherNote?: string;
     bankInfo?: BankInfoDto;
+    giftRegistries?: GiftRegistryItemDto[];
 }
 export declare class UpdateInvitationDto {
     title?: string;

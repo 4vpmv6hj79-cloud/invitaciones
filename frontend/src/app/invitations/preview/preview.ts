@@ -8,6 +8,7 @@ import { formatTime12h, formatDateLong } from '../time-format';
 import { normalizeMapsUrl } from '../maps-url';
 import { groupFont, groupScale, TypoGroup } from '../typography.util';
 import { groupRecommendations, RecommendationGroup } from '../recommendations.util';
+import { normalizeUrl } from '../url.util';
 
 // Vista previa de la invitación tal como la verán los invitados,
 // usando el borrador (por id) y SIN necesidad de publicar/pagar.
@@ -126,5 +127,8 @@ export class InvitationPreview implements OnInit {
   protected hasBankInfo(): boolean {
     const b = this.invitation()?.event?.data?.bankInfo;
     return Boolean(b && (b.holder || b.bank || b.clabe || b.note));
+  }
+  protected storeHref(value: string | undefined): string {
+    return normalizeUrl(value);
   }
 }

@@ -30,6 +30,13 @@ export interface BankInfo {
   note?: string; // nota opcional
 }
 
+// Una mesa de regalos / tienda (física o digital).
+export interface GiftRegistryItem {
+  name: string; // nombre de la tienda (ej. Liverpool, Amazon)
+  url?: string; // enlace opcional (tiendas digitales)
+  note?: string; // nota opcional (ej. "N.º de evento 12345")
+}
+
 // Contenido editable del evento.
 export interface EventData {
   coupleOrHonoree?: string;
@@ -91,6 +98,9 @@ export interface EventData {
 
   // --- Datos bancarios para regalo (dentro de la mesa de regalos) ---
   bankInfo?: BankInfo;
+
+  // --- Mesas de regalo / tiendas (físicas y digitales) ---
+  giftRegistries?: GiftRegistryItem[];
 }
 
 export interface InvitationEvent {

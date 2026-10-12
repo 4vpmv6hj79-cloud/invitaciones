@@ -11,6 +11,7 @@ import { formatTime12h, formatDateLong } from '../../invitations/time-format';
 import { normalizeMapsUrl } from '../../invitations/maps-url';
 import { groupFont, groupScale, TypoGroup } from '../../invitations/typography.util';
 import { groupRecommendations, RecommendationGroup } from '../../invitations/recommendations.util';
+import { normalizeUrl } from '../../invitations/url.util';
 
 @Component({
   selector: 'app-rsvp-view',
@@ -229,5 +230,8 @@ export class RsvpViewComponent implements OnInit {
   protected hasBankInfo(): boolean {
     const b = this.view()?.invitation.data.bankInfo;
     return Boolean(b && (b.holder || b.bank || b.clabe || b.note));
+  }
+  protected storeHref(value: string | undefined): string {
+    return normalizeUrl(value);
   }
 }

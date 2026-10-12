@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateInvitationDto = exports.EventDataDto = exports.BankInfoDto = exports.RecommendationItemDto = exports.LodgingItemDto = exports.ParentItemDto = void 0;
+exports.UpdateInvitationDto = exports.EventDataDto = exports.GiftRegistryItemDto = exports.BankInfoDto = exports.RecommendationItemDto = exports.LodgingItemDto = exports.ParentItemDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 class ParentItemDto {
@@ -107,6 +107,27 @@ __decorate([
     (0, class_validator_1.MaxLength)(200),
     __metadata("design:type", String)
 ], BankInfoDto.prototype, "note", void 0);
+class GiftRegistryItemDto {
+}
+exports.GiftRegistryItemDto = GiftRegistryItemDto;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(120),
+    __metadata("design:type", String)
+], GiftRegistryItemDto.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(600),
+    __metadata("design:type", String)
+], GiftRegistryItemDto.prototype, "url", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(200),
+    __metadata("design:type", String)
+], GiftRegistryItemDto.prototype, "note", void 0);
 class EventDataDto {
 }
 exports.EventDataDto = EventDataDto;
@@ -353,6 +374,14 @@ __decorate([
     (0, class_transformer_1.Type)(() => BankInfoDto),
     __metadata("design:type", BankInfoDto)
 ], EventDataDto.prototype, "bankInfo", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ArrayMaxSize)(12),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => GiftRegistryItemDto),
+    __metadata("design:type", Array)
+], EventDataDto.prototype, "giftRegistries", void 0);
 class UpdateInvitationDto {
 }
 exports.UpdateInvitationDto = UpdateInvitationDto;

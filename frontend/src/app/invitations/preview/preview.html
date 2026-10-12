@@ -161,7 +161,7 @@
       </div>
     }
 
-    @if (inv.event.data.giftInfo || hasBankInfo()) {
+    @if (inv.event.data.giftInfo || hasBankInfo() || (inv.event.data.giftRegistries && inv.event.data.giftRegistries.length > 0)) {
       <div class="info-block">
         <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'"
           [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">Mesa de regalos</p>
@@ -169,6 +169,26 @@
           <p class="line line--pre" [style.color]="inv.customization.secondary || '#555'">
             {{ inv.event.data.giftInfo }}
           </p>
+        }
+        @if (inv.event.data.giftRegistries && inv.event.data.giftRegistries.length > 0) {
+          <div class="registry-list">
+            @for (g of inv.event.data.giftRegistries; track $index) {
+              @if (g.name) {
+                <div class="registry-item">
+                  @if (g.url) {
+                    <a class="registry-btn" [href]="storeHref(g.url)" target="_blank" rel="noopener"
+                      [style.borderColor]="inv.customization.primary || '#b8860b'"
+                      [style.color]="inv.customization.primary || '#b8860b'">{{ g.name }}</a>
+                  } @else {
+                    <span class="line line--strong" [style.color]="inv.customization.secondary || '#555'">{{ g.name }}</span>
+                  }
+                  @if (g.note) {
+                    <span class="line line--small" [style.color]="inv.customization.secondary || '#555'">{{ g.note }}</span>
+                  }
+                </div>
+              }
+            }
+          </div>
         }
         @if (hasBankInfo()) {
           <div class="bank-card" [style.borderColor]="inv.customization.primary || '#b8860b'">

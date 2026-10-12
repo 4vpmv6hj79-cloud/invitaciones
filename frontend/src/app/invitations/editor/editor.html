@@ -348,6 +348,32 @@
         </div>
       </div>
 
+      <div class="field">
+        <label>Mesas de regalo / tiendas ({{ giftRegistries().length }}/{{ REGISTRY_MAX }})</label>
+        <small class="help">
+          Agrega tiendas físicas o digitales. Las que tengan enlace se mostrarán como botón para abrir la mesa.
+        </small>
+        @for (g of giftRegistries(); track $index) {
+          <div class="item-card">
+            <div class="item-card-head">
+              <input type="text" [value]="g.name"
+                (input)="updateRegistry($index, 'name', $any($event.target).value)"
+                placeholder="Nombre de la tienda (ej. Liverpool, Amazon)" />
+              <button type="button" class="gallery-remove gallery-remove--inline"
+                (click)="removeRegistryAt($index)" aria-label="Quitar">✕</button>
+            </div>
+            <input type="url" [value]="g.url || ''"
+              (input)="updateRegistry($index, 'url', $any($event.target).value)"
+              placeholder="Enlace (opcional, para tiendas digitales)" />
+            <input type="text" [value]="g.note || ''"
+              (input)="updateRegistry($index, 'note', $any($event.target).value)"
+              placeholder="Nota (opcional, ej. N.º de evento 12345)" />
+          </div>
+        }
+        <button type="button" class="add-item" (click)="addRegistry()"
+          [disabled]="giftRegistries().length >= REGISTRY_MAX">+ Agregar tienda</button>
+      </div>
+
       <h2>Padres y padrinos</h2>
 
       <div class="field">
@@ -723,7 +749,7 @@
             </div>
           }
 
-          @if (value().giftInfo || hasBankInfo()) {
+          @if (value().giftInfo || hasBankInfo() || giftRegistries().length > 0) {
             <div class="info-block">
               <p class="info-head" [style.color]="value().primary"
                 [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
@@ -731,6 +757,25 @@
               </p>
               @if (value().giftInfo) {
                 <p class="line line--pre" [style.color]="value().secondary">{{ value().giftInfo }}</p>
+              }
+              @if (giftRegistries().length > 0) {
+                <div class="registry-list">
+                  @for (g of giftRegistries(); track $index) {
+                    @if (g.name) {
+                      <div class="registry-item">
+                        @if (g.url) {
+                          <a class="registry-btn" [href]="storeHref(g.url)" target="_blank" rel="noopener"
+                            [style.borderColor]="value().primary" [style.color]="value().primary">{{ g.name }}</a>
+                        } @else {
+                          <span class="line line--strong" [style.color]="value().secondary">{{ g.name }}</span>
+                        }
+                        @if (g.note) {
+                          <span class="line line--small" [style.color]="value().secondary">{{ g.note }}</span>
+                        }
+                      </div>
+                    }
+                  }
+                </div>
               }
               @if (hasBankInfo()) {
                 <div class="bank-card" [style.borderColor]="value().primary">
