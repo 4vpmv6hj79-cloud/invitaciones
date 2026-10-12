@@ -771,3 +771,117 @@
   letter-spacing: 0.06em;
   font-weight: 700;
 }
+
+/* ---- Controles de listas (padres, hospedaje, recomendaciones) en el panel ---- */
+.list-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+
+  input[type='text'],
+  input[type='url'] {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .rec-cat {
+    flex: 0 0 32%;
+  }
+
+  .list-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+    font-size: 0.8rem;
+  }
+}
+
+.item-card {
+  border: 1px solid #e5e0d4;
+  border-radius: 8px;
+  padding: 0.6rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  .item-card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    input {
+      flex: 1;
+      min-width: 0;
+      font-weight: 600;
+    }
+  }
+}
+
+.gallery-remove--inline {
+  position: static;
+  flex: 0 0 auto;
+}
+
+.add-item {
+  margin-top: 0.3rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px dashed #c9c0ad;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #6b6350;
+  font-size: 0.85rem;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* ---- Render en la preview de los bloques nuevos ---- */
+.invitation {
+  .cross {
+    margin-left: 0.15rem;
+  }
+
+  .line--strong {
+    font-weight: 600;
+  }
+
+  .lodging-item {
+    margin-bottom: 0.75rem;
+  }
+
+  .rec-group {
+    margin-bottom: 0.6rem;
+
+    .rec-cat-head {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      margin: 0.4rem 0 0.15rem;
+    }
+  }
+
+  .maps-link--inline {
+    text-decoration: underline;
+  }
+
+  .bank-card {
+    border: 1px solid;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    margin-top: 0.5rem;
+    display: inline-block;
+
+    .bank-clabe {
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin: 0.2rem 0;
+    }
+  }
+}

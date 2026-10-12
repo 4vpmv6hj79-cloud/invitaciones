@@ -9,9 +9,104 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateInvitationDto = exports.EventDataDto = void 0;
+exports.UpdateInvitationDto = exports.EventDataDto = exports.BankInfoDto = exports.RecommendationItemDto = exports.LodgingItemDto = exports.ParentItemDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
+class ParentItemDto {
+}
+exports.ParentItemDto = ParentItemDto;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(120),
+    __metadata("design:type", String)
+], ParentItemDto.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], ParentItemDto.prototype, "deceased", void 0);
+class LodgingItemDto {
+}
+exports.LodgingItemDto = LodgingItemDto;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(120),
+    __metadata("design:type", String)
+], LodgingItemDto.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(160),
+    __metadata("design:type", String)
+], LodgingItemDto.prototype, "note", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(120),
+    __metadata("design:type", String)
+], LodgingItemDto.prototype, "distance", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(80),
+    __metadata("design:type", String)
+], LodgingItemDto.prototype, "reservationCode", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(600),
+    __metadata("design:type", String)
+], LodgingItemDto.prototype, "mapsUrl", void 0);
+class RecommendationItemDto {
+}
+exports.RecommendationItemDto = RecommendationItemDto;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(60),
+    __metadata("design:type", String)
+], RecommendationItemDto.prototype, "category", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(120),
+    __metadata("design:type", String)
+], RecommendationItemDto.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(600),
+    __metadata("design:type", String)
+], RecommendationItemDto.prototype, "mapsUrl", void 0);
+class BankInfoDto {
+}
+exports.BankInfoDto = BankInfoDto;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(120),
+    __metadata("design:type", String)
+], BankInfoDto.prototype, "holder", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(80),
+    __metadata("design:type", String)
+], BankInfoDto.prototype, "bank", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(60),
+    __metadata("design:type", String)
+], BankInfoDto.prototype, "clabe", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(200),
+    __metadata("design:type", String)
+], BankInfoDto.prototype, "note", void 0);
 class EventDataDto {
 }
 exports.EventDataDto = EventDataDto;
@@ -198,6 +293,66 @@ __decorate([
     (0, class_validator_1.MaxLength)(600, { each: true }),
     __metadata("design:type", Array)
 ], EventDataDto.prototype, "sectionImages", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(120),
+    __metadata("design:type", String)
+], EventDataDto.prototype, "parentsTitle", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ArrayMaxSize)(12),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => ParentItemDto),
+    __metadata("design:type", Array)
+], EventDataDto.prototype, "parents", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(120),
+    __metadata("design:type", String)
+], EventDataDto.prototype, "lodgingTitle", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ArrayMaxSize)(12),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => LodgingItemDto),
+    __metadata("design:type", Array)
+], EventDataDto.prototype, "lodging", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(120),
+    __metadata("design:type", String)
+], EventDataDto.prototype, "recommendationsTitle", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(400),
+    __metadata("design:type", String)
+], EventDataDto.prototype, "recommendationsNote", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ArrayMaxSize)(40),
+    (0, class_validator_1.ValidateNested)({ each: true }),
+    (0, class_transformer_1.Type)(() => RecommendationItemDto),
+    __metadata("design:type", Array)
+], EventDataDto.prototype, "recommendations", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MaxLength)(400),
+    __metadata("design:type", String)
+], EventDataDto.prototype, "weatherNote", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.ValidateNested)(),
+    (0, class_transformer_1.Type)(() => BankInfoDto),
+    __metadata("design:type", BankInfoDto)
+], EventDataDto.prototype, "bankInfo", void 0);
 class UpdateInvitationDto {
 }
 exports.UpdateInvitationDto = UpdateInvitationDto;

@@ -7,6 +7,7 @@ import { InvitationService } from '../../invitations/invitation.service';
 import { formatTime12h, formatDateLong } from '../../invitations/time-format';
 import { normalizeMapsUrl } from '../../invitations/maps-url';
 import { groupFont, groupScale, TypoGroup } from '../../invitations/typography.util';
+import { groupRecommendations, RecommendationGroup } from '../../invitations/recommendations.util';
 
 // Vista pública de la invitación (enlace compartido /i/:token).
 // Solo muestra la invitación; la confirmación de asistencia se hace por el
@@ -105,5 +106,23 @@ export class InvitationView implements OnInit {
   // Hora en formato 12h (evento religioso).
   protected fmtTime(time: string | undefined): string {
     return formatTime12h(time);
+  }
+
+  // --- Bloques nuevos ---
+  protected parentsHeading(): string {
+    return this.invitation()?.data?.parentsTitle?.trim() || 'Con la bendición de nuestros padres';
+  }
+  protected lodgingHeading(): string {
+    return this.invitation()?.data?.lodgingTitle?.trim() || 'Hospedaje';
+  }
+  protected recommendationsHeading(): string {
+    return this.invitation()?.data?.recommendationsTitle?.trim() || 'Recomendaciones';
+  }
+  protected recGroups(): RecommendationGroup[] {
+    return groupRecommendations(this.invitation()?.data?.recommendations);
+  }
+  protected hasBankInfo(): boolean {
+    const b = this.invitation()?.data?.bankInfo;
+    return Boolean(b && (b.holder || b.bank || b.clabe || b.note));
   }
 }

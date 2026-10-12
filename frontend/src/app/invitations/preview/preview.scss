@@ -274,3 +274,48 @@
   letter-spacing: 0.06em;
   font-weight: 700;
 }
+
+/* ---- Bloques nuevos: padres, hospedaje, recomendaciones, datos bancarios ---- */
+.invitation {
+  .cross {
+    margin-left: 0.15rem;
+  }
+
+  .line--strong {
+    font-weight: 600;
+  }
+
+  .lodging-item {
+    margin-bottom: 0.75rem;
+  }
+
+  .rec-group {
+    margin-bottom: 0.6rem;
+
+    .rec-cat-head {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      margin: 0.4rem 0 0.15rem;
+    }
+  }
+
+  .maps-link--inline {
+    text-decoration: underline;
+  }
+
+  .bank-card {
+    border: 1px solid;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    margin-top: 0.5rem;
+    display: inline-block;
+
+    .bank-clabe {
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin: 0.2rem 0;
+    }
+  }
+}

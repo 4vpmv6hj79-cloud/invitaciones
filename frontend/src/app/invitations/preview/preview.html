@@ -57,6 +57,22 @@
       />
     }
 
+    @if (inv.event.data.parents && inv.event.data.parents.length > 0) {
+      <div class="info-block">
+        <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'"
+          [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+          {{ parentsHeading() }}
+        </p>
+        @for (p of inv.event.data.parents; track $index) {
+          @if (p.name) {
+            <p class="line" [style.color]="inv.customization.secondary || '#555'">
+              {{ p.name }}@if (p.deceased) { <span class="cross">✝</span> }
+            </p>
+          }
+        }
+      </div>
+    }
+
     @if (inv.event.data.religiousEnabled) {
       <div class="religious" [style.borderColor]="inv.customization.primary || '#b8860b'">
         <p class="religious-head" [style.color]="inv.customization.primary || '#b8860b'"
@@ -145,13 +161,31 @@
       </div>
     }
 
-    @if (inv.event.data.giftInfo) {
+    @if (inv.event.data.giftInfo || hasBankInfo()) {
       <div class="info-block">
         <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'"
           [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">Mesa de regalos</p>
-        <p class="line line--pre" [style.color]="inv.customization.secondary || '#555'">
-          {{ inv.event.data.giftInfo }}
-        </p>
+        @if (inv.event.data.giftInfo) {
+          <p class="line line--pre" [style.color]="inv.customization.secondary || '#555'">
+            {{ inv.event.data.giftInfo }}
+          </p>
+        }
+        @if (hasBankInfo()) {
+          <div class="bank-card" [style.borderColor]="inv.customization.primary || '#b8860b'">
+            @if (inv.event.data.bankInfo?.holder) {
+              <p class="line line--small" [style.color]="inv.customization.secondary || '#555'">Titular: {{ inv.event.data.bankInfo?.holder }}</p>
+            }
+            @if (inv.event.data.bankInfo?.bank) {
+              <p class="line line--small" [style.color]="inv.customization.secondary || '#555'">Banco: {{ inv.event.data.bankInfo?.bank }}</p>
+            }
+            @if (inv.event.data.bankInfo?.clabe) {
+              <p class="line bank-clabe" [style.color]="inv.customization.primary || '#b8860b'">{{ inv.event.data.bankInfo?.clabe }}</p>
+            }
+            @if (inv.event.data.bankInfo?.note) {
+              <p class="line line--small" [style.color]="inv.customization.secondary || '#555'">{{ inv.event.data.bankInfo?.note }}</p>
+            }
+          </div>
+        }
       </div>
     }
 
@@ -162,6 +196,68 @@
             [style.width]="inv.event.data.galleryMosaic ? null : galleryItemWidth()"
             [src]="gallerySrc(img)" alt="Foto del evento" />
         }
+      </div>
+    }
+
+    @if (inv.event.data.lodging && inv.event.data.lodging.length > 0) {
+      <div class="info-block">
+        <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'"
+          [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+          {{ lodgingHeading() }}
+        </p>
+        @for (l of inv.event.data.lodging; track $index) {
+          @if (l.name) {
+            <div class="lodging-item">
+              <p class="line line--strong" [style.color]="inv.customization.secondary || '#555'">{{ l.name }}</p>
+              @if (l.note) { <p class="line line--small" [style.color]="inv.customization.secondary || '#555'">{{ l.note }}</p> }
+              @if (l.distance) { <p class="line line--small" [style.color]="inv.customization.secondary || '#555'">{{ l.distance }}</p> }
+              @if (l.reservationCode) {
+                <p class="line line--small" [style.color]="inv.customization.secondary || '#555'">Código: {{ l.reservationCode }}</p>
+              }
+              @if (l.mapsUrl) {
+                <a class="maps-link" [href]="mapsHref(l.mapsUrl)" target="_blank" rel="noopener"
+                  [style.color]="inv.customization.primary || '#b8860b'">📍 Ver ubicación</a>
+              }
+            </div>
+          }
+        }
+      </div>
+    }
+
+    @if (recGroups().length > 0) {
+      <div class="info-block">
+        <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'"
+          [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+          {{ recommendationsHeading() }}
+        </p>
+        @if (inv.event.data.recommendationsNote) {
+          <p class="line line--small" [style.color]="inv.customization.secondary || '#555'">{{ inv.event.data.recommendationsNote }}</p>
+        }
+        @for (grp of recGroups(); track grp.category) {
+          <div class="rec-group">
+            <p class="rec-cat-head" [style.color]="inv.customization.primary || '#b8860b'">{{ grp.category }}</p>
+            @for (r of grp.items; track $index) {
+              <p class="line" [style.color]="inv.customization.secondary || '#555'">
+                @if (r.mapsUrl) {
+                  <a class="maps-link maps-link--inline" [href]="mapsHref(r.mapsUrl)" target="_blank"
+                    rel="noopener" [style.color]="inv.customization.primary || '#b8860b'">{{ r.name }}</a>
+                } @else {
+                  {{ r.name }}
+                }
+              </p>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (inv.event.data.weatherNote) {
+      <div class="info-block">
+        <p class="info-head" [style.color]="inv.customization.primary || '#b8860b'"
+          [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+          Clima
+        </p>
+        <p class="line line--pre" [style.color]="inv.customization.secondary || '#555'">{{ inv.event.data.weatherNote }}</p>
       </div>
     }
 

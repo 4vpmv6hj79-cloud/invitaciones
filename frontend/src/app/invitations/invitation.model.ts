@@ -1,5 +1,35 @@
 import { Template, TemplateTheme } from '../catalog/template.model';
 
+// Un padre/madre/padrino listado en la sección de familia.
+export interface ParentItem {
+  name: string;
+  deceased?: boolean; // marca ✝ para honrar a un ser querido fallecido
+}
+
+// Un hotel/opción de hospedaje recomendado.
+export interface LodgingItem {
+  name: string;
+  note?: string; // ej. "En el centro", "Enfrente del salón"
+  distance?: string; // ej. "A 5 min del lugar"
+  reservationCode?: string; // código de reservación con tarifa especial
+  mapsUrl?: string; // enlace opcional de ubicación
+}
+
+// Una recomendación de lugar dentro de una categoría.
+export interface RecommendationItem {
+  category: string; // ej. "Comida", "Cena", "Taquerías"
+  name: string; // nombre del lugar
+  mapsUrl?: string; // enlace opcional de ubicación
+}
+
+// Datos bancarios para regalo en efectivo/transferencia.
+export interface BankInfo {
+  holder?: string; // titular de la cuenta
+  bank?: string; // nombre del banco
+  clabe?: string; // CLABE / número de cuenta o tarjeta
+  note?: string; // nota opcional
+}
+
 // Contenido editable del evento.
 export interface EventData {
   coupleOrHonoree?: string;
@@ -42,6 +72,25 @@ export interface EventData {
   religiousTime?: string; // HH:mm
   religiousLocationName?: string;
   religiousMapsUrl?: string;
+
+  // --- Padres / padrinos (sección "Con la bendición de nuestros padres") ---
+  parentsTitle?: string; // título de la sección (default: "Con la bendición de nuestros padres")
+  parents?: ParentItem[]; // lista de nombres
+
+  // --- Hospedaje (hoteles recomendados) ---
+  lodgingTitle?: string; // título de la sección (default: "Hospedaje")
+  lodging?: LodgingItem[];
+
+  // --- Recomendaciones de lugares (agrupadas por categoría) ---
+  recommendationsTitle?: string; // título de la sección (default: "Recomendaciones")
+  recommendationsNote?: string; // texto introductorio opcional
+  recommendations?: RecommendationItem[];
+
+  // --- Clima esperado el día del evento (texto fijo editable) ---
+  weatherNote?: string;
+
+  // --- Datos bancarios para regalo (dentro de la mesa de regalos) ---
+  bankInfo?: BankInfo;
 }
 
 export interface InvitationEvent {

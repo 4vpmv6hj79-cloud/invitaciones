@@ -45,6 +45,22 @@
         />
       }
 
+      @if (v.invitation.data.parents && v.invitation.data.parents.length > 0) {
+        <div class="info-block">
+          <p class="info-head" [style.color]="v.invitation.customization.primary || '#b8860b'"
+            [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+            {{ parentsHeading() }}
+          </p>
+          @for (p of v.invitation.data.parents; track $index) {
+            @if (p.name) {
+              <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">
+                {{ p.name }}@if (p.deceased) { <span class="cross">✝</span> }
+              </p>
+            }
+          }
+        </div>
+      }
+
       @if (v.invitation.data.religiousEnabled) {
         <div class="religious" [style.borderColor]="v.invitation.customization.primary || '#b8860b'">
           <p class="religious-head" [style.color]="v.invitation.customization.primary || '#b8860b'"
@@ -128,15 +144,33 @@
         </div>
       }
 
-      @if (v.invitation.data.giftInfo) {
+      @if (v.invitation.data.giftInfo || hasBankInfo()) {
         <div class="info-block">
           <p class="info-head" [style.color]="v.invitation.customization.primary || '#b8860b'"
             [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
             Mesa de regalos
           </p>
-          <p class="line line--pre" [style.color]="v.invitation.customization.secondary || '#555'">
-            {{ v.invitation.data.giftInfo }}
-          </p>
+          @if (v.invitation.data.giftInfo) {
+            <p class="line line--pre" [style.color]="v.invitation.customization.secondary || '#555'">
+              {{ v.invitation.data.giftInfo }}
+            </p>
+          }
+          @if (hasBankInfo()) {
+            <div class="bank-card" [style.borderColor]="v.invitation.customization.primary || '#b8860b'">
+              @if (v.invitation.data.bankInfo?.holder) {
+                <p class="line line--small" [style.color]="v.invitation.customization.secondary || '#555'">Titular: {{ v.invitation.data.bankInfo?.holder }}</p>
+              }
+              @if (v.invitation.data.bankInfo?.bank) {
+                <p class="line line--small" [style.color]="v.invitation.customization.secondary || '#555'">Banco: {{ v.invitation.data.bankInfo?.bank }}</p>
+              }
+              @if (v.invitation.data.bankInfo?.clabe) {
+                <p class="line bank-clabe" [style.color]="v.invitation.customization.primary || '#b8860b'">{{ v.invitation.data.bankInfo?.clabe }}</p>
+              }
+              @if (v.invitation.data.bankInfo?.note) {
+                <p class="line line--small" [style.color]="v.invitation.customization.secondary || '#555'">{{ v.invitation.data.bankInfo?.note }}</p>
+              }
+            </div>
+          }
         </div>
       }
 
@@ -147,6 +181,68 @@
               [style.width]="v.invitation.data.galleryMosaic ? null : galleryItemWidth()"
               [src]="gallerySrc(img)" alt="Foto del evento" />
           }
+        </div>
+      }
+
+      @if (v.invitation.data.lodging && v.invitation.data.lodging.length > 0) {
+        <div class="info-block">
+          <p class="info-head" [style.color]="v.invitation.customization.primary || '#b8860b'"
+            [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+            {{ lodgingHeading() }}
+          </p>
+          @for (l of v.invitation.data.lodging; track $index) {
+            @if (l.name) {
+              <div class="lodging-item">
+                <p class="line line--strong" [style.color]="v.invitation.customization.secondary || '#555'">{{ l.name }}</p>
+                @if (l.note) { <p class="line line--small" [style.color]="v.invitation.customization.secondary || '#555'">{{ l.note }}</p> }
+                @if (l.distance) { <p class="line line--small" [style.color]="v.invitation.customization.secondary || '#555'">{{ l.distance }}</p> }
+                @if (l.reservationCode) {
+                  <p class="line line--small" [style.color]="v.invitation.customization.secondary || '#555'">Código: {{ l.reservationCode }}</p>
+                }
+                @if (l.mapsUrl) {
+                  <a class="maps-link" [href]="mapsHref(l.mapsUrl)" target="_blank" rel="noopener"
+                    [style.color]="v.invitation.customization.primary || '#b8860b'">📍 Ver ubicación</a>
+                }
+              </div>
+            }
+          }
+        </div>
+      }
+
+      @if (recGroups().length > 0) {
+        <div class="info-block">
+          <p class="info-head" [style.color]="v.invitation.customization.primary || '#b8860b'"
+            [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+            {{ recommendationsHeading() }}
+          </p>
+          @if (v.invitation.data.recommendationsNote) {
+            <p class="line line--small" [style.color]="v.invitation.customization.secondary || '#555'">{{ v.invitation.data.recommendationsNote }}</p>
+          }
+          @for (grp of recGroups(); track grp.category) {
+            <div class="rec-group">
+              <p class="rec-cat-head" [style.color]="v.invitation.customization.primary || '#b8860b'">{{ grp.category }}</p>
+              @for (r of grp.items; track $index) {
+                <p class="line" [style.color]="v.invitation.customization.secondary || '#555'">
+                  @if (r.mapsUrl) {
+                    <a class="maps-link maps-link--inline" [href]="mapsHref(r.mapsUrl)" target="_blank"
+                      rel="noopener" [style.color]="v.invitation.customization.primary || '#b8860b'">{{ r.name }}</a>
+                  } @else {
+                    {{ r.name }}
+                  }
+                </p>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      @if (v.invitation.data.weatherNote) {
+        <div class="info-block">
+          <p class="info-head" [style.color]="v.invitation.customization.primary || '#b8860b'"
+            [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+            Clima
+          </p>
+          <p class="line line--pre" [style.color]="v.invitation.customization.secondary || '#555'">{{ v.invitation.data.weatherNote }}</p>
         </div>
       }
 

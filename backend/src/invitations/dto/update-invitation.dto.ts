@@ -13,6 +13,87 @@ import {
   ValidateNested,
 } from 'class-validator';
 
+// Un padre/madre/padrino de la sección de familia.
+export class ParentItemDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  name?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  deceased?: boolean;
+}
+
+// Una opción de hospedaje recomendada.
+export class LodgingItemDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(160)
+  note?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  distance?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  reservationCode?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(600)
+  mapsUrl?: string;
+}
+
+// Una recomendación de lugar dentro de una categoría.
+export class RecommendationItemDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(60)
+  category?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(600)
+  mapsUrl?: string;
+}
+
+// Datos bancarios para regalo en efectivo/transferencia.
+export class BankInfoDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  holder?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  bank?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(60)
+  clabe?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  note?: string;
+}
+
 // Contenido del evento editable desde el editor autoservicio.
 export class EventDataDto {
   @IsOptional()
@@ -194,6 +275,62 @@ export class EventDataDto {
   @IsString({ each: true })
   @MaxLength(600, { each: true })
   sectionImages?: string[];
+
+  // --- Padres / padrinos ("Con la bendición de nuestros padres") ---
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  parentsTitle?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(12)
+  @ValidateNested({ each: true })
+  @Type(() => ParentItemDto)
+  parents?: ParentItemDto[];
+
+  // --- Hospedaje (hoteles recomendados) ---
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  lodgingTitle?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(12)
+  @ValidateNested({ each: true })
+  @Type(() => LodgingItemDto)
+  lodging?: LodgingItemDto[];
+
+  // --- Recomendaciones de lugares (agrupadas por categoría) ---
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  recommendationsTitle?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(400)
+  recommendationsNote?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(40)
+  @ValidateNested({ each: true })
+  @Type(() => RecommendationItemDto)
+  recommendations?: RecommendationItemDto[];
+
+  // --- Clima esperado el día del evento (texto fijo editable) ---
+  @IsOptional()
+  @IsString()
+  @MaxLength(400)
+  weatherNote?: string;
+
+  // --- Datos bancarios para regalo ---
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => BankInfoDto)
+  bankInfo?: BankInfoDto;
 }
 
 // Actualización del borrador: título, contenido del evento y personalización del diseño.

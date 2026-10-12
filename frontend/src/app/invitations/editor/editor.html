@@ -325,6 +325,137 @@
         </small>
       </div>
 
+      <div class="field">
+        <label>Datos para transferencia (opcional)</label>
+        <small class="help">Se mostrará dentro de la Mesa de regalos, con un botón para copiar la cuenta.</small>
+        <div class="row">
+          <div class="field">
+            <label for="bankHolder">Titular</label>
+            <input id="bankHolder" type="text" formControlName="bankHolder" placeholder="Ej. Lizeth G." />
+          </div>
+          <div class="field">
+            <label for="bankName">Banco</label>
+            <input id="bankName" type="text" formControlName="bankName" placeholder="Ej. BBVA" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="bankClabe">CLABE / Tarjeta</label>
+          <input id="bankClabe" type="text" formControlName="bankClabe" placeholder="Ej. 0123 4567 8901 2345 67" />
+        </div>
+        <div class="field">
+          <label for="bankNote">Nota (opcional)</label>
+          <input id="bankNote" type="text" formControlName="bankNote" placeholder="Ej. Concepto: Luna de miel" />
+        </div>
+      </div>
+
+      <h2>Padres y padrinos</h2>
+
+      <div class="field">
+        <label for="parentsTitle">Título de la sección</label>
+        <input id="parentsTitle" type="text" formControlName="parentsTitle"
+          placeholder="Con la bendición de nuestros padres" />
+        <small class="help">Si lo dejas vacío, se mostrará "Con la bendición de nuestros padres".</small>
+      </div>
+      <div class="field">
+        <label>Nombres ({{ parents().length }}/{{ PARENTS_MAX }})</label>
+        @for (p of parents(); track $index) {
+          <div class="list-row">
+            <input type="text" [value]="p.name"
+              (input)="updateParent($index, 'name', $any($event.target).value)"
+              placeholder="Nombre completo" />
+            <label class="list-check">
+              <input type="checkbox" [checked]="p.deceased" (change)="toggleParentDeceased($index)" />
+              <span>✝ Finado</span>
+            </label>
+            <button type="button" class="gallery-remove gallery-remove--inline"
+              (click)="removeParentAt($index)" aria-label="Quitar">✕</button>
+          </div>
+        }
+        <button type="button" class="add-item" (click)="addParent()"
+          [disabled]="parents().length >= PARENTS_MAX">+ Agregar nombre</button>
+      </div>
+
+      <h2>Hospedaje</h2>
+
+      <div class="field">
+        <label for="lodgingTitle">Título de la sección</label>
+        <input id="lodgingTitle" type="text" formControlName="lodgingTitle" placeholder="Hospedaje" />
+      </div>
+      <div class="field">
+        <label>Hoteles recomendados ({{ lodging().length }}/{{ LODGING_MAX }})</label>
+        @for (l of lodging(); track $index) {
+          <div class="item-card">
+            <div class="item-card-head">
+              <input type="text" [value]="l.name"
+                (input)="updateLodging($index, 'name', $any($event.target).value)"
+                placeholder="Nombre del hotel" />
+              <button type="button" class="gallery-remove gallery-remove--inline"
+                (click)="removeLodgingAt($index)" aria-label="Quitar">✕</button>
+            </div>
+            <input type="text" [value]="l.note || ''"
+              (input)="updateLodging($index, 'note', $any($event.target).value)"
+              placeholder="Nota (ej. En el centro de la ciudad)" />
+            <input type="text" [value]="l.distance || ''"
+              (input)="updateLodging($index, 'distance', $any($event.target).value)"
+              placeholder="Distancia (ej. A 5 min del lugar)" />
+            <input type="text" [value]="l.reservationCode || ''"
+              (input)="updateLodging($index, 'reservationCode', $any($event.target).value)"
+              placeholder="Código de reservación (opcional)" />
+            <input type="url" [value]="l.mapsUrl || ''"
+              (input)="updateLodging($index, 'mapsUrl', $any($event.target).value)"
+              placeholder="Enlace de ubicación (opcional)" />
+          </div>
+        }
+        <button type="button" class="add-item" (click)="addLodging()"
+          [disabled]="lodging().length >= LODGING_MAX">+ Agregar hotel</button>
+      </div>
+
+      <h2>Recomendaciones</h2>
+
+      <div class="field">
+        <label for="recommendationsTitle">Título de la sección</label>
+        <input id="recommendationsTitle" type="text" formControlName="recommendationsTitle"
+          placeholder="Recomendaciones" />
+      </div>
+      <div class="field">
+        <label for="recommendationsNote">Texto introductorio (opcional)</label>
+        <textarea id="recommendationsNote" formControlName="recommendationsNote" rows="2"
+          placeholder="Ej. Nuestros lugares favoritos para cada momento del día."></textarea>
+      </div>
+      <div class="field">
+        <label>Lugares ({{ recommendations().length }}/{{ RECS_MAX }})</label>
+        <small class="help">La "categoría" agrupa los lugares (ej. Comida, Cena, Taquerías).</small>
+        @for (r of recommendations(); track $index) {
+          <div class="list-row">
+            <input type="text" class="rec-cat" [value]="r.category"
+              (input)="updateRecommendation($index, 'category', $any($event.target).value)"
+              placeholder="Categoría" />
+            <input type="text" [value]="r.name"
+              (input)="updateRecommendation($index, 'name', $any($event.target).value)"
+              placeholder="Nombre del lugar" />
+            <input type="url" [value]="r.mapsUrl || ''"
+              (input)="updateRecommendation($index, 'mapsUrl', $any($event.target).value)"
+              placeholder="Ubicación (opcional)" />
+            <button type="button" class="gallery-remove gallery-remove--inline"
+              (click)="removeRecommendationAt($index)" aria-label="Quitar">✕</button>
+          </div>
+        }
+        <button type="button" class="add-item" (click)="addRecommendation()"
+          [disabled]="recommendations().length >= RECS_MAX">+ Agregar lugar</button>
+      </div>
+
+      <h2>Clima</h2>
+
+      <div class="field">
+        <label for="weatherNote">Nota sobre el clima (opcional)</label>
+        <textarea id="weatherNote" formControlName="weatherNote" rows="3"
+          placeholder="Ej. Día templado de 23 a 24 °C y noche de 5 °C. Te recomendamos llevar algo abrigador."></textarea>
+        <small class="help">
+          Texto libre que tú defines. (El pronóstico real no es confiable con meses de anticipación,
+          por eso se escribe a mano.)
+        </small>
+      </div>
+
       <h2>Diseño</h2>
 
       <div class="field">
@@ -505,6 +636,21 @@
               [muted]="value().secondary"
             />
           }
+          @if (parents().length > 0) {
+            <div class="info-block">
+              <p class="info-head" [style.color]="value().primary"
+                [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+                {{ parentsHeading() }}
+              </p>
+              @for (p of parents(); track $index) {
+                @if (p.name) {
+                  <p class="line" [style.color]="value().secondary">
+                    {{ p.name }}@if (p.deceased) { <span class="cross">✝</span> }
+                  </p>
+                }
+              }
+            </div>
+          }
           @if (value().religiousEnabled) {
             <div class="religious" [style.borderColor]="value().primary">
               <p class="religious-head" [style.color]="value().primary"
@@ -577,13 +723,31 @@
             </div>
           }
 
-          @if (value().giftInfo) {
+          @if (value().giftInfo || hasBankInfo()) {
             <div class="info-block">
               <p class="info-head" [style.color]="value().primary"
                 [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
                 Mesa de regalos
               </p>
-              <p class="line line--pre" [style.color]="value().secondary">{{ value().giftInfo }}</p>
+              @if (value().giftInfo) {
+                <p class="line line--pre" [style.color]="value().secondary">{{ value().giftInfo }}</p>
+              }
+              @if (hasBankInfo()) {
+                <div class="bank-card" [style.borderColor]="value().primary">
+                  @if (value().bankHolder) {
+                    <p class="line line--small" [style.color]="value().secondary">Titular: {{ value().bankHolder }}</p>
+                  }
+                  @if (value().bankName) {
+                    <p class="line line--small" [style.color]="value().secondary">Banco: {{ value().bankName }}</p>
+                  }
+                  @if (value().bankClabe) {
+                    <p class="line bank-clabe" [style.color]="value().primary">{{ value().bankClabe }}</p>
+                  }
+                  @if (value().bankNote) {
+                    <p class="line line--small" [style.color]="value().secondary">{{ value().bankNote }}</p>
+                  }
+                </div>
+              }
             </div>
           }
 
@@ -593,6 +757,68 @@
                 <img class="gallery-img" [style.width]="value().galleryMosaic ? null : galleryItemWidth()"
                   [src]="gallerySrc(img)" alt="Foto del evento" />
               }
+            </div>
+          }
+
+          @if (lodging().length > 0) {
+            <div class="info-block">
+              <p class="info-head" [style.color]="value().primary"
+                [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+                {{ lodgingHeading() }}
+              </p>
+              @for (l of lodging(); track $index) {
+                @if (l.name) {
+                  <div class="lodging-item">
+                    <p class="line line--strong" [style.color]="value().secondary">{{ l.name }}</p>
+                    @if (l.note) { <p class="line line--small" [style.color]="value().secondary">{{ l.note }}</p> }
+                    @if (l.distance) { <p class="line line--small" [style.color]="value().secondary">{{ l.distance }}</p> }
+                    @if (l.reservationCode) {
+                      <p class="line line--small" [style.color]="value().secondary">Código: {{ l.reservationCode }}</p>
+                    }
+                    @if (l.mapsUrl) {
+                      <a class="maps-link" [href]="mapsHref(l.mapsUrl)" target="_blank" rel="noopener"
+                        [style.color]="value().primary">📍 Ver ubicación</a>
+                    }
+                  </div>
+                }
+              }
+            </div>
+          }
+
+          @if (recGroups().length > 0) {
+            <div class="info-block">
+              <p class="info-head" [style.color]="value().primary"
+                [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+                {{ recommendationsHeading() }}
+              </p>
+              @if (value().recommendationsNote) {
+                <p class="line line--small" [style.color]="value().secondary">{{ value().recommendationsNote }}</p>
+              }
+              @for (grp of recGroups(); track grp.category) {
+                <div class="rec-group">
+                  <p class="rec-cat-head" [style.color]="value().primary">{{ grp.category }}</p>
+                  @for (r of grp.items; track $index) {
+                    <p class="line" [style.color]="value().secondary">
+                      @if (r.mapsUrl) {
+                        <a class="maps-link maps-link--inline" [href]="mapsHref(r.mapsUrl)" target="_blank"
+                          rel="noopener" [style.color]="value().primary">{{ r.name }}</a>
+                      } @else {
+                        {{ r.name }}
+                      }
+                    </p>
+                  }
+                </div>
+              }
+            </div>
+          }
+
+          @if (value().weatherNote) {
+            <div class="info-block">
+              <p class="info-head" [style.color]="value().primary"
+                [style.fontFamily]="gFont('section')" [style.fontSize.em]="0.8 * gScale('section')">
+                Clima
+              </p>
+              <p class="line line--pre" [style.color]="value().secondary">{{ value().weatherNote }}</p>
             </div>
           }
 

@@ -3,7 +3,13 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { InvitationService } from '../invitation.service';
-import { Invitation, UpdateInvitationPayload } from '../invitation.model';
+import {
+  Invitation,
+  UpdateInvitationPayload,
+  ParentItem,
+  LodgingItem,
+  RecommendationItem,
+} from '../invitation.model';
 import { OrderService } from '../../orders/order.service';
 import { PALETTES, Palette } from '../palettes';
 import { Countdown } from '../countdown/countdown';
@@ -12,6 +18,7 @@ import { formatTime12h, formatDateLong } from '../time-format';
 import { normalizeMapsUrl } from '../maps-url';
 import { TemplateTheme } from '../../catalog/template.model';
 import { groupFont, groupScale, TypoGroup } from '../typography.util';
+import { groupRecommendations, RecommendationGroup } from '../recommendations.util';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 type PreviewMode = 'mobile' | 'desktop';
@@ -58,6 +65,17 @@ export class Editor implements OnInit {
   protected readonly sectionError = signal<string | null>(null);
   protected newSectionUrl = '';
   protected readonly SECTION_MAX = 6;
+
+  // --- Bloques nuevos: listas de objetos editables (signals) ---
+  // Padres / padrinos.
+  protected readonly parents = signal<ParentItem[]>([]);
+  protected readonly PARENTS_MAX = 12;
+  // Hospedaje.
+  protected readonly lodging = signal<LodgingItem[]>([]);
+  protected readonly LODGING_MAX = 12;
+  // Recomendaciones.
+  protected readonly recommendations = signal<RecommendationItem[]>([]);
+  protected readonly RECS_MAX = 40;
 
   private invitationId = '';
 
@@ -111,6 +129,16 @@ export class Editor implements OnInit {
     sectionHeadingFont: [''],
     sectionScale: [1],
     dressImagePct: [30],
+    // Bloques nuevos: títulos y textos sueltos.
+    parentsTitle: [''],
+    lodgingTitle: [''],
+    recommendationsTitle: [''],
+    recommendationsNote: [''],
+    weatherNote: [''],
+    bankHolder: [''],
+    bankName: [''],
+    bankClabe: [''],
+    bankNote: [''],
   });
 
   // Grupos de tipografía avanzada (nivel 2) para generar los controles.
@@ -214,10 +242,22 @@ export class Editor implements OnInit {
       sectionHeadingFont: c.sectionHeadingFont ?? '',
       sectionScale: c.sectionScale ?? 1,
       dressImagePct: c.dressImagePct ?? 30,
+      parentsTitle: d.parentsTitle ?? '',
+      lodgingTitle: d.lodgingTitle ?? '',
+      recommendationsTitle: d.recommendationsTitle ?? '',
+      recommendationsNote: d.recommendationsNote ?? '',
+      weatherNote: d.weatherNote ?? '',
+      bankHolder: d.bankInfo?.holder ?? '',
+      bankName: d.bankInfo?.bank ?? '',
+      bankClabe: d.bankInfo?.clabe ?? '',
+      bankNote: d.bankInfo?.note ?? '',
     });
     this.gallery.set(Array.isArray(d.galleryImages) ? [...d.galleryImages] : []);
     this.dressImages.set(Array.isArray(d.dressCodeImages) ? [...d.dressCodeImages] : []);
     this.sectionImages.set(Array.isArray(d.sectionImages) ? [...d.sectionImages] : []);
+    this.parents.set(Array.isArray(d.parents) ? [...d.parents] : []);
+    this.lodging.set(Array.isArray(d.lodging) ? [...d.lodging] : []);
+    this.recommendations.set(Array.isArray(d.recommendations) ? [...d.recommendations] : []);
     this.value.set(this.form.getRawValue());
   }
 
@@ -267,6 +307,21 @@ export class Editor implements OnInit {
         religiousTime: v.religiousEnabled ? v.religiousTime : '',
         religiousLocationName: sameLoc ? '' : v.religiousEnabled ? v.religiousLocationName : '',
         religiousMapsUrl: sameLoc ? '' : v.religiousEnabled ? v.religiousMapsUrl : '',
+        // Bloques nuevos.
+        parentsTitle: v.parentsTitle,
+        parents: this.parents().filter((p) => p.name?.trim()),
+        lodgingTitle: v.lodgingTitle,
+        lodging: this.lodging().filter((l) => l.name?.trim()),
+        recommendationsTitle: v.recommendationsTitle,
+        recommendationsNote: v.recommendationsNote,
+        recommendations: this.recommendations().filter((r) => r.name?.trim()),
+        weatherNote: v.weatherNote,
+        bankInfo: {
+          holder: v.bankHolder,
+          bank: v.bankName,
+          clabe: v.bankClabe,
+          note: v.bankNote,
+        },
       },
       customization: {
         primary: v.primary,
@@ -503,6 +558,81 @@ export class Editor implements OnInit {
     this.save();
   }
 
+  // --- Padres / padrinos ---
+  addParent(): void {
+    if (this.parents().length >= this.PARENTS_MAX) return;
+    this.parents.update((list) => [...list, { name: '', deceased: false }]);
+    this.save();
+  }
+
+  updateParent(index: number, field: 'name', value: string): void {
+    this.parents.update((list) =>
+      list.map((p, i) => (i === index ? { ...p, [field]: value } : p)),
+    );
+    this.save();
+  }
+
+  toggleParentDeceased(index: number): void {
+    this.parents.update((list) =>
+      list.map((p, i) => (i === index ? { ...p, deceased: !p.deceased } : p)),
+    );
+    this.save();
+  }
+
+  removeParentAt(index: number): void {
+    this.parents.update((list) => list.filter((_, i) => i !== index));
+    this.save();
+  }
+
+  // --- Hospedaje ---
+  addLodging(): void {
+    if (this.lodging().length >= this.LODGING_MAX) return;
+    this.lodging.update((list) => [
+      ...list,
+      { name: '', note: '', distance: '', reservationCode: '', mapsUrl: '' },
+    ]);
+    this.save();
+  }
+
+  updateLodging(
+    index: number,
+    field: 'name' | 'note' | 'distance' | 'reservationCode' | 'mapsUrl',
+    value: string,
+  ): void {
+    this.lodging.update((list) =>
+      list.map((l, i) => (i === index ? { ...l, [field]: value } : l)),
+    );
+    this.save();
+  }
+
+  removeLodgingAt(index: number): void {
+    this.lodging.update((list) => list.filter((_, i) => i !== index));
+    this.save();
+  }
+
+  // --- Recomendaciones ---
+  addRecommendation(): void {
+    if (this.recommendations().length >= this.RECS_MAX) return;
+    this.recommendations.update((list) => [...list, { category: '', name: '', mapsUrl: '' }]);
+    this.save();
+  }
+
+  updateRecommendation(
+    index: number,
+    field: 'category' | 'name' | 'mapsUrl',
+    value: string,
+  ): void {
+    this.recommendations.update((list) =>
+      list.map((r, i) => (i === index ? { ...r, [field]: value } : r)),
+    );
+    this.save();
+  }
+
+  removeRecommendationAt(index: number): void {
+    this.recommendations.update((list) => list.filter((_, i) => i !== index));
+    this.save();
+  }
+
   // Aplica una paleta curada: rellena colores y fuentes del formulario.
   // Dispara valueChanges, por lo que autosave y preview se actualizan solos.
   applyPalette(p: Palette): void {
@@ -608,5 +738,29 @@ export class Editor implements OnInit {
   // Normaliza el enlace de ubicación para que siempre abra Google Maps.
   protected mapsHref(value: string | undefined): string {
     return normalizeMapsUrl(value);
+  }
+
+  // --- Helpers de los bloques nuevos para la preview ---
+  protected parentsHeading(): string {
+    return this.value().parentsTitle?.trim() || 'Con la bendición de nuestros padres';
+  }
+
+  protected lodgingHeading(): string {
+    return this.value().lodgingTitle?.trim() || 'Hospedaje';
+  }
+
+  protected recommendationsHeading(): string {
+    return this.value().recommendationsTitle?.trim() || 'Recomendaciones';
+  }
+
+  // Agrupa las recomendaciones por categoría para la preview.
+  protected recGroups(): RecommendationGroup[] {
+    return groupRecommendations(this.recommendations());
+  }
+
+  // Indica si hay algún dato bancario capturado (para mostrar el bloque en la preview).
+  protected hasBankInfo(): boolean {
+    const v = this.value();
+    return Boolean(v.bankHolder || v.bankName || v.bankClabe || v.bankNote);
   }
 }

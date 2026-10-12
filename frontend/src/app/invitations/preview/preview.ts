@@ -7,6 +7,7 @@ import { MusicPlayer } from '../music-player/music-player';
 import { formatTime12h, formatDateLong } from '../time-format';
 import { normalizeMapsUrl } from '../maps-url';
 import { groupFont, groupScale, TypoGroup } from '../typography.util';
+import { groupRecommendations, RecommendationGroup } from '../recommendations.util';
 
 // Vista previa de la invitación tal como la verán los invitados,
 // usando el borrador (por id) y SIN necesidad de publicar/pagar.
@@ -107,5 +108,23 @@ export class InvitationPreview implements OnInit {
   // Hora en formato 12h (evento religioso).
   protected fmtTime(time: string | undefined): string {
     return formatTime12h(time);
+  }
+
+  // --- Bloques nuevos ---
+  protected parentsHeading(): string {
+    return this.invitation()?.event?.data?.parentsTitle?.trim() || 'Con la bendición de nuestros padres';
+  }
+  protected lodgingHeading(): string {
+    return this.invitation()?.event?.data?.lodgingTitle?.trim() || 'Hospedaje';
+  }
+  protected recommendationsHeading(): string {
+    return this.invitation()?.event?.data?.recommendationsTitle?.trim() || 'Recomendaciones';
+  }
+  protected recGroups(): RecommendationGroup[] {
+    return groupRecommendations(this.invitation()?.event?.data?.recommendations);
+  }
+  protected hasBankInfo(): boolean {
+    const b = this.invitation()?.event?.data?.bankInfo;
+    return Boolean(b && (b.holder || b.bank || b.clabe || b.note));
   }
 }

@@ -10,6 +10,7 @@ import { InvitationService } from '../../invitations/invitation.service';
 import { formatTime12h, formatDateLong } from '../../invitations/time-format';
 import { normalizeMapsUrl } from '../../invitations/maps-url';
 import { groupFont, groupScale, TypoGroup } from '../../invitations/typography.util';
+import { groupRecommendations, RecommendationGroup } from '../../invitations/recommendations.util';
 
 @Component({
   selector: 'app-rsvp-view',
@@ -210,5 +211,23 @@ export class RsvpViewComponent implements OnInit {
     const inv = this.view()?.invitation;
     if (!inv) return;
     downloadIcs(inv.title, inv.data);
+  }
+
+  // --- Bloques nuevos ---
+  protected parentsHeading(): string {
+    return this.view()?.invitation.data.parentsTitle?.trim() || 'Con la bendición de nuestros padres';
+  }
+  protected lodgingHeading(): string {
+    return this.view()?.invitation.data.lodgingTitle?.trim() || 'Hospedaje';
+  }
+  protected recommendationsHeading(): string {
+    return this.view()?.invitation.data.recommendationsTitle?.trim() || 'Recomendaciones';
+  }
+  protected recGroups(): RecommendationGroup[] {
+    return groupRecommendations(this.view()?.invitation.data.recommendations);
+  }
+  protected hasBankInfo(): boolean {
+    const b = this.view()?.invitation.data.bankInfo;
+    return Boolean(b && (b.holder || b.bank || b.clabe || b.note));
   }
 }
