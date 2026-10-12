@@ -31,6 +31,15 @@ export class User {
   @Column({ type: 'enum', enum: UserRole, default: UserRole.Organizer })
   role!: UserRole;
 
+  // --- Recuperación de contraseña ---
+  // Hash del token de reseteo (nunca se guarda el token en claro). Nulo si no hay reseteo activo.
+  @Column({ name: 'reset_token_hash', type: 'varchar', length: 128, nullable: true })
+  resetTokenHash?: string | null;
+
+  // Expiración del token de reseteo. Nulo si no hay reseteo activo.
+  @Column({ name: 'reset_token_expires', type: 'timestamptz', nullable: true })
+  resetTokenExpires?: Date | null;
+
   @CreateDateColumn()
   createdAt!: Date;
 }

@@ -41,6 +41,14 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ name: 'reset_token_hash', type: 'varchar', length: 128, nullable: true }),
+    __metadata("design:type", Object)
+], User.prototype, "resetTokenHash", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'reset_token_expires', type: 'timestamptz', nullable: true }),
+    __metadata("design:type", Object)
+], User.prototype, "resetTokenExpires", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], User.prototype, "createdAt", void 0);

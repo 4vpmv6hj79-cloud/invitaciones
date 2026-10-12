@@ -16,6 +16,16 @@ export const routes: Routes = [
     loadComponent: () => import('./auth/auth-page/auth-page').then((m) => m.AuthPage),
     data: { mode: 'register' },
   },
+  {
+    path: 'recuperar',
+    loadComponent: () =>
+      import('./auth/forgot-password/forgot-password').then((m) => m.ForgotPassword),
+  },
+  {
+    path: 'restablecer',
+    loadComponent: () =>
+      import('./auth/reset-password/reset-password').then((m) => m.ResetPassword),
+  },
 
   // --- Público (sin sesión) ---
   {

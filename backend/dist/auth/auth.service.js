@@ -50,12 +50,17 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const jwt_1 = require("@nestjs/jwt");
+const config_1 = require("@nestjs/config");
+const crypto_1 = require("crypto");
 const bcrypt = __importStar(require("bcrypt"));
 const user_entity_1 = require("./user.entity");
+const mail_service_1 = require("./mail.service");
 let AuthService = class AuthService {
-    constructor(users, jwt) {
+    constructor(users, jwt, config, mail) {
         this.users = users;
         this.jwt = jwt;
+        this.config = config;
+        this.mail = mail;
     }
     async register(dto) {
         const email = dto.email.toLowerCase().trim();
@@ -84,6 +89,38 @@ let AuthService = class AuthService {
         const user = await this.users.findOne({ where: { id } });
         return user ? this.toPublic(user) : null;
     }
+    async forgotPassword(emailRaw) {
+        const email = emailRaw.toLowerCase().trim();
+        const user = await this.users.findOne({ where: { email } });
+        if (!user) {
+            return;
+        }
+        const rawToken = (0, crypto_1.randomBytes)(32).toString('hex');
+        user.resetTokenHash = this.hashToken(rawToken);
+        const expires = new Date();
+        expires.setHours(expires.getHours() + 1);
+        user.resetTokenExpires = expires;
+        await this.users.save(user);
+        const frontendUrl = this.config.get('FRONTEND_URL')?.trim() || 'http://localhost:4300';
+        const resetUrl = `${frontendUrl}/restablecer?token=${rawToken}`;
+        await this.mail.sendPasswordReset(email, resetUrl);
+    }
+    async resetPassword(rawToken, newPassword) {
+        const tokenHash = this.hashToken(rawToken);
+        const user = await this.users.findOne({
+            where: { resetTokenHash: tokenHash, resetTokenExpires: (0, typeorm_2.MoreThan)(new Date()) },
+        });
+        if (!user) {
+            throw new common_1.BadRequestException('El enlace de recuperación no es válido o ya expiró.');
+        }
+        user.passwordHash = await bcrypt.hash(newPassword, 10);
+        user.resetTokenHash = null;
+        user.resetTokenExpires = null;
+        await this.users.save(user);
+    }
+    hashToken(rawToken) {
+        return (0, crypto_1.createHash)('sha256').update(rawToken).digest('hex');
+    }
     buildResult(user) {
         const payload = { sub: user.id, role: user.role, email: user.email };
         const token = this.jwt.sign(payload);
@@ -98,6 +135,8 @@ exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        config_1.ConfigService,
+        mail_service_1.MailService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

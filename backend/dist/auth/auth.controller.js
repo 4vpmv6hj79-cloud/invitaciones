@@ -17,6 +17,8 @@ const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const register_dto_1 = require("./dto/register.dto");
 const login_dto_1 = require("./dto/login.dto");
+const forgot_password_dto_1 = require("./dto/forgot-password.dto");
+const reset_password_dto_1 = require("./dto/reset-password.dto");
 const decorators_1 = require("./decorators");
 let AuthController = class AuthController {
     constructor(service) {
@@ -27,6 +29,17 @@ let AuthController = class AuthController {
     }
     login(dto) {
         return this.service.login(dto);
+    }
+    async forgotPassword(dto) {
+        await this.service.forgotPassword(dto.email);
+        return {
+            ok: true,
+            message: 'Si el correo está registrado, enviaremos un enlace para restablecer la contraseña.',
+        };
+    }
+    async resetPassword(dto) {
+        await this.service.resetPassword(dto.token, dto.password);
+        return { ok: true, message: 'Tu contraseña se actualizó. Ya puedes iniciar sesión.' };
     }
     me(user) {
         return this.service.findById(user.id);
@@ -49,6 +62,24 @@ __decorate([
     __metadata("design:paramtypes", [login_dto_1.LoginDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "login", null);
+__decorate([
+    (0, decorators_1.Public)(),
+    (0, common_1.HttpCode)(200),
+    (0, common_1.Post)('forgot-password'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [forgot_password_dto_1.ForgotPasswordDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "forgotPassword", null);
+__decorate([
+    (0, decorators_1.Public)(),
+    (0, common_1.HttpCode)(200),
+    (0, common_1.Post)('reset-password'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [reset_password_dto_1.ResetPasswordDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "resetPassword", null);
 __decorate([
     (0, common_1.Get)('me'),
     __param(0, (0, decorators_1.CurrentUser)()),

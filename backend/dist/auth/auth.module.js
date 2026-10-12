@@ -16,6 +16,7 @@ const core_1 = require("@nestjs/core");
 const user_entity_1 = require("./user.entity");
 const auth_service_1 = require("./auth.service");
 const auth_controller_1 = require("./auth.controller");
+const mail_service_1 = require("./mail.service");
 const jwt_strategy_1 = require("./jwt.strategy");
 const jwt_auth_guard_1 = require("./jwt-auth.guard");
 const roles_guard_1 = require("./roles.guard");
@@ -41,6 +42,7 @@ exports.AuthModule = AuthModule = __decorate([
         controllers: [auth_controller_1.AuthController],
         providers: [
             auth_service_1.AuthService,
+            mail_service_1.MailService,
             jwt_strategy_1.JwtStrategy,
             { provide: core_1.APP_GUARD, useClass: jwt_auth_guard_1.JwtAuthGuard },
             { provide: core_1.APP_GUARD, useClass: roles_guard_1.RolesGuard },

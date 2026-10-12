@@ -33,6 +33,12 @@
       </button>
     </form>
 
+    @if (!isRegister()) {
+      <p class="switch forgot">
+        <a routerLink="/recuperar">¿Olvidaste tu contraseña?</a>
+      </p>
+    }
+
     <p class="switch">
       @if (isRegister()) {
         ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>

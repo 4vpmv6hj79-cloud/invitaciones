@@ -9,5 +9,7 @@ export declare class User {
     passwordHash: string;
     name: string;
     role: UserRole;
+    resetTokenHash?: string | null;
+    resetTokenExpires?: Date | null;
     createdAt: Date;
 }

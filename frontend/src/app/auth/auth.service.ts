@@ -42,6 +42,22 @@ export class AuthService {
       .pipe(tap((res) => this.store(res)));
   }
 
+  // Solicita el correo de recuperación de contraseña.
+  forgotPassword(email: string): Observable<{ ok: boolean; message: string }> {
+    return this.http.post<{ ok: boolean; message: string }>(
+      `${this.baseUrl}/forgot-password`,
+      { email },
+    );
+  }
+
+  // Confirma el reseteo con el token recibido por correo y la nueva contraseña.
+  resetPassword(token: string, password: string): Observable<{ ok: boolean; message: string }> {
+    return this.http.post<{ ok: boolean; message: string }>(
+      `${this.baseUrl}/reset-password`,
+      { token, password },
+    );
+  }
+
   logout(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
