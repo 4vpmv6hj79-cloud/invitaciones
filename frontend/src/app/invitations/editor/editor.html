@@ -595,12 +595,20 @@
       <p class="hint">Mira la invitación como la verán tus invitados. Puedes volver a editar en cualquier momento.</p>
 
       <button type="button" class="publish-btn" (click)="publish()" [disabled]="publishing()">
-        {{ publishing() ? 'Redirigiendo al pago…' : 'Publicar y compartir' }}
+        @if (isAdmin()) {
+          {{ publishing() ? 'Publicando…' : 'Publicar y compartir' }}
+        } @else {
+          {{ publishing() ? 'Redirigiendo al pago…' : 'Publicar y compartir' }}
+        }
       </button>
       @if (publishError()) {
-        <p class="hint hint--error">No se pudo iniciar el pago. Intenta de nuevo.</p>
+        <p class="hint hint--error">No se pudo publicar. Intenta de nuevo.</p>
       }
-      <p class="hint">Al publicar, pagas una vez y obtienes el enlace para compartir.</p>
+      @if (isAdmin()) {
+        <p class="hint">Como administrador, publicas sin costo y obtienes el enlace para compartir.</p>
+      } @else {
+        <p class="hint">Al publicar, pagas una vez y obtienes el enlace para compartir.</p>
+      }
     </section>
 
     <!-- Vista previa en vivo -->

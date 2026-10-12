@@ -25,6 +25,7 @@ const cloudinary_service_1 = require("./cloudinary.service");
 const create_invitation_dto_1 = require("./dto/create-invitation.dto");
 const update_invitation_dto_1 = require("./dto/update-invitation.dto");
 const decorators_1 = require("../auth/decorators");
+const user_entity_1 = require("../auth/user.entity");
 const imageUpload = {
     storage: (0, multer_1.memoryStorage)(),
     limits: { fileSize: 5 * 1024 * 1024 },
@@ -64,6 +65,11 @@ let InvitationsController = class InvitationsController {
     }
     update(id, dto, user) {
         return this.service.update(id, dto, user.id);
+    }
+    async publishAsAdmin(id, user) {
+        await this.service.findOwned(id, user.id);
+        const invitation = await this.service.publish(id, 3650);
+        return { id: invitation.id, status: invitation.status, publicToken: invitation.publicToken };
     }
     async uploadImage(id, file, user) {
         if (!file) {
@@ -127,6 +133,15 @@ __decorate([
     __metadata("design:paramtypes", [String, update_invitation_dto_1.UpdateInvitationDto, Object]),
     __metadata("design:returntype", void 0)
 ], InvitationsController.prototype, "update", null);
+__decorate([
+    (0, decorators_1.Roles)(user_entity_1.UserRole.Admin),
+    (0, common_1.Post)(':id/publish'),
+    __param(0, (0, common_1.Param)('id', new common_1.ParseUUIDPipe())),
+    __param(1, (0, decorators_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], InvitationsController.prototype, "publishAsAdmin", null);
 __decorate([
     (0, common_1.Post)(':id/upload-image'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', imageUpload)),

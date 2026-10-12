@@ -33,6 +33,14 @@ export class InvitationService {
     return this.http.patch<Invitation>(`${this.baseUrl}/${id}`, payload);
   }
 
+  // Publica la invitación SIN pago (solo administradores).
+  publishAsAdmin(id: string): Observable<{ id: string; status: string; publicToken: string | null }> {
+    return this.http.post<{ id: string; status: string; publicToken: string | null }>(
+      `${this.baseUrl}/${id}/publish`,
+      {},
+    );
+  }
+
   // Sube una imagen (portada/galería) a la invitación. Devuelve la URL guardada.
   uploadImage(id: string, file: File): Observable<{ url: string }> {
     const form = new FormData();

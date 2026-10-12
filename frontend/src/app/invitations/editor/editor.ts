@@ -12,6 +12,7 @@ import {
   GiftRegistryItem,
 } from '../invitation.model';
 import { OrderService } from '../../orders/order.service';
+import { AuthService } from '../../auth/auth.service';
 import { PALETTES, Palette } from '../palettes';
 import { Countdown } from '../countdown/countdown';
 import { MusicPlayer } from '../music-player/music-player';
@@ -37,6 +38,7 @@ export class Editor implements OnInit {
   private readonly router = inject(Router);
   private readonly service = inject(InvitationService);
   private readonly orders = inject(OrderService);
+  private readonly auth = inject(AuthService);
   private readonly fb = inject(FormBuilder);
 
   protected readonly loading = signal(true);
@@ -688,14 +690,35 @@ export class Editor implements OnInit {
     this.router.navigate(['/vista-previa', this.invitationId]);
   }
 
-  // Guarda y luego inicia el pago para publicar la invitación.
+  // ¿El usuario autenticado es administrador?
+  protected isAdmin(): boolean {
+    return this.auth.user()?.role === 'admin';
+  }
+
+  // Guarda y luego publica la invitación.
+  // Admin: publica directo, sin pago. Resto: pasa por el flujo de pago.
   publish(): void {
     if (this.publishing()) return;
     this.publishing.set(true);
     this.publishError.set(false);
 
-    // Guarda el estado actual antes de cobrar.
+    // Guarda el estado actual antes de publicar/cobrar.
     this.save();
+
+    // Administrador: publica sin pago.
+    if (this.isAdmin()) {
+      this.service.publishAsAdmin(this.invitationId).subscribe({
+        next: () => {
+          window.location.href = `/vista-previa/${this.invitationId}`;
+        },
+        error: () => {
+          this.publishing.set(false);
+          this.publishError.set(true);
+        },
+      });
+      return;
+    }
+
     this.orders.createCheckout(this.invitationId).subscribe({
       next: (res) => {
         if (res.checkoutUrl) {

@@ -23,7 +23,8 @@ import { PdfService } from './pdf.service';
 import { CloudinaryService } from './cloudinary.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
-import { CurrentUser } from '../auth/decorators';
+import { CurrentUser, Roles } from '../auth/decorators';
+import { UserRole } from '../auth/user.entity';
 
 // Config de Multer: la imagen se mantiene en memoria (buffer) para poder subirla
 // a Cloudinary. Si Cloudinary no está configurado, el controlador la escribe en
@@ -96,6 +97,22 @@ export class InvitationsController {
     @CurrentUser() user: { id: string },
   ) {
     return this.service.update(id, dto, user.id);
+  }
+
+  // Publica la invitación SIN pago. Reservado a administradores (rol admin).
+  // Verifica que el admin sea dueño de la invitación antes de publicar.
+  // POST /invitations/:id/publish
+  @Roles(UserRole.Admin)
+  @Post(':id/publish')
+  async publishAsAdmin(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @CurrentUser() user: { id: string },
+  ) {
+    // Reutiliza la verificación de propiedad.
+    await this.service.findOwned(id, user.id);
+    // Vigencia amplia (10 años) para publicaciones de administrador.
+    const invitation = await this.service.publish(id, 3650);
+    return { id: invitation.id, status: invitation.status, publicToken: invitation.publicToken };
   }
 
   // Sube una imagen (portada o galería) y devuelve su URL pública.

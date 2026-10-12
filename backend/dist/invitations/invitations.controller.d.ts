@@ -24,6 +24,13 @@ export declare class InvitationsController {
     update(id: string, dto: UpdateInvitationDto, user: {
         id: string;
     }): Promise<import("./invitation.entity").Invitation>;
+    publishAsAdmin(id: string, user: {
+        id: string;
+    }): Promise<{
+        id: string;
+        status: import("./invitation.entity").InvitationStatus;
+        publicToken: string | null;
+    }>;
     uploadImage(id: string, file: Express.Multer.File, user: {
         id: string;
     }): Promise<{
