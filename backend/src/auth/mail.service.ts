@@ -1,42 +1,58 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Resend } from 'resend';
+import * as nodemailer from 'nodemailer';
+import type { Transporter } from 'nodemailer';
 
 /**
- * Servicio de envío de correos.
+ * Servicio de envío de correos por SMTP (Gmail u otro proveedor SMTP).
  *
- * Si RESEND_API_KEY está configurada, envía correos reales con Resend.
+ * Si SMTP_HOST/SMTP_USER/SMTP_PASSWORD están configurados, envía correos reales.
  * Si no, opera en "modo sin correo": no envía nada, pero registra en los logs
- * el enlace generado para diagnóstico (útil mientras no hay servicio de correo).
+ * el enlace generado (útil para diagnóstico mientras no hay SMTP configurado).
  *
- * Variables de entorno:
- *   RESEND_API_KEY  - API key de Resend (habilita el envío real)
- *   MAIL_FROM       - remitente, ej. "Invitaciones <noreply@tudominio.com>"
- *                     (por defecto usa el dominio de pruebas de Resend)
+ * Variables de entorno (para Gmail):
+ *   SMTP_HOST     - smtp.gmail.com
+ *   SMTP_PORT     - 465 (SSL) o 587 (STARTTLS). Por defecto 465.
+ *   SMTP_USER     - tu correo de Gmail
+ *   SMTP_PASSWORD - contraseña de aplicación de Google (16 caracteres)
+ *   MAIL_FROM     - remitente mostrado, ej. "Invitaciones <tucorreo@gmail.com>"
+ *                   (si no se indica, usa SMTP_USER)
  */
 @Injectable()
 export class MailService {
   private readonly logger = new Logger(MailService.name);
-  private readonly resend: Resend | null;
+  private readonly transporter: Transporter | null;
   private readonly from: string;
 
   constructor(config: ConfigService) {
-    const apiKey = config.get<string>('RESEND_API_KEY')?.trim();
-    this.from =
-      config.get<string>('MAIL_FROM')?.trim() || 'Invitaciones <onboarding@resend.dev>';
-    this.resend = apiKey ? new Resend(apiKey) : null;
+    const host = config.get<string>('SMTP_HOST')?.trim();
+    const user = config.get<string>('SMTP_USER')?.trim();
+    const password = config.get<string>('SMTP_PASSWORD')?.trim();
+    const port = Number(config.get<string>('SMTP_PORT')?.trim() || 465);
 
-    if (this.resend) {
-      this.logger.log(`Servicio de correo activo (remitente: ${this.from}).`);
+    this.from =
+      config.get<string>('MAIL_FROM')?.trim() ||
+      (user ? `Invitaciones <${user}>` : 'Invitaciones <no-reply@localhost>');
+
+    if (host && user && password) {
+      this.transporter = nodemailer.createTransport({
+        host,
+        port,
+        // 465 usa SSL directo (secure: true); 587 usa STARTTLS (secure: false).
+        secure: port === 465,
+        auth: { user, pass: password },
+      });
+      this.logger.log(`Servicio de correo SMTP activo (host: ${host}, remitente: ${this.from}).`);
     } else {
+      this.transporter = null;
       this.logger.warn(
-        'RESEND_API_KEY no configurada: los correos NO se envían (modo sin correo).',
+        'SMTP no configurado (faltan SMTP_HOST/SMTP_USER/SMTP_PASSWORD): los correos NO se envían (modo sin correo).',
       );
     }
   }
 
   get isEnabled(): boolean {
-    return this.resend !== null;
+    return this.transporter !== null;
   }
 
   /**
@@ -61,16 +77,14 @@ export class MailService {
       </div>
     `;
 
-    if (!this.resend) {
+    if (!this.transporter) {
       // Modo sin correo: no se envía, pero dejamos rastro para diagnóstico.
-      this.logger.warn(
-        `[modo sin correo] Enlace de recuperación para ${to}: ${resetUrl}`,
-      );
+      this.logger.warn(`[modo sin correo] Enlace de recuperación para ${to}: ${resetUrl}`);
       return;
     }
 
     try {
-      await this.resend.emails.send({ from: this.from, to, subject, html });
+      await this.transporter.sendMail({ from: this.from, to, subject, html });
       this.logger.log(`Correo de recuperación enviado a ${to}.`);
     } catch (e) {
       const detail = (e as { message?: string })?.message ?? 'error desconocido';
