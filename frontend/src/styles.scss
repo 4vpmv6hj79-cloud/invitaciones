@@ -75,6 +75,37 @@
   --transition: 220ms ease;
 }
 
+/* ============================================================
+   Marca de agua global del monograma Erivette.
+   Aparece muy tenue y centrada detrás del contenido en todas las
+   pantallas de la plataforma. Fija al viewport para que no estorbe
+   al hacer scroll. Se desactiva en el editor y en las vistas de la
+   invitación para no causar problemas visuales al diseñar/mostrar
+   las invitaciones.
+   ============================================================ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none; /* nunca bloquea clics */
+  background-image: url('/monograma.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: min(55vw, 520px);
+  opacity: 0.05;           /* muy sutil */
+  mix-blend-mode: multiply;
+}
+
+/* Oculta la marca de agua donde podría estorbar al diseño/visualización
+   de las invitaciones: editor, vista previa, vista pública y vista de invitado. */
+body:has(app-editor)::before,
+body:has(app-invitation-preview)::before,
+body:has(app-invitation-view)::before,
+body:has(app-rsvp-view)::before {
+  display: none;
+}
+
 /* Respeta la preferencia de reducir movimiento. */
 @media (prefers-reduced-motion: reduce) {
   *,
