@@ -28,6 +28,13 @@ export class PaymentSuccess implements OnInit {
 
   ngOnInit(): void {
     const orderId = this.route.snapshot.queryParamMap.get('order');
+    // Publicación de administrador (sin pago): llega con ?invitation=<id> y
+    // carga los enlaces directamente, sin esperar confirmación de pago.
+    const invitationId = this.route.snapshot.queryParamMap.get('invitation');
+    if (invitationId) {
+      this.loadLinks(invitationId);
+      return;
+    }
     if (!orderId) {
       this.state.set('error');
       return;

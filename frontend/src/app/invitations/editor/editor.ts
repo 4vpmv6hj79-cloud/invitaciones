@@ -705,11 +705,12 @@ export class Editor implements OnInit {
     // Guarda el estado actual antes de publicar/cobrar.
     this.save();
 
-    // Administrador: publica sin pago.
+    // Administrador: publica sin pago y va a la pantalla de compartir
+    // (enlace público, WhatsApp y gestión de invitados), igual que tras un pago.
     if (this.isAdmin()) {
       this.service.publishAsAdmin(this.invitationId).subscribe({
         next: () => {
-          window.location.href = `/vista-previa/${this.invitationId}`;
+          window.location.href = `/pago/exito?invitation=${this.invitationId}`;
         },
         error: () => {
           this.publishing.set(false);
