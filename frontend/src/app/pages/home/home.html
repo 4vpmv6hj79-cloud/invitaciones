@@ -1,5 +1,7 @@
 <nav class="topbar">
-  <span class="brand">Invitaciones</span>
+  <a class="brand" routerLink="/" aria-label="Erivette Invitaciones">
+    <img src="logo.jpg" alt="Erivette Invitaciones" class="brand-logo" />
+  </a>
   <div class="topbar-links">
     @if (auth.isLoggedIn()) {
       <a routerLink="/mis-invitaciones">Mis invitaciones</a>
@@ -83,6 +85,6 @@
   </section>
 
   <footer class="foot">
-    <span>Invitaciones Digitales</span>
+    <span>Erivette Invitaciones</span>
   </footer>
 </main>

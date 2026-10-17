@@ -8,22 +8,44 @@
    ============================================================ */
 
 :root {
+  /* ============================================================
+     Paleta "7 colores de la Laguna de Bacalar".
+     De turquesa claro a azul profundo, inspirada en los tonos de
+     la Laguna de los Siete Colores (Bacalar, Quintana Roo).
+       1. #E6F7F4  espuma / turquesa muy claro
+       2. #A7E8E0  turquesa claro
+       3. #5FD0CB  turquesa
+       4. #22B9C4  aguamarina
+       5. #1C92B5  azul cielo profundo
+       6. #136AA3  azul laguna
+       7. #0B3C6E  azul profundo / tinta
+     ============================================================ */
+
   /* --- Color: superficie y tinta --- */
-  --color-bg: #fbf9f6;          /* fondo general cálido */
+  --color-bg: #f2fbfa;          /* fondo general, espuma clara */
   --color-surface: #ffffff;     /* tarjetas, paneles */
-  --color-surface-2: #f5f2ee;   /* superficie alterna */
-  --color-ink: #1c1a24;         /* texto principal */
-  --color-muted: #6b6773;       /* texto secundario */
-  --color-border: #ece8f0;      /* bordes sutiles */
+  --color-surface-2: #e6f7f4;   /* superficie alterna (turquesa muy claro) */
+  --color-ink: #0b3c6e;         /* texto principal (azul profundo) */
+  --color-muted: #4a6b84;       /* texto secundario (azul grisáceo) */
+  --color-border: #cdeae7;      /* bordes sutiles (turquesa apagado) */
 
   /* --- Color: acento de marca y estados --- */
-  --color-accent: #6b5b95;      /* violeta de marca (ya usado en la app) */
-  --color-accent-strong: #574a7d;
-  --color-accent-soft: #f3f0fa;
-  --color-gold: #b8860b;        /* dorado (CTAs de invitación/éxito) */
+  --color-accent: #1c92b5;      /* azul cielo profundo (acento de marca) */
+  --color-accent-strong: #136aa3; /* azul laguna (hover/activo) */
+  --color-accent-soft: #e6f7f4; /* turquesa muy claro (fondos suaves) */
+  --color-gold: #22b9c4;        /* aguamarina (CTAs destacados) */
   --color-success: #2f9e44;
   --color-danger: #b4342c;
   --color-warning: #c77700;
+
+  /* --- Los 7 colores de Bacalar (disponibles para detalles/gradientes) --- */
+  --bacalar-1: #e6f7f4;
+  --bacalar-2: #a7e8e0;
+  --bacalar-3: #5fd0cb;
+  --bacalar-4: #22b9c4;
+  --bacalar-5: #1c92b5;
+  --bacalar-6: #136aa3;
+  --bacalar-7: #0b3c6e;
 
   /* --- Radios --- */
   --radius-sm: 8px;

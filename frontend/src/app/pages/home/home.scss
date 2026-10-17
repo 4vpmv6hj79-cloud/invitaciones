@@ -19,10 +19,14 @@
   border-bottom: 1px solid var(--color-border);
 
   .brand {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--color-ink);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .brand-logo {
+    height: 44px;
+    width: auto;
+    display: block;
   }
 
   .topbar-links {
