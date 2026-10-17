@@ -21,12 +21,28 @@
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
 
+  /* Monograma a la izquierda + texto a la derecha. */
   .brand {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+
+  /* Monograma: alto controlado; se mezcla con el fondo claro de la barra. */
+  .brand-mono {
+    height: 52px;
+    width: auto;
+    display: block;
+    mix-blend-mode: multiply; /* disimula el fondo crema del PNG sobre la barra clara */
+  }
+
+  .brand-text {
     display: inline-flex;
     flex-direction: column;
     align-items: flex-start;
     line-height: 1;
-    text-decoration: none;
   }
 
   /* "Erivette" en caligrafía elegante, azul laguna. */
