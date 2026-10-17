@@ -23,18 +23,28 @@
 
   .brand {
     display: inline-flex;
-    align-items: center;
-    /* Permite que el logo se salga de la barra sin afectar su altura. */
-    align-self: center;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1;
+    text-decoration: none;
   }
 
-  .brand-logo {
-    height: 110px;
-    width: auto;
-    display: block;
-    /* Márgenes negativos: el logo crece hacia arriba y abajo sin agrandar
-       la barra compacta. */
-    margin: -32px 0;
+  /* "Erivette" en caligrafía elegante, azul laguna. */
+  .brand-name {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.1rem;
+    color: var(--bacalar-6); /* azul laguna */
+    line-height: 0.9;
+  }
+
+  /* "Invitaciones" en minúsculas espaciadas, azul profundo bien visible. */
+  .brand-sub {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--bacalar-7); /* azul profundo, contrasta y se lee bien */
+    margin-left: 0.15rem;
   }
 
   .topbar-links {
