@@ -81,3 +81,45 @@ export function minPlanFor(feature: FeatureKey): PlanId {
   }
   return 'platinum';
 }
+
+// Etiqueta legible de cada función (para mostrar "las diferencias" en el popup).
+export const FEATURE_LABELS: Record<FeatureKey, string> = {
+  cover: 'Portada personalizada',
+  countdown: 'Cuenta regresiva',
+  location: 'Ubicación con mapa',
+  dressCode: 'Código de vestimenta',
+  gift: 'Mesa de regalos',
+  gallery: 'Galería de fotos',
+  rsvp: 'Confirmación de asistencia',
+  music: 'Música de fondo',
+  guestPasses: 'Pases y cupos por invitado',
+  religious: 'Evento religioso',
+  parents: 'Padres y padrinos',
+  lodging: 'Hospedaje',
+  recommendations: 'Recomendaciones',
+  weather: 'Clima',
+  sectionImages: 'Imágenes entre secciones',
+  ticketsQr: 'Boletos QR y control de acceso',
+};
+
+// Lista de funciones que un plan agrega respecto a otro plan base.
+export function featuresAddedBy(plan: PlanId, base: PlanId): FeatureKey[] {
+  const baseSet = new Set(PLAN_FEATURES[base]);
+  return PLAN_FEATURES[plan].filter((f) => !baseSet.has(f));
+}
+
+// Dado el plan actual y una función bloqueada, devuelve las opciones de mejora
+// válidas (planes que SÍ incluyen la función y son superiores al actual), con
+// el detalle de lo que cada uno agrega respecto al plan actual.
+export interface UpgradeOption {
+  id: PlanId;
+  name: string;
+  addedFeatures: FeatureKey[]; // qué suma respecto al plan actual
+}
+
+export function upgradeOptionsFor(current: PlanId, feature: FeatureKey): PlanId[] {
+  const currentIndex = PLAN_ORDER.indexOf(current);
+  return PLAN_ORDER.filter((plan, idx) => {
+    return idx > currentIndex && PLAN_FEATURES[plan].includes(feature);
+  });
+}

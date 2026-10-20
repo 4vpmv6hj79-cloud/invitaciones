@@ -33,11 +33,39 @@
         </small>
       </div>
 
-      <!-- Aviso emergente al tocar una función bloqueada. -->
-      @if (lockNotice()) {
-        <div class="lock-notice">
-          <p>{{ lockNotice() }}</p>
-          <button type="button" class="lock-dismiss" (click)="dismissLock()">Entendido</button>
+      <!-- Popup al tocar una función bloqueada: planes que la desbloquean. -->
+      @if (upgradeChoices().length > 0) {
+        <div class="upgrade-backdrop" (click)="closeUpgrade()">
+          <div class="upgrade-modal" (click)="$event.stopPropagation()">
+            <h3>Desbloquea más funciones</h3>
+            <p class="upgrade-intro">
+              Estás por desbloquear una función que no incluye tu plan actual
+              ({{ planName(selectedPlan()) }}). Elige con qué plan quieres continuar:
+              el costo se cobrará al publicar.
+            </p>
+
+            @for (opt of upgradeChoices(); track opt.id) {
+              <div class="upgrade-opt">
+                <div class="upgrade-opt-head">
+                  <span class="upgrade-opt-name">Plan {{ opt.name }}</span>
+                  <span class="upgrade-opt-price">{{ formatPrice(opt.priceCents) }}</span>
+                </div>
+                <p class="upgrade-opt-sub">Agrega respecto a tu plan actual:</p>
+                <ul class="upgrade-opt-features">
+                  @for (f of opt.added; track f.key) {
+                    <li>{{ f.label }}</li>
+                  }
+                </ul>
+                <button type="button" class="upgrade-opt-btn" (click)="chooseUpgrade(opt.id)">
+                  Elegir plan {{ opt.name }}
+                </button>
+              </div>
+            }
+
+            <button type="button" class="upgrade-cancel" (click)="closeUpgrade()">
+              Ahora no
+            </button>
+          </div>
         </div>
       }
 

@@ -955,28 +955,119 @@
   }
 }
 
-.lock-notice {
-  margin: 0 0 1rem;
-  padding: 0.75rem;
-  border-radius: 10px;
-  background: #fff6e5;
-  border: 1px solid #f0d9a8;
+/* Popup de mejora de plan (al tocar un candado). */
+.upgrade-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(11, 60, 110, 0.45);
+}
 
-  p {
+.upgrade-modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.25rem;
+  max-width: 440px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+
+  h3 {
     margin: 0 0 0.5rem;
-    font-size: 0.85rem;
-    color: #6b5a2a;
+    font-family: var(--font-display, serif);
+    color: var(--color-ink, #0b3c6e);
   }
 
-  .lock-dismiss {
-    padding: 0.35rem 0.9rem;
+  .upgrade-intro {
+    margin: 0 0 1rem;
+    font-size: 0.85rem;
+    color: var(--color-muted, #4a6b84);
+  }
+}
+
+.upgrade-opt {
+  border: 1.5px solid var(--color-border, #cdeae7);
+  border-radius: 12px;
+  padding: 0.9rem;
+  margin-bottom: 0.75rem;
+
+  .upgrade-opt-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+  }
+
+  .upgrade-opt-name {
+    font-weight: 700;
+    color: var(--color-ink, #0b3c6e);
+  }
+
+  .upgrade-opt-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-accent, #1c92b5);
+  }
+
+  .upgrade-opt-sub {
+    margin: 0 0 0.3rem;
+    font-size: 0.78rem;
+    color: var(--color-muted, #4a6b84);
+  }
+
+  .upgrade-opt-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 0.75rem;
+
+    li {
+      position: relative;
+      padding-left: 1.3rem;
+      margin-bottom: 0.25rem;
+      font-size: 0.85rem;
+      color: var(--color-ink, #333);
+
+      &::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--bacalar-4, #22b9c4);
+        font-weight: 700;
+      }
+    }
+  }
+
+  .upgrade-opt-btn {
+    width: 100%;
+    padding: 0.6rem;
     border: none;
     border-radius: 999px;
     background: var(--color-accent, #1c92b5);
     color: #fff;
-    font-size: 0.8rem;
+    font-weight: 600;
+    font-size: 0.9rem;
     cursor: pointer;
+
+    &:hover {
+      background: var(--color-accent-strong, #136aa3);
+    }
   }
+}
+
+.upgrade-cancel {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  background: transparent;
+  color: var(--color-muted, #6b6350);
+  font-size: 0.85rem;
+  cursor: pointer;
 }
 
 /* Encabezado de sección con candado. */

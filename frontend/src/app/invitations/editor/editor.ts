@@ -22,14 +22,24 @@ import { TemplateTheme } from '../../catalog/template.model';
 import { groupFont, groupScale, TypoGroup } from '../typography.util';
 import { groupRecommendations, RecommendationGroup } from '../recommendations.util';
 import { normalizeUrl } from '../url.util';
-import { PlanId } from '../invitation.model';
+import { PlanId, Plan } from '../invitation.model';
 import {
   FeatureKey,
+  FEATURE_LABELS,
   PLAN_NAMES,
   PLAN_ORDER,
   planHasFeature,
-  minPlanFor,
+  featuresAddedBy,
+  upgradeOptionsFor,
 } from '../plan-features';
+
+// Opción de mejora mostrada en el popup del candado.
+interface UpgradeChoice {
+  id: PlanId;
+  name: string;
+  priceCents: number;
+  added: { key: FeatureKey; label: string }[];
+}
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 type PreviewMode = 'mobile' | 'desktop';
@@ -94,8 +104,10 @@ export class Editor implements OnInit {
 
   // Plan elegido en el editor (preferencia; el cobro/desbloqueo real es al pagar).
   protected readonly selectedPlan = signal<PlanId>('premium');
-  // Mensaje emergente al tocar una función bloqueada.
-  protected readonly lockNotice = signal<string | null>(null);
+  // Precios de planes (del backend), para mostrarlos en el popup del candado.
+  protected readonly plansInfo = signal<Plan[]>([]);
+  // Popup del candado: opciones de mejora disponibles (vacío = cerrado).
+  protected readonly upgradeChoices = signal<UpgradeChoice[]>([]);
 
   private invitationId = '';
 
@@ -199,6 +211,12 @@ export class Editor implements OnInit {
       return;
     }
     this.invitationId = id;
+
+    // Carga los precios de planes para el popup del candado.
+    this.service.getPlans().subscribe({
+      next: (plans) => this.plansInfo.set(plans),
+      error: () => this.plansInfo.set([]),
+    });
 
     this.service.getById(id).subscribe({
       next: (inv) => {
@@ -716,10 +734,15 @@ export class Editor implements OnInit {
   // Lista de planes para el selector del editor.
   protected readonly planOptions = PLAN_ORDER.map((id) => ({ id, name: PLAN_NAMES[id] }));
 
+  // Nombre legible de un plan.
+  protected planName(id: PlanId): string {
+    return PLAN_NAMES[id];
+  }
+
   // Cambia el plan elegido en el editor y guarda la preferencia.
   protected setPlan(plan: PlanId): void {
     this.selectedPlan.set(plan);
-    this.lockNotice.set(null);
+    this.upgradeChoices.set([]);
     this.save();
   }
 
@@ -728,23 +751,45 @@ export class Editor implements OnInit {
     return !planHasFeature(this.selectedPlan(), feature);
   }
 
-  // Al tocar una función bloqueada: muestra aviso de que requiere subir de plan
-  // y que el desbloqueo se confirma al completar el pago.
+  // Precio (en centavos) de un plan, desde la info del backend.
+  private priceOf(planId: PlanId): number {
+    return this.plansInfo().find((p) => p.id === planId)?.priceCents ?? 0;
+  }
+
+  // Al tocar una función bloqueada: abre el popup con las opciones de mejora
+  // (planes que la incluyen), cada uno con su precio y lo que agrega respecto
+  // al plan actual.
   protected showLock(feature: FeatureKey): void {
-    const plan = minPlanFor(feature);
-    this.lockNotice.set(
-      `Esta función está disponible en el plan ${PLAN_NAMES[plan]}. ` +
-        `Sube de plan para usarla; se desbloqueará al completar el pago en la publicación.`,
-    );
+    const current = this.selectedPlan();
+    const options = upgradeOptionsFor(current, feature).map((planId) => ({
+      id: planId,
+      name: PLAN_NAMES[planId],
+      priceCents: this.priceOf(planId),
+      added: featuresAddedBy(planId, current).map((key) => ({
+        key,
+        label: FEATURE_LABELS[key],
+      })),
+    }));
+    this.upgradeChoices.set(options);
   }
 
-  // Sube al plan mínimo que incluye la función (desde el aviso del candado).
-  protected upgradeTo(feature: FeatureKey): void {
-    this.setPlan(minPlanFor(feature));
+  // Confirma la elección de un plan desde el popup: lo aplica y lo guarda.
+  protected chooseUpgrade(planId: PlanId): void {
+    this.setPlan(planId);
   }
 
-  protected dismissLock(): void {
-    this.lockNotice.set(null);
+  // Cierra el popup sin cambiar de plan.
+  protected closeUpgrade(): void {
+    this.upgradeChoices.set([]);
+  }
+
+  // Precio formateado en pesos (desde centavos).
+  protected formatPrice(cents: number): string {
+    return (cents / 100).toLocaleString('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+      minimumFractionDigits: 0,
+    });
   }
 
   // Guarda y lleva a la pantalla de selección de plan, donde el cliente
