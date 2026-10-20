@@ -3,6 +3,7 @@ import {
   ArrayMaxSize,
   IsArray,
   IsBoolean,
+  IsIn,
   IsNumber,
   IsObject,
   IsOptional,
@@ -365,6 +366,12 @@ export class UpdateInvitationDto {
   @IsString()
   @MaxLength(160)
   title?: string;
+
+  // Plan elegido en el editor (esencial | premium | platinum). Opcional.
+  @IsOptional()
+  @IsString()
+  @IsIn(['esencial', 'premium', 'platinum'], { message: 'Plan no válido' })
+  plan?: string;
 
   @IsOptional()
   @ValidateNested()

@@ -79,6 +79,9 @@ let InvitationsService = class InvitationsService {
         if (dto.customization) {
             invitation.customization = { ...invitation.customization, ...dto.customization };
         }
+        if (dto.plan !== undefined) {
+            invitation.plan = dto.plan;
+        }
         await this.events.save(invitation.event);
         return this.invitations.save(invitation);
     }

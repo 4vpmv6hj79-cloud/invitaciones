@@ -393,6 +393,12 @@ __decorate([
 ], UpdateInvitationDto.prototype, "title", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsIn)(['esencial', 'premium', 'platinum'], { message: 'Plan no válido' }),
+    __metadata("design:type", String)
+], UpdateInvitationDto.prototype, "plan", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.ValidateNested)(),
     (0, class_transformer_1.Type)(() => EventDataDto),
     __metadata("design:type", EventDataDto)

@@ -909,3 +909,129 @@
     font-size: 0.9rem;
   }
 }
+
+/* ---- Selector de plan y bloqueo de funciones (Fase 2) ---- */
+.plan-switch {
+  margin: 0.75rem 0 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border, #e5e0d4);
+  border-radius: 10px;
+  background: var(--color-surface-2, #f5f2ee);
+
+  .plan-switch-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-muted, #6b6350);
+    margin-bottom: 0.4rem;
+  }
+
+  .plan-switch-options {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .plan-opt {
+    flex: 1;
+    min-width: 90px;
+    padding: 0.5rem 0.6rem;
+    border: 1.5px solid var(--color-border, #d9d2c4);
+    background: #fff;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-ink, #333);
+    transition: all 0.15s ease;
+
+    &.active {
+      border-color: var(--color-accent, #1c92b5);
+      background: var(--color-accent, #1c92b5);
+      color: #fff;
+    }
+  }
+}
+
+.lock-notice {
+  margin: 0 0 1rem;
+  padding: 0.75rem;
+  border-radius: 10px;
+  background: #fff6e5;
+  border: 1px solid #f0d9a8;
+
+  p {
+    margin: 0 0 0.5rem;
+    font-size: 0.85rem;
+    color: #6b5a2a;
+  }
+
+  .lock-dismiss {
+    padding: 0.35rem 0.9rem;
+    border: none;
+    border-radius: 999px;
+    background: var(--color-accent, #1c92b5);
+    color: #fff;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+}
+
+/* Encabezado de sección con candado. */
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .lock-badge {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+  }
+}
+
+/* Envoltura de sección bloqueable: atenúa el contenido y pone overlay. */
+.locked-wrap {
+  position: relative;
+
+  &.is-locked {
+    > *:not(.lock-overlay) {
+      opacity: 0.45;
+      pointer-events: none;
+      user-select: none;
+      filter: grayscale(0.3);
+    }
+  }
+
+  .lock-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border: 1px dashed var(--color-accent, #1c92b5);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.55);
+    color: var(--color-accent-strong, #136aa3);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+}
+
+.lock-inline {
+  border: none;
+  background: transparent;
+  color: var(--color-accent, #1c92b5);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.2rem 0;
+  text-align: left;
+}

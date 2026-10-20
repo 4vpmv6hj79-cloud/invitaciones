@@ -69,6 +69,7 @@ export declare class EventDataDto {
 }
 export declare class UpdateInvitationDto {
     title?: string;
+    plan?: string;
     eventData?: EventDataDto;
     customization?: Record<string, unknown>;
 }

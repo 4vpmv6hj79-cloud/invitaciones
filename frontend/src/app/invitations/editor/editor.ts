@@ -22,6 +22,14 @@ import { TemplateTheme } from '../../catalog/template.model';
 import { groupFont, groupScale, TypoGroup } from '../typography.util';
 import { groupRecommendations, RecommendationGroup } from '../recommendations.util';
 import { normalizeUrl } from '../url.util';
+import { PlanId } from '../invitation.model';
+import {
+  FeatureKey,
+  PLAN_NAMES,
+  PLAN_ORDER,
+  planHasFeature,
+  minPlanFor,
+} from '../plan-features';
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error';
 type PreviewMode = 'mobile' | 'desktop';
@@ -83,6 +91,11 @@ export class Editor implements OnInit {
   // Mesas de regalo / tiendas.
   protected readonly giftRegistries = signal<GiftRegistryItem[]>([]);
   protected readonly REGISTRY_MAX = 12;
+
+  // Plan elegido en el editor (preferencia; el cobro/desbloqueo real es al pagar).
+  protected readonly selectedPlan = signal<PlanId>('premium');
+  // Mensaje emergente al tocar una función bloqueada.
+  protected readonly lockNotice = signal<string | null>(null);
 
   private invitationId = '';
 
@@ -266,6 +279,8 @@ export class Editor implements OnInit {
     this.lodging.set(Array.isArray(d.lodging) ? [...d.lodging] : []);
     this.recommendations.set(Array.isArray(d.recommendations) ? [...d.recommendations] : []);
     this.giftRegistries.set(Array.isArray(d.giftRegistries) ? [...d.giftRegistries] : []);
+    // Plan guardado (preferencia). Si no hay, arranca en Premium (el más elegido).
+    this.selectedPlan.set(inv.plan ?? 'premium');
     this.value.set(this.form.getRawValue());
   }
 
@@ -285,6 +300,7 @@ export class Editor implements OnInit {
     const sameLoc = v.religiousEnabled && v.religiousSameLocation;
     const payload: UpdateInvitationPayload = {
       title: v.title,
+      plan: this.selectedPlan(),
       eventData: {
         coupleOrHonoree: v.coupleOrHonoree,
         message: v.message,
@@ -693,6 +709,42 @@ export class Editor implements OnInit {
   // ¿El usuario autenticado es administrador?
   protected isAdmin(): boolean {
     return this.auth.user()?.role === 'admin';
+  }
+
+  // --- Planes y bloqueo de funciones (Fase 2) ---
+
+  // Lista de planes para el selector del editor.
+  protected readonly planOptions = PLAN_ORDER.map((id) => ({ id, name: PLAN_NAMES[id] }));
+
+  // Cambia el plan elegido en el editor y guarda la preferencia.
+  protected setPlan(plan: PlanId): void {
+    this.selectedPlan.set(plan);
+    this.lockNotice.set(null);
+    this.save();
+  }
+
+  // ¿La función está bloqueada para el plan actualmente elegido?
+  protected isLocked(feature: FeatureKey): boolean {
+    return !planHasFeature(this.selectedPlan(), feature);
+  }
+
+  // Al tocar una función bloqueada: muestra aviso de que requiere subir de plan
+  // y que el desbloqueo se confirma al completar el pago.
+  protected showLock(feature: FeatureKey): void {
+    const plan = minPlanFor(feature);
+    this.lockNotice.set(
+      `Esta función está disponible en el plan ${PLAN_NAMES[plan]}. ` +
+        `Sube de plan para usarla; se desbloqueará al completar el pago en la publicación.`,
+    );
+  }
+
+  // Sube al plan mínimo que incluye la función (desde el aviso del candado).
+  protected upgradeTo(feature: FeatureKey): void {
+    this.setPlan(minPlanFor(feature));
+  }
+
+  protected dismissLock(): void {
+    this.lockNotice.set(null);
   }
 
   // Guarda y lleva a la pantalla de selección de plan, donde el cliente

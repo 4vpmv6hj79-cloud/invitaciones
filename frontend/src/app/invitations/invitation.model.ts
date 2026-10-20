@@ -122,6 +122,7 @@ export interface Invitation {
   customization: InvitationCustomization;
   status: 'draft' | 'published';
   ticketsEnabled: boolean;
+  plan?: PlanId | null;
   publicToken: string | null;
   publishedAt: string | null;
   expiresAt: string | null;
@@ -149,4 +150,5 @@ export interface UpdateInvitationPayload {
   title?: string;
   eventData?: EventData;
   customization?: InvitationCustomization;
+  plan?: PlanId;
 }

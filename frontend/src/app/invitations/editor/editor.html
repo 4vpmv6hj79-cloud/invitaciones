@@ -18,6 +18,29 @@
         </span>
       </div>
 
+      <!-- Selector de plan: define qué funciones están disponibles/bloqueadas. -->
+      <div class="plan-switch">
+        <span class="plan-switch-label">Tu plan</span>
+        <div class="plan-switch-options">
+          @for (p of planOptions; track p.id) {
+            <button type="button" class="plan-opt" [class.active]="selectedPlan() === p.id"
+              (click)="setPlan(p.id)">{{ p.name }}</button>
+          }
+        </div>
+        <small class="help">
+          Elige el plan para desbloquear funciones. El cobro y el desbloqueo definitivo
+          se realizan al completar el pago en la publicación.
+        </small>
+      </div>
+
+      <!-- Aviso emergente al tocar una función bloqueada. -->
+      @if (lockNotice()) {
+        <div class="lock-notice">
+          <p>{{ lockNotice() }}</p>
+          <button type="button" class="lock-dismiss" (click)="dismissLock()">Entendido</button>
+        </div>
+      }
+
       <h2>Datos del evento</h2>
 
       <div class="field">
@@ -169,15 +192,22 @@
         <label for="rsvpMode">Confirmación de asistencia</label>
         <select id="rsvpMode" formControlName="rsvpMode">
           <option value="abierto">Preguntar cuántos asistirán</option>
-          <option value="cerrado">Confirmar con un número fijo de acompañantes</option>
+          <option value="cerrado" [disabled]="isLocked('guestPasses')">
+            Confirmar con un número fijo de acompañantes{{ isLocked('guestPasses') ? ' (plan superior)' : '' }}
+          </option>
         </select>
         <small class="help">
           "Abierto": cada invitado elige cuántas personas asistirán.
           "Cerrado": el invitado solo confirma la cantidad que tú defines.
+          @if (isLocked('guestPasses')) {
+            <br /><button type="button" class="lock-inline" (click)="showLock('guestPasses')">
+              🔒 Los pases y cupos por invitado requieren un plan superior
+            </button>
+          }
         </small>
       </div>
 
-      @if (value().rsvpMode === 'cerrado') {
+      @if (value().rsvpMode === 'cerrado' && !isLocked('guestPasses')) {
         <div class="field">
           <label for="rsvpCompanions">Acompañantes por invitado (además del invitado)</label>
           <input id="rsvpCompanions" type="number" min="0" max="20"
@@ -188,8 +218,17 @@
         </div>
       }
 
-      <h2>Evento religioso</h2>
+      <h2 class="sec-head">
+        Evento religioso
+        @if (isLocked('religious')) { <button type="button" class="lock-badge" (click)="showLock('religious')">🔒</button> }
+      </h2>
 
+      <div class="locked-wrap" [class.is-locked]="isLocked('religious')">
+      @if (isLocked('religious')) {
+        <button type="button" class="lock-overlay" (click)="showLock('religious')">
+          🔒 Disponible en un plan superior
+        </button>
+      }
       <label class="check-field">
         <input type="checkbox" formControlName="religiousEnabled" />
         <span>¿Tu evento contará con un evento religioso?</span>
@@ -225,6 +264,7 @@
           </div>
         }
       }
+      </div>
 
       <h2>Código de vestimenta</h2>
 
@@ -273,45 +313,65 @@
         }
       </div>
 
-      <h2>Música</h2>
+      <h2 class="sec-head">
+        Música
+        @if (isLocked('music')) { <button type="button" class="lock-badge" (click)="showLock('music')">🔒</button> }
+      </h2>
 
-      <div class="field">
-        <label for="musicUrl">Música de fondo (enlace de YouTube)</label>
-        <input id="musicUrl" type="url" formControlName="musicUrl"
-          placeholder="https://www.youtube.com/watch?v=..." />
-        <small class="help">
-          Pega el enlace de YouTube. En la invitación, el invitado verá un botón de música para
-          reproducirla (los navegadores no permiten que suene sola al abrir).
-        </small>
+      <div class="locked-wrap" [class.is-locked]="isLocked('music')">
+        @if (isLocked('music')) {
+          <button type="button" class="lock-overlay" (click)="showLock('music')">
+            🔒 Disponible en un plan superior
+          </button>
+        }
+        <div class="field">
+          <label for="musicUrl">Música de fondo (enlace de YouTube)</label>
+          <input id="musicUrl" type="url" formControlName="musicUrl"
+            placeholder="https://www.youtube.com/watch?v=..." />
+          <small class="help">
+            Pega el enlace de YouTube. En la invitación, el invitado verá un botón de música para
+            reproducirla (los navegadores no permiten que suene sola al abrir).
+          </small>
+        </div>
       </div>
 
-      <h2>Imágenes entre secciones</h2>
+      <h2 class="sec-head">
+        Imágenes entre secciones
+        @if (isLocked('sectionImages')) { <button type="button" class="lock-badge" (click)="showLock('sectionImages')">🔒</button> }
+      </h2>
 
-      <div class="field">
-        <label>Imágenes decorativas ({{ sectionImages().length }}/{{ SECTION_MAX }})</label>
-        @if (sectionImages().length > 0) {
-          <div class="gallery-grid">
-            @for (img of sectionImages(); track $index) {
-              <div class="gallery-thumb">
-                <img [src]="sectionSrc(img)" alt="Imagen decorativa" />
-                <button type="button" class="gallery-remove" (click)="removeSectionAt($index)"
-                  aria-label="Quitar imagen">✕</button>
-              </div>
-            }
-          </div>
+      <div class="locked-wrap" [class.is-locked]="isLocked('sectionImages')">
+        @if (isLocked('sectionImages')) {
+          <button type="button" class="lock-overlay" (click)="showLock('sectionImages')">
+            🔒 Disponible en un plan superior
+          </button>
         }
-        <div class="gallery-add">
-          <input type="url" [(ngModel)]="newSectionUrl" [ngModelOptions]="{ standalone: true }"
-            placeholder="Pega la URL de una imagen" (keyup.enter)="addSectionUrl()" />
-          <button type="button" (click)="addSectionUrl()">Agregar</button>
+        <div class="field">
+          <label>Imágenes decorativas ({{ sectionImages().length }}/{{ SECTION_MAX }})</label>
+          @if (sectionImages().length > 0) {
+            <div class="gallery-grid">
+              @for (img of sectionImages(); track $index) {
+                <div class="gallery-thumb">
+                  <img [src]="sectionSrc(img)" alt="Imagen decorativa" />
+                  <button type="button" class="gallery-remove" (click)="removeSectionAt($index)"
+                    aria-label="Quitar imagen">✕</button>
+                </div>
+              }
+            </div>
+          }
+          <div class="gallery-add">
+            <input type="url" [(ngModel)]="newSectionUrl" [ngModelOptions]="{ standalone: true }"
+              placeholder="Pega la URL de una imagen" (keyup.enter)="addSectionUrl()" />
+            <button type="button" (click)="addSectionUrl()">Agregar</button>
+          </div>
+          <label class="cover-upload">
+            {{ sectionUploading() ? 'Subiendo…' : 'o subir una imagen' }}
+            <input type="file" accept="image/*" (change)="onSectionFile($event)" hidden
+              [disabled]="sectionUploading()" />
+          </label>
+          <small class="help">Se mostrarán a lo ancho, intercaladas entre las secciones de la invitación.</small>
+          @if (sectionError()) { <small class="help help--error">{{ sectionError() }}</small> }
         </div>
-        <label class="cover-upload">
-          {{ sectionUploading() ? 'Subiendo…' : 'o subir una imagen' }}
-          <input type="file" accept="image/*" (change)="onSectionFile($event)" hidden
-            [disabled]="sectionUploading()" />
-        </label>
-        <small class="help">Se mostrarán a lo ancho, intercaladas entre las secciones de la invitación.</small>
-        @if (sectionError()) { <small class="help help--error">{{ sectionError() }}</small> }
       </div>
 
       <h2>Mesa de regalos</h2>
@@ -374,112 +434,152 @@
           [disabled]="giftRegistries().length >= REGISTRY_MAX">+ Agregar tienda</button>
       </div>
 
-      <h2>Padres y padrinos</h2>
+      <h2 class="sec-head">
+        Padres y padrinos
+        @if (isLocked('parents')) { <button type="button" class="lock-badge" (click)="showLock('parents')">🔒</button> }
+      </h2>
 
-      <div class="field">
-        <label for="parentsTitle">Título de la sección</label>
-        <input id="parentsTitle" type="text" formControlName="parentsTitle"
-          placeholder="Con la bendición de nuestros padres" />
-        <small class="help">Si lo dejas vacío, se mostrará "Con la bendición de nuestros padres".</small>
-      </div>
-      <div class="field">
-        <label>Nombres ({{ parents().length }}/{{ PARENTS_MAX }})</label>
-        @for (p of parents(); track $index) {
-          <div class="list-row">
-            <input type="text" [value]="p.name"
-              (input)="updateParent($index, 'name', $any($event.target).value)"
-              placeholder="Nombre completo" />
-            <label class="list-check">
-              <input type="checkbox" [checked]="p.deceased" (change)="toggleParentDeceased($index)" />
-              <span>✝ Finado</span>
-            </label>
-            <button type="button" class="gallery-remove gallery-remove--inline"
-              (click)="removeParentAt($index)" aria-label="Quitar">✕</button>
-          </div>
+      <div class="locked-wrap" [class.is-locked]="isLocked('parents')">
+        @if (isLocked('parents')) {
+          <button type="button" class="lock-overlay" (click)="showLock('parents')">
+            🔒 Disponible en un plan superior
+          </button>
         }
-        <button type="button" class="add-item" (click)="addParent()"
-          [disabled]="parents().length >= PARENTS_MAX">+ Agregar nombre</button>
-      </div>
-
-      <h2>Hospedaje</h2>
-
-      <div class="field">
-        <label for="lodgingTitle">Título de la sección</label>
-        <input id="lodgingTitle" type="text" formControlName="lodgingTitle" placeholder="Hospedaje" />
-      </div>
-      <div class="field">
-        <label>Hoteles recomendados ({{ lodging().length }}/{{ LODGING_MAX }})</label>
-        @for (l of lodging(); track $index) {
-          <div class="item-card">
-            <div class="item-card-head">
-              <input type="text" [value]="l.name"
-                (input)="updateLodging($index, 'name', $any($event.target).value)"
-                placeholder="Nombre del hotel" />
+        <div class="field">
+          <label for="parentsTitle">Título de la sección</label>
+          <input id="parentsTitle" type="text" formControlName="parentsTitle"
+            placeholder="Con la bendición de nuestros padres" />
+          <small class="help">Si lo dejas vacío, se mostrará "Con la bendición de nuestros padres".</small>
+        </div>
+        <div class="field">
+          <label>Nombres ({{ parents().length }}/{{ PARENTS_MAX }})</label>
+          @for (p of parents(); track $index) {
+            <div class="list-row">
+              <input type="text" [value]="p.name"
+                (input)="updateParent($index, 'name', $any($event.target).value)"
+                placeholder="Nombre completo" />
+              <label class="list-check">
+                <input type="checkbox" [checked]="p.deceased" (change)="toggleParentDeceased($index)" />
+                <span>✝ Finado</span>
+              </label>
               <button type="button" class="gallery-remove gallery-remove--inline"
-                (click)="removeLodgingAt($index)" aria-label="Quitar">✕</button>
+                (click)="removeParentAt($index)" aria-label="Quitar">✕</button>
             </div>
-            <input type="text" [value]="l.note || ''"
-              (input)="updateLodging($index, 'note', $any($event.target).value)"
-              placeholder="Nota (ej. En el centro de la ciudad)" />
-            <input type="text" [value]="l.distance || ''"
-              (input)="updateLodging($index, 'distance', $any($event.target).value)"
-              placeholder="Distancia (ej. A 5 min del lugar)" />
-            <input type="text" [value]="l.reservationCode || ''"
-              (input)="updateLodging($index, 'reservationCode', $any($event.target).value)"
-              placeholder="Código de reservación (opcional)" />
-            <input type="url" [value]="l.mapsUrl || ''"
-              (input)="updateLodging($index, 'mapsUrl', $any($event.target).value)"
-              placeholder="Enlace de ubicación (opcional)" />
-          </div>
+          }
+          <button type="button" class="add-item" (click)="addParent()"
+            [disabled]="parents().length >= PARENTS_MAX">+ Agregar nombre</button>
+        </div>
+      </div>
+
+      <h2 class="sec-head">
+        Hospedaje
+        @if (isLocked('lodging')) { <button type="button" class="lock-badge" (click)="showLock('lodging')">🔒</button> }
+      </h2>
+
+      <div class="locked-wrap" [class.is-locked]="isLocked('lodging')">
+        @if (isLocked('lodging')) {
+          <button type="button" class="lock-overlay" (click)="showLock('lodging')">
+            🔒 Disponible en un plan superior
+          </button>
         }
-        <button type="button" class="add-item" (click)="addLodging()"
-          [disabled]="lodging().length >= LODGING_MAX">+ Agregar hotel</button>
+        <div class="field">
+          <label for="lodgingTitle">Título de la sección</label>
+          <input id="lodgingTitle" type="text" formControlName="lodgingTitle" placeholder="Hospedaje" />
+        </div>
+        <div class="field">
+          <label>Hoteles recomendados ({{ lodging().length }}/{{ LODGING_MAX }})</label>
+          @for (l of lodging(); track $index) {
+            <div class="item-card">
+              <div class="item-card-head">
+                <input type="text" [value]="l.name"
+                  (input)="updateLodging($index, 'name', $any($event.target).value)"
+                  placeholder="Nombre del hotel" />
+                <button type="button" class="gallery-remove gallery-remove--inline"
+                  (click)="removeLodgingAt($index)" aria-label="Quitar">✕</button>
+              </div>
+              <input type="text" [value]="l.note || ''"
+                (input)="updateLodging($index, 'note', $any($event.target).value)"
+                placeholder="Nota (ej. En el centro de la ciudad)" />
+              <input type="text" [value]="l.distance || ''"
+                (input)="updateLodging($index, 'distance', $any($event.target).value)"
+                placeholder="Distancia (ej. A 5 min del lugar)" />
+              <input type="text" [value]="l.reservationCode || ''"
+                (input)="updateLodging($index, 'reservationCode', $any($event.target).value)"
+                placeholder="Código de reservación (opcional)" />
+              <input type="url" [value]="l.mapsUrl || ''"
+                (input)="updateLodging($index, 'mapsUrl', $any($event.target).value)"
+                placeholder="Enlace de ubicación (opcional)" />
+            </div>
+          }
+          <button type="button" class="add-item" (click)="addLodging()"
+            [disabled]="lodging().length >= LODGING_MAX">+ Agregar hotel</button>
+        </div>
       </div>
 
-      <h2>Recomendaciones</h2>
+      <h2 class="sec-head">
+        Recomendaciones
+        @if (isLocked('recommendations')) { <button type="button" class="lock-badge" (click)="showLock('recommendations')">🔒</button> }
+      </h2>
 
-      <div class="field">
-        <label for="recommendationsTitle">Título de la sección</label>
-        <input id="recommendationsTitle" type="text" formControlName="recommendationsTitle"
-          placeholder="Recomendaciones" />
-      </div>
-      <div class="field">
-        <label for="recommendationsNote">Texto introductorio (opcional)</label>
-        <textarea id="recommendationsNote" formControlName="recommendationsNote" rows="2"
-          placeholder="Ej. Nuestros lugares favoritos para cada momento del día."></textarea>
-      </div>
-      <div class="field">
-        <label>Lugares ({{ recommendations().length }}/{{ RECS_MAX }})</label>
-        <small class="help">La "categoría" agrupa los lugares (ej. Comida, Cena, Taquerías).</small>
-        @for (r of recommendations(); track $index) {
-          <div class="list-row">
-            <input type="text" class="rec-cat" [value]="r.category"
-              (input)="updateRecommendation($index, 'category', $any($event.target).value)"
-              placeholder="Categoría" />
-            <input type="text" [value]="r.name"
-              (input)="updateRecommendation($index, 'name', $any($event.target).value)"
-              placeholder="Nombre del lugar" />
-            <input type="url" [value]="r.mapsUrl || ''"
-              (input)="updateRecommendation($index, 'mapsUrl', $any($event.target).value)"
-              placeholder="Ubicación (opcional)" />
-            <button type="button" class="gallery-remove gallery-remove--inline"
-              (click)="removeRecommendationAt($index)" aria-label="Quitar">✕</button>
-          </div>
+      <div class="locked-wrap" [class.is-locked]="isLocked('recommendations')">
+        @if (isLocked('recommendations')) {
+          <button type="button" class="lock-overlay" (click)="showLock('recommendations')">
+            🔒 Disponible en un plan superior
+          </button>
         }
-        <button type="button" class="add-item" (click)="addRecommendation()"
-          [disabled]="recommendations().length >= RECS_MAX">+ Agregar lugar</button>
+        <div class="field">
+          <label for="recommendationsTitle">Título de la sección</label>
+          <input id="recommendationsTitle" type="text" formControlName="recommendationsTitle"
+            placeholder="Recomendaciones" />
+        </div>
+        <div class="field">
+          <label for="recommendationsNote">Texto introductorio (opcional)</label>
+          <textarea id="recommendationsNote" formControlName="recommendationsNote" rows="2"
+            placeholder="Ej. Nuestros lugares favoritos para cada momento del día."></textarea>
+        </div>
+        <div class="field">
+          <label>Lugares ({{ recommendations().length }}/{{ RECS_MAX }})</label>
+          <small class="help">La "categoría" agrupa los lugares (ej. Comida, Cena, Taquerías).</small>
+          @for (r of recommendations(); track $index) {
+            <div class="list-row">
+              <input type="text" class="rec-cat" [value]="r.category"
+                (input)="updateRecommendation($index, 'category', $any($event.target).value)"
+                placeholder="Categoría" />
+              <input type="text" [value]="r.name"
+                (input)="updateRecommendation($index, 'name', $any($event.target).value)"
+                placeholder="Nombre del lugar" />
+              <input type="url" [value]="r.mapsUrl || ''"
+                (input)="updateRecommendation($index, 'mapsUrl', $any($event.target).value)"
+                placeholder="Ubicación (opcional)" />
+              <button type="button" class="gallery-remove gallery-remove--inline"
+                (click)="removeRecommendationAt($index)" aria-label="Quitar">✕</button>
+            </div>
+          }
+          <button type="button" class="add-item" (click)="addRecommendation()"
+            [disabled]="recommendations().length >= RECS_MAX">+ Agregar lugar</button>
+        </div>
       </div>
 
-      <h2>Clima</h2>
+      <h2 class="sec-head">
+        Clima
+        @if (isLocked('weather')) { <button type="button" class="lock-badge" (click)="showLock('weather')">🔒</button> }
+      </h2>
 
-      <div class="field">
-        <label for="weatherNote">Nota sobre el clima (opcional)</label>
-        <textarea id="weatherNote" formControlName="weatherNote" rows="3"
-          placeholder="Ej. Día templado de 23 a 24 °C y noche de 5 °C. Te recomendamos llevar algo abrigador."></textarea>
-        <small class="help">
-          Texto libre que tú defines. (El pronóstico real no es confiable con meses de anticipación,
-          por eso se escribe a mano.)
-        </small>
+      <div class="locked-wrap" [class.is-locked]="isLocked('weather')">
+        @if (isLocked('weather')) {
+          <button type="button" class="lock-overlay" (click)="showLock('weather')">
+            🔒 Disponible en un plan superior
+          </button>
+        }
+        <div class="field">
+          <label for="weatherNote">Nota sobre el clima (opcional)</label>
+          <textarea id="weatherNote" formControlName="weatherNote" rows="3"
+            placeholder="Ej. Día templado de 23 a 24 °C y noche de 5 °C. Te recomendamos llevar algo abrigador."></textarea>
+          <small class="help">
+            Texto libre que tú defines. (El pronóstico real no es confiable con meses de anticipación,
+            por eso se escribe a mano.)
+          </small>
+        </div>
       </div>
 
       <h2>Diseño</h2>

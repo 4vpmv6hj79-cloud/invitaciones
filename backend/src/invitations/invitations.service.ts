@@ -90,6 +90,11 @@ export class InvitationsService {
     if (dto.customization) {
       invitation.customization = { ...invitation.customization, ...dto.customization };
     }
+    // Plan elegido en el editor (preferencia del cliente). El cobro/desbloqueo
+    // definitivo ocurre al publicar y pagar; esto solo guarda su elección.
+    if (dto.plan !== undefined) {
+      invitation.plan = dto.plan;
+    }
 
     // event tiene cascade: se guarda junto con la invitación.
     await this.events.save(invitation.event);
