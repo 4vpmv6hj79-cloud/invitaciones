@@ -23,7 +23,7 @@ let OrdersController = class OrdersController {
         this.service = service;
     }
     create(dto, user) {
-        return this.service.createCheckout(dto.invitationId, user.id);
+        return this.service.createCheckout(dto.invitationId, user.id, dto.plan);
     }
     createDesign(dto, user) {
         return this.service.createDesignCheckout(dto.designRequestId, user.id);

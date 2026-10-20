@@ -22,7 +22,7 @@ export class OrdersController {
   // Inicia el pago. POST /orders (solo el dueño de la invitación)
   @Post()
   create(@Body() dto: CreateOrderDto, @CurrentUser() user: { id: string }) {
-    return this.service.createCheckout(dto.invitationId, user.id);
+    return this.service.createCheckout(dto.invitationId, user.id, dto.plan);
   }
 
   // Inicia el pago de una solicitud de diseño. POST /orders/design

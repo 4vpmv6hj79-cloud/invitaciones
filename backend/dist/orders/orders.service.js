@@ -26,6 +26,7 @@ const order_entity_1 = require("./order.entity");
 const invitation_entity_1 = require("../invitations/invitation.entity");
 const invitations_service_1 = require("../invitations/invitations.service");
 const design_service_1 = require("../design/design.service");
+const plans_1 = require("../invitations/plans");
 let OrdersService = OrdersService_1 = class OrdersService {
     constructor(orders, invitations, invitationsService, designService, config) {
         this.orders = orders;
@@ -43,7 +44,7 @@ let OrdersService = OrdersService_1 = class OrdersService {
     get validityDays() {
         return Number(this.config.get('PUBLISH_VALIDITY_DAYS') ?? 180);
     }
-    async createCheckout(invitationId, ownerId) {
+    async createCheckout(invitationId, ownerId, planId) {
         const invitation = await this.invitations.findOne({ where: { id: invitationId } });
         if (!invitation) {
             throw new common_1.NotFoundException('Invitación no encontrada');
@@ -51,11 +52,14 @@ let OrdersService = OrdersService_1 = class OrdersService {
         if (invitation.ownerId && invitation.ownerId !== ownerId) {
             throw new common_1.ForbiddenException('No tienes acceso a esta invitación');
         }
+        const plan = (0, plans_1.getPlan)(planId);
+        invitation.plan = plan.id;
+        await this.invitations.save(invitation);
         const useStripe = this.stripe !== null;
         const order = await this.orders.save(this.orders.create({
             kind: order_entity_1.OrderKind.InvitationPublish,
             invitationId,
-            amount: this.priceCents,
+            amount: plan.priceCents,
             currency: 'MXN',
             status: order_entity_1.OrderStatus.Pending,
             provider: useStripe ? order_entity_1.PaymentProvider.Stripe : order_entity_1.PaymentProvider.Simulated,
@@ -71,8 +75,8 @@ let OrdersService = OrdersService_1 = class OrdersService {
                 {
                     price_data: {
                         currency: 'mxn',
-                        product_data: { name: 'Publicación de invitación digital' },
-                        unit_amount: this.priceCents,
+                        product_data: { name: `Publicación de invitación digital · Plan ${plan.name}` },
+                        unit_amount: plan.priceCents,
                     },
                     quantity: 1,
                 },

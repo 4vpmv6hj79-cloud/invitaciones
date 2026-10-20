@@ -20,9 +20,9 @@ export class OrderService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiBaseUrl}/orders`;
 
-  // Inicia el pago de la publicación de una invitación.
-  createCheckout(invitationId: string): Observable<CheckoutResult> {
-    return this.http.post<CheckoutResult>(this.baseUrl, { invitationId });
+  // Inicia el pago de la publicación de una invitación, con el plan elegido.
+  createCheckout(invitationId: string, plan?: string): Observable<CheckoutResult> {
+    return this.http.post<CheckoutResult>(this.baseUrl, { invitationId, plan });
   }
 
   getStatus(orderId: string): Observable<OrderStatus> {

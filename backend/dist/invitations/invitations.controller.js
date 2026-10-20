@@ -26,6 +26,7 @@ const create_invitation_dto_1 = require("./dto/create-invitation.dto");
 const update_invitation_dto_1 = require("./dto/update-invitation.dto");
 const decorators_1 = require("../auth/decorators");
 const user_entity_1 = require("../auth/user.entity");
+const plans_1 = require("./plans");
 const imageUpload = {
     storage: (0, multer_1.memoryStorage)(),
     limits: { fileSize: 5 * 1024 * 1024 },
@@ -43,6 +44,9 @@ let InvitationsController = class InvitationsController {
         this.service = service;
         this.pdf = pdf;
         this.cloudinary = cloudinary;
+    }
+    listPlans() {
+        return [plans_1.PLANS.esencial, plans_1.PLANS.premium, plans_1.PLANS.platinum];
     }
     create(dto, user) {
         return this.service.createDraft(dto, user.id);
@@ -91,6 +95,13 @@ let InvitationsController = class InvitationsController {
     }
 };
 exports.InvitationsController = InvitationsController;
+__decorate([
+    (0, decorators_1.Public)(),
+    (0, common_1.Get)('plans'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], InvitationsController.prototype, "listPlans", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),

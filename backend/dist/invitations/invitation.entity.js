@@ -43,6 +43,10 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Invitation.prototype, "ticketsEnabled", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ name: 'plan', type: 'varchar', length: 20, nullable: true }),
+    __metadata("design:type", Object)
+], Invitation.prototype, "plan", void 0);
+__decorate([
     (0, typeorm_1.OneToOne)(() => event_entity_1.Event, (event) => event.invitation, {
         cascade: true,
         eager: true,

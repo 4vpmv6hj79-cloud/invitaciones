@@ -23,8 +23,9 @@ import { PdfService } from './pdf.service';
 import { CloudinaryService } from './cloudinary.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
-import { CurrentUser, Roles } from '../auth/decorators';
+import { CurrentUser, Roles, Public } from '../auth/decorators';
 import { UserRole } from '../auth/user.entity';
+import { PLANS } from './plans';
 
 // Config de Multer: la imagen se mantiene en memoria (buffer) para poder subirla
 // a Cloudinary. Si Cloudinary no está configurado, el controlador la escribe en
@@ -49,6 +50,15 @@ export class InvitationsController {
     private readonly pdf: PdfService,
     private readonly cloudinary: CloudinaryService,
   ) {}
+
+  // Lista pública de planes de publicación (precio y funciones). GET /invitations/plans
+  // Público: el catálogo de precios no requiere sesión.
+  @Public()
+  @Get('plans')
+  listPlans() {
+    // Devuelve los planes como arreglo ordenado para la UI.
+    return [PLANS.esencial, PLANS.premium, PLANS.platinum];
+  }
 
   // Crea un borrador desde una plantilla, propiedad del usuario actual.
   @Post()

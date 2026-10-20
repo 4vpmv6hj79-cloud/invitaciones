@@ -7,6 +7,7 @@ import {
   CreateInvitationPayload,
   Invitation,
   UpdateInvitationPayload,
+  Plan,
 } from './invitation.model';
 
 @Injectable({ providedIn: 'root' })
@@ -39,6 +40,11 @@ export class InvitationService {
       `${this.baseUrl}/${id}/publish`,
       {},
     );
+  }
+
+  // Lista de planes de publicación (precio y funciones). Público.
+  getPlans(): Observable<Plan[]> {
+    return this.http.get<Plan[]>(`${this.baseUrl}/plans`);
   }
 
   // Sube una imagen (portada/galería) a la invitación. Devuelve la URL guardada.

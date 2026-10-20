@@ -13,6 +13,7 @@ import { Order, OrderStatus, OrderKind, PaymentProvider } from './order.entity';
 import { Invitation } from '../invitations/invitation.entity';
 import { InvitationsService } from '../invitations/invitations.service';
 import { DesignService } from '../design/design.service';
+import { getPlan } from '../invitations/plans';
 
 // Resultado de iniciar un pago: a dónde debe ir el usuario a continuación.
 export interface CheckoutResult {
@@ -50,7 +51,12 @@ export class OrdersService {
   }
 
   // Inicia el pago de la publicación de una invitación.
-  async createCheckout(invitationId: string, ownerId: string): Promise<CheckoutResult> {
+  // El precio depende del plan elegido (esencial | premium | platinum).
+  async createCheckout(
+    invitationId: string,
+    ownerId: string,
+    planId?: string,
+  ): Promise<CheckoutResult> {
     const invitation = await this.invitations.findOne({ where: { id: invitationId } });
     if (!invitation) {
       throw new NotFoundException('Invitación no encontrada');
@@ -60,12 +66,18 @@ export class OrdersService {
       throw new ForbiddenException('No tienes acceso a esta invitación');
     }
 
+    // Resuelve el plan y su precio. Guarda el plan elegido en la invitación
+    // para aplicarlo al publicar (tras el pago).
+    const plan = getPlan(planId);
+    invitation.plan = plan.id;
+    await this.invitations.save(invitation);
+
     const useStripe = this.stripe !== null;
     const order = await this.orders.save(
       this.orders.create({
         kind: OrderKind.InvitationPublish,
         invitationId,
-        amount: this.priceCents,
+        amount: plan.priceCents,
         currency: 'MXN',
         status: OrderStatus.Pending,
         provider: useStripe ? PaymentProvider.Stripe : PaymentProvider.Simulated,
@@ -86,8 +98,8 @@ export class OrdersService {
         {
           price_data: {
             currency: 'mxn',
-            product_data: { name: 'Publicación de invitación digital' },
-            unit_amount: this.priceCents,
+            product_data: { name: `Publicación de invitación digital · Plan ${plan.name}` },
+            unit_amount: plan.priceCents,
           },
           quantity: 1,
         },

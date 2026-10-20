@@ -21,7 +21,7 @@ export declare class OrdersService {
     constructor(orders: Repository<Order>, invitations: Repository<Invitation>, invitationsService: InvitationsService, designService: DesignService, config: ConfigService);
     private get priceCents();
     private get validityDays();
-    createCheckout(invitationId: string, ownerId: string): Promise<CheckoutResult>;
+    createCheckout(invitationId: string, ownerId: string, planId?: string): Promise<CheckoutResult>;
     createDesignCheckout(designRequestId: string, userId: string): Promise<CheckoutResult>;
     confirmPaid(orderId: string, paymentRef: string): Promise<Order>;
     findOne(id: string): Promise<Order>;

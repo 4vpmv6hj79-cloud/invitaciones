@@ -10,6 +10,7 @@ export declare class Invitation {
     templateId: string;
     ownerId: string | null;
     ticketsEnabled: boolean;
+    plan: string | null;
     event: Event;
     eventId: string;
     customization: Record<string, unknown>;

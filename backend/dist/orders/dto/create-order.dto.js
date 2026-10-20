@@ -18,4 +18,10 @@ __decorate([
     (0, class_validator_1.IsUUID)('4', { message: 'invitationId no es un identificador válido' }),
     __metadata("design:type", String)
 ], CreateOrderDto.prototype, "invitationId", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsIn)(['esencial', 'premium', 'platinum'], { message: 'Plan no válido' }),
+    __metadata("design:type", String)
+], CreateOrderDto.prototype, "plan", void 0);
 //# sourceMappingURL=create-order.dto.js.map

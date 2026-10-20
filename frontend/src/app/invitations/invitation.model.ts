@@ -129,6 +129,15 @@ export interface Invitation {
   updatedAt: string;
 }
 
+// Plan de publicación (precio y funciones).
+export type PlanId = 'esencial' | 'premium' | 'platinum';
+export interface Plan {
+  id: PlanId;
+  name: string;
+  priceCents: number;
+  features: string[];
+}
+
 // Carga para crear un borrador desde una plantilla.
 export interface CreateInvitationPayload {
   templateId: string;

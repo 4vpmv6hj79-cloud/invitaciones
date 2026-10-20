@@ -1,0 +1,54 @@
+<main class="plan-page">
+  <a class="back" [routerLink]="['/editor', invitationId]">← Volver a editar</a>
+
+  <header class="plan-head">
+    <h1>Elige tu plan</h1>
+    <p>Selecciona el plan con el que quieres publicar tu invitación.</p>
+  </header>
+
+  @if (loading()) {
+    <p class="state">Cargando planes…</p>
+  } @else {
+    <div class="plans">
+      @for (p of plans(); track p.id) {
+        <button
+          type="button"
+          class="plan-card"
+          [class.active]="selected() === p.id"
+          [class.featured]="p.id === 'premium'"
+          (click)="select(p.id)"
+        >
+          @if (p.id === 'premium') {
+            <span class="badge">El más elegido</span>
+          }
+          <h2>{{ p.name }}</h2>
+          <p class="price">{{ price(p.priceCents) }}</p>
+          <ul class="features">
+            @for (f of p.features; track f) {
+              <li>{{ featureLabel(f) }}</li>
+            }
+          </ul>
+          <span class="choose">{{ selected() === p.id ? 'Seleccionado' : 'Elegir' }}</span>
+        </button>
+      }
+    </div>
+
+    @if (error()) {
+      <p class="err">{{ error() }}</p>
+    }
+
+    <button type="button" class="confirm-btn" (click)="confirm()" [disabled]="publishing()">
+      @if (isAdmin()) {
+        {{ publishing() ? 'Publicando…' : 'Publicar y compartir' }}
+      } @else {
+        {{ publishing() ? 'Redirigiendo al pago…' : 'Continuar al pago' }}
+      }
+    </button>
+
+    @if (isAdmin()) {
+      <p class="hint">Como administrador, publicas sin costo.</p>
+    } @else {
+      <p class="hint">Pagas una vez y obtienes el enlace para compartir.</p>
+    }
+  }
+</main>

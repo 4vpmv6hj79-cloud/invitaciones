@@ -40,6 +40,11 @@ export class Invitation {
   @Column({ name: 'tickets_enabled', default: false })
   ticketsEnabled!: boolean;
 
+  // Plan de publicación elegido (esencial | premium | platinum).
+  // Se fija al publicar; nulo mientras es borrador.
+  @Column({ name: 'plan', type: 'varchar', length: 20, nullable: true })
+  plan!: string | null;
+
   // Contenido del evento (relación 1:1).
   @OneToOne(() => Event, (event) => event.invitation, {
     cascade: true,

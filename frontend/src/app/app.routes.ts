@@ -68,6 +68,12 @@ export const routes: Routes = [
       import('./invitations/preview/preview').then((m) => m.InvitationPreview),
   },
   {
+    path: 'publicar/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./invitations/plan-selector/plan-selector').then((m) => m.PlanSelector),
+  },
+  {
     path: 'pago/exito',
     canActivate: [authGuard],
     loadComponent: () =>

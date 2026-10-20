@@ -695,46 +695,14 @@ export class Editor implements OnInit {
     return this.auth.user()?.role === 'admin';
   }
 
-  // Guarda y luego publica la invitación.
-  // Admin: publica directo, sin pago. Resto: pasa por el flujo de pago.
+  // Guarda y lleva a la pantalla de selección de plan, donde el cliente
+  // elige plan y continúa al pago (o, si es admin, publica sin costo).
   publish(): void {
     if (this.publishing()) return;
     this.publishing.set(true);
     this.publishError.set(false);
-
-    // Guarda el estado actual antes de publicar/cobrar.
     this.save();
-
-    // Administrador: publica sin pago y va a la pantalla de compartir
-    // (enlace público, WhatsApp y gestión de invitados), igual que tras un pago.
-    if (this.isAdmin()) {
-      this.service.publishAsAdmin(this.invitationId).subscribe({
-        next: () => {
-          window.location.href = `/pago/exito?invitation=${this.invitationId}`;
-        },
-        error: () => {
-          this.publishing.set(false);
-          this.publishError.set(true);
-        },
-      });
-      return;
-    }
-
-    this.orders.createCheckout(this.invitationId).subscribe({
-      next: (res) => {
-        if (res.checkoutUrl) {
-          // Stripe: redirige a la pasarela.
-          window.location.href = res.checkoutUrl;
-        } else {
-          // Modo simulado: el pago ya quedó confirmado; vamos a la pantalla de éxito.
-          window.location.href = `/pago/exito?order=${res.orderId}`;
-        }
-      },
-      error: () => {
-        this.publishing.set(false);
-        this.publishError.set(true);
-      },
-    });
+    this.router.navigate(['/publicar', this.invitationId]);
   }
 
   // Solo la fecha (larga). La hora se muestra aparte como "Recepción".

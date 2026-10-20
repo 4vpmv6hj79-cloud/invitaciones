@@ -9,6 +9,7 @@ export declare class InvitationsController {
     private readonly pdf;
     private readonly cloudinary;
     constructor(service: InvitationsService, pdf: PdfService, cloudinary: CloudinaryService);
+    listPlans(): import("./plans").PlanDefinition[];
     create(dto: CreateInvitationDto, user: {
         id: string;
     }): Promise<import("./invitation.entity").Invitation>;
