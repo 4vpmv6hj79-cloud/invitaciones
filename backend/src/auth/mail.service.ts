@@ -41,8 +41,16 @@ export class MailService {
         // 465 usa SSL directo (secure: true); 587 usa STARTTLS (secure: false).
         secure: port === 465,
         auth: { user, pass: password },
+        // Tiempos de espera acotados: si el puerto está bloqueado, falla rápido
+        // en vez de colgar la petición. (Render Free suele bloquear el 465;
+        // se recomienda SMTP_PORT=587.)
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 15000,
       });
-      this.logger.log(`Servicio de correo SMTP activo (host: ${host}, remitente: ${this.from}).`);
+      this.logger.log(
+        `Servicio de correo SMTP activo (host: ${host}, puerto: ${port}, remitente: ${this.from}).`,
+      );
     } else {
       this.transporter = null;
       this.logger.warn(

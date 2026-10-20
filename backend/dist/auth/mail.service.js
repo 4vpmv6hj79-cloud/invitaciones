@@ -63,8 +63,11 @@ let MailService = MailService_1 = class MailService {
                 port,
                 secure: port === 465,
                 auth: { user, pass: password },
+                connectionTimeout: 10000,
+                greetingTimeout: 10000,
+                socketTimeout: 15000,
             });
-            this.logger.log(`Servicio de correo SMTP activo (host: ${host}, remitente: ${this.from}).`);
+            this.logger.log(`Servicio de correo SMTP activo (host: ${host}, puerto: ${port}, remitente: ${this.from}).`);
         }
         else {
             this.transporter = null;
