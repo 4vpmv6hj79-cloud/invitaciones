@@ -355,4 +355,18 @@
   color: var(--color-muted);
   font-size: 0.85rem;
   border-top: 1px solid var(--color-border);
+
+  .foot-help {
+    margin: var(--space-2) 0 0;
+
+    a {
+      color: var(--color-accent);
+      text-decoration: none;
+      font-weight: 600;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 }

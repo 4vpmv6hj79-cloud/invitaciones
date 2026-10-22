@@ -88,6 +88,39 @@
   font-size: 0.92rem;
 }
 
+.contact-btn {
+  display: block;
+  width: 100%;
+  margin: var(--space-3) 0;
+  padding: 0.8rem;
+  text-align: center;
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  font-weight: 600;
+
+  &:hover {
+    background: var(--color-accent-strong);
+  }
+}
+
+.contact-mail {
+  font-size: 0.88rem;
+  color: var(--color-muted);
+  text-align: center;
+
+  a {
+    color: var(--color-accent);
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
 button[type='submit'],
 .card button[type='button'] {
   width: 100%;
