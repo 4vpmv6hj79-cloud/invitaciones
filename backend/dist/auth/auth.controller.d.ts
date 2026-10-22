@@ -3,6 +3,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { SecurityQuestionLookupDto, SecurityResetDto } from './dto/security-reset.dto';
 export declare class AuthController {
     private readonly service;
     constructor(service: AuthService);
@@ -13,6 +14,14 @@ export declare class AuthController {
         message: string;
     }>;
     resetPassword(dto: ResetPasswordDto): Promise<{
+        ok: boolean;
+        message: string;
+    }>;
+    securityQuestions(): import("./security-questions").SecurityQuestion[];
+    getSecurityQuestion(dto: SecurityQuestionLookupDto): Promise<{
+        questionId: string | null;
+    }>;
+    securityReset(dto: SecurityResetDto): Promise<{
         ok: boolean;
         message: string;
     }>;

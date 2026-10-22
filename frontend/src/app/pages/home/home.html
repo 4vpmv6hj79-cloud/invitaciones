@@ -7,6 +7,7 @@
     </span>
   </a>
   <div class="topbar-links">
+    <a href="#contacto">Ayuda</a>
     @if (auth.isLoggedIn()) {
       <a routerLink="/mis-invitaciones">Mis invitaciones</a>
       <button type="button" (click)="logout()">Salir</button>
@@ -88,7 +89,7 @@
     <a class="btn btn-primary" routerLink="/catalogo">Explorar catálogo</a>
   </section>
 
-  <footer class="foot">
+  <footer class="foot" id="contacto">
     <span>Erivette Invitaciones</span>
     <p class="foot-help">
       ¿Tienes dudas o necesitas ayuda? Escríbenos a

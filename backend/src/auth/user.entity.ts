@@ -40,6 +40,15 @@ export class User {
   @Column({ name: 'reset_token_expires', type: 'timestamptz', nullable: true })
   resetTokenExpires?: Date | null;
 
+  // --- Pregunta de seguridad (recuperación sin correo) ---
+  // Identificador de la pregunta elegida por el usuario (ej. 'pet', 'city').
+  @Column({ name: 'security_question', type: 'varchar', length: 40, nullable: true })
+  securityQuestion?: string | null;
+
+  // Hash bcrypt de la respuesta (normalizada). Nunca se guarda en claro.
+  @Column({ name: 'security_answer_hash', type: 'varchar', length: 100, nullable: true })
+  securityAnswerHash?: string | null;
+
   @CreateDateColumn()
   createdAt!: Date;
 }

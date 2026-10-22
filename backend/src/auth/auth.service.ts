@@ -14,6 +14,7 @@ import { User, UserRole } from './user.entity';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { MailService } from './mail.service';
+import { isValidQuestionId, normalizeAnswer } from './security-questions';
 
 // Datos públicos del usuario (sin el hash).
 export interface PublicUser {
@@ -45,15 +46,61 @@ export class AuthService {
       throw new ConflictException('Ya existe una cuenta con ese correo');
     }
     const passwordHash = await bcrypt.hash(dto.password, 10);
+
+    // Pregunta de seguridad (opcional por compatibilidad; validada si viene).
+    let securityQuestion: string | null = null;
+    let securityAnswerHash: string | null = null;
+    if (dto.securityQuestion && dto.securityAnswer) {
+      if (!isValidQuestionId(dto.securityQuestion)) {
+        throw new BadRequestException('Pregunta de seguridad no válida');
+      }
+      securityQuestion = dto.securityQuestion;
+      securityAnswerHash = await bcrypt.hash(normalizeAnswer(dto.securityAnswer), 10);
+    }
+
     const user = await this.users.save(
       this.users.create({
         email,
         passwordHash,
         name: dto.name,
         role: UserRole.Organizer,
+        securityQuestion,
+        securityAnswerHash,
       }),
     );
     return this.buildResult(user);
+  }
+
+  // Devuelve la pregunta de seguridad asociada a un correo (para el reset sin correo).
+  // Respuesta genérica si no existe la cuenta o no tiene pregunta configurada,
+  // para no revelar qué correos están registrados.
+  async getSecurityQuestion(emailRaw: string): Promise<{ questionId: string | null }> {
+    const email = emailRaw.toLowerCase().trim();
+    const user = await this.users.findOne({ where: { email } });
+    if (!user || !user.securityQuestion) {
+      return { questionId: null };
+    }
+    return { questionId: user.securityQuestion };
+  }
+
+  // Restablece la contraseña verificando la respuesta de la pregunta de seguridad.
+  async resetWithSecurityAnswer(
+    emailRaw: string,
+    answer: string,
+    newPassword: string,
+  ): Promise<void> {
+    const email = emailRaw.toLowerCase().trim();
+    const user = await this.users.findOne({ where: { email } });
+    // Mensaje genérico para no revelar si el correo existe o tiene pregunta.
+    if (!user || !user.securityQuestion || !user.securityAnswerHash) {
+      throw new BadRequestException('No se pudo verificar la información. Revisa los datos.');
+    }
+    const ok = await bcrypt.compare(normalizeAnswer(answer), user.securityAnswerHash);
+    if (!ok) {
+      throw new BadRequestException('La respuesta de seguridad no es correcta.');
+    }
+    user.passwordHash = await bcrypt.hash(newPassword, 10);
+    await this.users.save(user);
   }
 
   async login(dto: LoginDto): Promise<AuthResult> {

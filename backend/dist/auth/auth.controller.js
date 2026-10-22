@@ -19,7 +19,9 @@ const register_dto_1 = require("./dto/register.dto");
 const login_dto_1 = require("./dto/login.dto");
 const forgot_password_dto_1 = require("./dto/forgot-password.dto");
 const reset_password_dto_1 = require("./dto/reset-password.dto");
+const security_reset_dto_1 = require("./dto/security-reset.dto");
 const decorators_1 = require("./decorators");
+const security_questions_1 = require("./security-questions");
 let AuthController = class AuthController {
     constructor(service) {
         this.service = service;
@@ -39,6 +41,16 @@ let AuthController = class AuthController {
     }
     async resetPassword(dto) {
         await this.service.resetPassword(dto.token, dto.password);
+        return { ok: true, message: 'Tu contraseña se actualizó. Ya puedes iniciar sesión.' };
+    }
+    securityQuestions() {
+        return security_questions_1.SECURITY_QUESTIONS;
+    }
+    getSecurityQuestion(dto) {
+        return this.service.getSecurityQuestion(dto.email);
+    }
+    async securityReset(dto) {
+        await this.service.resetWithSecurityAnswer(dto.email, dto.answer, dto.password);
         return { ok: true, message: 'Tu contraseña se actualizó. Ya puedes iniciar sesión.' };
     }
     me(user) {
@@ -80,6 +92,31 @@ __decorate([
     __metadata("design:paramtypes", [reset_password_dto_1.ResetPasswordDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "resetPassword", null);
+__decorate([
+    (0, decorators_1.Public)(),
+    (0, common_1.Get)('security-questions'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "securityQuestions", null);
+__decorate([
+    (0, decorators_1.Public)(),
+    (0, common_1.HttpCode)(200),
+    (0, common_1.Post)('security-question'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [security_reset_dto_1.SecurityQuestionLookupDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "getSecurityQuestion", null);
+__decorate([
+    (0, decorators_1.Public)(),
+    (0, common_1.HttpCode)(200),
+    (0, common_1.Post)('security-reset'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [security_reset_dto_1.SecurityResetDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "securityReset", null);
 __decorate([
     (0, common_1.Get)('me'),
     __param(0, (0, decorators_1.CurrentUser)()),

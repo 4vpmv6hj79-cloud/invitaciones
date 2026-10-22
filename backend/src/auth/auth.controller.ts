@@ -4,7 +4,9 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { SecurityQuestionLookupDto, SecurityResetDto } from './dto/security-reset.dto';
 import { CurrentUser, Public } from './decorators';
+import { SECURITY_QUESTIONS } from './security-questions';
 
 @Controller('auth')
 export class AuthController {
@@ -41,6 +43,31 @@ export class AuthController {
   @Post('reset-password')
   async resetPassword(@Body() dto: ResetPasswordDto) {
     await this.service.resetPassword(dto.token, dto.password);
+    return { ok: true, message: 'Tu contraseña se actualizó. Ya puedes iniciar sesión.' };
+  }
+
+  // Catálogo de preguntas de seguridad (para registro y recuperación). Público.
+  @Public()
+  @Get('security-questions')
+  securityQuestions() {
+    return SECURITY_QUESTIONS;
+  }
+
+  // Paso 1 del reset sin correo: obtener la pregunta de seguridad de un correo.
+  // Devuelve { questionId: null } si no hay pregunta (sin revelar si existe la cuenta).
+  @Public()
+  @HttpCode(200)
+  @Post('security-question')
+  getSecurityQuestion(@Body() dto: SecurityQuestionLookupDto) {
+    return this.service.getSecurityQuestion(dto.email);
+  }
+
+  // Paso 2 del reset sin correo: restablecer la contraseña con la respuesta.
+  @Public()
+  @HttpCode(200)
+  @Post('security-reset')
+  async securityReset(@Body() dto: SecurityResetDto) {
+    await this.service.resetWithSecurityAnswer(dto.email, dto.answer, dto.password);
     return { ok: true, message: 'Tu contraseña se actualizó. Ya puedes iniciar sesión.' };
   }
 

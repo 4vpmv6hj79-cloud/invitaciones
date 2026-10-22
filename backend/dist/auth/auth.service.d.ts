@@ -22,6 +22,10 @@ export declare class AuthService {
     private readonly mail;
     constructor(users: Repository<User>, jwt: JwtService, config: ConfigService, mail: MailService);
     register(dto: RegisterDto): Promise<AuthResult>;
+    getSecurityQuestion(emailRaw: string): Promise<{
+        questionId: string | null;
+    }>;
+    resetWithSecurityAnswer(emailRaw: string, answer: string, newPassword: string): Promise<void>;
     login(dto: LoginDto): Promise<AuthResult>;
     findById(id: string): Promise<PublicUser | null>;
     forgotPassword(emailRaw: string): Promise<void>;

@@ -11,5 +11,7 @@ export declare class User {
     role: UserRole;
     resetTokenHash?: string | null;
     resetTokenExpires?: Date | null;
+    securityQuestion?: string | null;
+    securityAnswerHash?: string | null;
     createdAt: Date;
 }

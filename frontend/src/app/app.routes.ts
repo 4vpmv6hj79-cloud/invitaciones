@@ -21,11 +21,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./auth/forgot-password/forgot-password').then((m) => m.ForgotPassword),
   },
-  {
-    path: 'restablecer',
-    loadComponent: () =>
-      import('./auth/reset-password/reset-password').then((m) => m.ResetPassword),
-  },
 
   // --- Público (sin sesión) ---
   {

@@ -55,6 +55,7 @@ const crypto_1 = require("crypto");
 const bcrypt = __importStar(require("bcrypt"));
 const user_entity_1 = require("./user.entity");
 const mail_service_1 = require("./mail.service");
+const security_questions_1 = require("./security-questions");
 let AuthService = class AuthService {
     constructor(users, jwt, config, mail) {
         this.users = users;
@@ -69,13 +70,45 @@ let AuthService = class AuthService {
             throw new common_1.ConflictException('Ya existe una cuenta con ese correo');
         }
         const passwordHash = await bcrypt.hash(dto.password, 10);
+        let securityQuestion = null;
+        let securityAnswerHash = null;
+        if (dto.securityQuestion && dto.securityAnswer) {
+            if (!(0, security_questions_1.isValidQuestionId)(dto.securityQuestion)) {
+                throw new common_1.BadRequestException('Pregunta de seguridad no válida');
+            }
+            securityQuestion = dto.securityQuestion;
+            securityAnswerHash = await bcrypt.hash((0, security_questions_1.normalizeAnswer)(dto.securityAnswer), 10);
+        }
         const user = await this.users.save(this.users.create({
             email,
             passwordHash,
             name: dto.name,
             role: user_entity_1.UserRole.Organizer,
+            securityQuestion,
+            securityAnswerHash,
         }));
         return this.buildResult(user);
+    }
+    async getSecurityQuestion(emailRaw) {
+        const email = emailRaw.toLowerCase().trim();
+        const user = await this.users.findOne({ where: { email } });
+        if (!user || !user.securityQuestion) {
+            return { questionId: null };
+        }
+        return { questionId: user.securityQuestion };
+    }
+    async resetWithSecurityAnswer(emailRaw, answer, newPassword) {
+        const email = emailRaw.toLowerCase().trim();
+        const user = await this.users.findOne({ where: { email } });
+        if (!user || !user.securityQuestion || !user.securityAnswerHash) {
+            throw new common_1.BadRequestException('No se pudo verificar la información. Revisa los datos.');
+        }
+        const ok = await bcrypt.compare((0, security_questions_1.normalizeAnswer)(answer), user.securityAnswerHash);
+        if (!ok) {
+            throw new common_1.BadRequestException('La respuesta de seguridad no es correcta.');
+        }
+        user.passwordHash = await bcrypt.hash(newPassword, 10);
+        await this.users.save(user);
     }
     async login(dto) {
         const email = dto.email.toLowerCase().trim();

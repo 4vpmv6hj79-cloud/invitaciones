@@ -24,6 +24,24 @@
         <small>Mínimo 8 caracteres.</small>
       </label>
 
+      @if (isRegister()) {
+        <label class="field">
+          <span>Pregunta de seguridad</span>
+          <select formControlName="securityQuestion">
+            <option value="">Elige una pregunta…</option>
+            @for (q of securityQuestions(); track q.id) {
+              <option [value]="q.id">{{ q.text }}</option>
+            }
+          </select>
+          <small>La usarás para recuperar tu contraseña sin correo.</small>
+        </label>
+        <label class="field">
+          <span>Respuesta</span>
+          <input type="text" formControlName="securityAnswer" autocomplete="off" />
+          <small>Recuérdala; la necesitarás si olvidas tu contraseña.</small>
+        </label>
+      }
+
       @if (error()) {
         <p class="err">{{ error() }}</p>
       }

@@ -49,6 +49,14 @@ __decorate([
     __metadata("design:type", Object)
 ], User.prototype, "resetTokenExpires", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ name: 'security_question', type: 'varchar', length: 40, nullable: true }),
+    __metadata("design:type", Object)
+], User.prototype, "securityQuestion", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'security_answer_hash', type: 'varchar', length: 100, nullable: true }),
+    __metadata("design:type", Object)
+], User.prototype, "securityAnswerHash", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], User.prototype, "createdAt", void 0);
