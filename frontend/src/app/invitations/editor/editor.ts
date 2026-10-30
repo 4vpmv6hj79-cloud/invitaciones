@@ -799,7 +799,11 @@ export class Editor implements OnInit {
     this.publishing.set(true);
     this.publishError.set(false);
     this.save();
-    this.router.navigate(['/publicar', this.invitationId]);
+    // El plan viaja en la URL para que la pantalla de planes arranque con el
+    // elegido en el editor sin depender de que el guardado haya terminado.
+    this.router.navigate(['/publicar', this.invitationId], {
+      queryParams: { plan: this.selectedPlan() },
+    });
   }
 
   // Solo la fecha (larga). La hora se muestra aparte como "Recepción".

@@ -27,6 +27,23 @@ export class PlanSelector implements OnInit {
 
   ngOnInit(): void {
     this.invitationId = this.route.snapshot.paramMap.get('id') ?? '';
+
+    // Plan preseleccionado: primero el que llega en la URL (elegido en el editor);
+    // si no viene, el que tenga guardado la invitación; si no, Premium.
+    const fromUrl = this.route.snapshot.queryParamMap.get('plan');
+    if (fromUrl === 'esencial' || fromUrl === 'premium' || fromUrl === 'platinum') {
+      this.selected.set(fromUrl);
+    } else if (this.invitationId) {
+      this.invitations.getById(this.invitationId).subscribe({
+        next: (inv) => {
+          if (inv.plan) this.selected.set(inv.plan);
+        },
+        error: () => {
+          /* se mantiene Premium por defecto */
+        },
+      });
+    }
+
     this.invitations.getPlans().subscribe({
       next: (plans) => {
         this.plans.set(plans);
